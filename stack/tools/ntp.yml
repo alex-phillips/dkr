@@ -1,0 +1,10 @@
+version: '3'
+services:
+  ntp:
+    container_name: ntp
+    image: cturra/ntp
+    cap_add:
+      - SYS_TIME
+    ports:
+      - 123:123/udp
+

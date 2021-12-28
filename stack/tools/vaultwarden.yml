@@ -1,0 +1,15 @@
+version: '3'
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    environment:
+      - TZ=America/New_York
+      - SIGNUPS_ALLOWED=false
+    volumes:
+      - ${NAS}/docker/vaultwarden:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      port: 80
+      host: bw.${SERVER_DOMAIN}

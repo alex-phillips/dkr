@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mongo:
+    container_name: mongo
+    image: mongo
+    environment:
+      MONGO_DATA_DIR: /data
+    ports:
+      - 27017:27017
+    volumes:
+      - ${NAS}/docker/mongo:/data/db
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+    labels:
+      port: 8081
+      host: mongo.${SERVER_DOMAIN}
+      auth: true

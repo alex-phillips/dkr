@@ -1,0 +1,12 @@
+version: '3'
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:2.11.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${NAS}/docker/portainer:/data
+    labels:
+      port: 9443
+      host: dkr.w00t.cloud
+      protocol: https

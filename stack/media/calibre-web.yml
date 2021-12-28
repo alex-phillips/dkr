@@ -1,0 +1,19 @@
+version: '3'
+services:
+  calibre-web:
+    container_name: calibre-web
+    image: ghcr.io/linuxserver/calibre-web
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      DOCKER_MODS: linuxserver/calibre-web:calibre
+    volumes:
+      - ${NAS}/docker/calibre-web/config:/config
+      - ${NAS}/media/books:/books
+      - ${NAS}/docker/calibre-web/config/kindlegen:/app/calibre-web/vendor/kindlegen
+    labels:
+      port: 8083
+      host: books.${SERVER_DOMAIN}
+      nginx_directives: proxy_hide_header X-Frame-Options;
+      custom_response_headers:
+        X-Frame-Options: ""

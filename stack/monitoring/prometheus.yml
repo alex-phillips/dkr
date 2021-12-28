@@ -1,0 +1,66 @@
+version: '3'
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.23.0
+    volumes:
+      - ${NAS}/docker/prometheus/config:/etc/prometheus
+      - ${NAS}/docker/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=365d'
+      - '--web.enable-lifecycle'
+
+  pushgateway:
+    image: prom/pushgateway:v1.3.0
+    container_name: pushgateway
+    restart: unless-stopped
+
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager:v0.23.0
+    volumes:
+      - ${NAS}/docker/alertmanager:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    labels:
+      port: 9093
+      host: alerts.${SERVER_DOMAIN}
+
+  nodeexporter:
+    image: prom/node-exporter:v1.0.1
+    container_name: nodeexporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    network_mode: host
+
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:latest
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    command:
+      - '--docker_only=true'
+        #      - '--disable_metrics=disk,tcp,udp,percpu,sched,process'
+      - '--housekeeping_interval=60s'
+      - '--store_container_labels=false'
+      - '--whitelisted_container_labels=name'
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

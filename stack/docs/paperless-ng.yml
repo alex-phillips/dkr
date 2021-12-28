@@ -1,0 +1,20 @@
+version: '3'
+services:
+  paperless-ng:
+    container_name: paperless-ng
+    image: linuxserver/paperless-ng
+    environment:
+      PUID: 1000
+      GUID: 1000
+      TZ: America/New_York
+      PAPERLESS_CONSUMER_RECURSIVE: 'true'
+      PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: 'true'
+      PAPERLESS_FILENAME_FORMAT: "{correspondent}/{tag_list}/{created_year}/{title}"
+      PAPERLESS_TIME_ZONE: America/New_York
+      #REDIS_URL: redis://localhost:6379
+    volumes:
+      - ${NAS}/docker/paperless-ng:/config
+      - ${NAS}/documents:/data
+    labels:
+      host: docs.${SERVER_DOMAIN}
+      port: 8000

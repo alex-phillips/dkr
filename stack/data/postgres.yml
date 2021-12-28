@@ -1,0 +1,25 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ${NAS}/docker/postgres:/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${GOOGLE_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: applepie
+    volumes:
+      - ${NAS}/docker/pgadmin:/var/lib/pgadmin
+    labels:
+      port: 80
+      host: pg.${SERVER_DOMAIN}
+      auth: true

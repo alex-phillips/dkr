@@ -1,0 +1,17 @@
+version: '2.4'
+services:
+  invoiceninja:
+    container_name: invoiceninja
+    image: ghcr.io/linuxserver-labs/invoiceninja
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      #SNAPPDF_EXECUTABLE_PATH: /usr/bin/chromium-browser
+      PDF_GENERATOR: snappdf
+    volumes:
+      - ${NAS}/docker/invoiceninja:/config
+    labels:
+      port: 443
+      host: invoice.${SERVER_DOMAIN}
+      protocol: https

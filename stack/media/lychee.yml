@@ -1,0 +1,21 @@
+version: '3'
+services:
+  lychee:
+    container_name: lychee
+    image: ghcr.io/linuxserver/lychee
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TIMEZONE}
+      - DB_HOST=mariadb
+      - DB_DATABASE=lychee
+      - DB_USERNAME=lychee
+      - DB_PASSWORD=${DB_PASS_LYCHEE}
+    volumes:
+      - ${NAS}/docker/lychee/config:/config
+      - ${NAS}/docker/lychee/pictures:/pictures
+      - ${NAS}:${NAS}:ro
+    labels:
+      namespace: media
+      host: pics.${SERVER_DOMAIN}
+      port: 80

@@ -1,0 +1,20 @@
+version: '3'
+services:
+  bookstack:
+    container_name: bookstack
+    image: ghcr.io/linuxserver/bookstack
+    depends_on:
+      - mariadb
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+      ADVANCED_MODE: 1
+      APP_URL: https://wiki.${SERVER_DOMAIN}
+      ALLOWED_IFRAME_HOSTS: https://org.${SERVER_DOMAIN}
+    volumes:
+      - ${NAS}/docker/bookstack:/config
+    labels:
+      port: 443
+      protocol: https
+      host: wiki.${SERVER_DOMAIN}

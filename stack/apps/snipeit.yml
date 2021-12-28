@@ -1,0 +1,19 @@
+version: '3'
+services:
+  snipeit:
+    container_name: snipeit
+    image: ghcr.io/linuxserver/snipe-it
+    volumes:
+      - ${NAS}/docker/snipeit:/config
+    environment:
+      APP_URL: https://it.${SERVER_DOMAIN}
+      MYSQL_PORT_3306_TCP_ADDR: mariadb
+      MYSQL_PORT_3306_TCP_PORT: 3306
+      MYSQL_DATABASE: snipeit
+      MYSQL_USER: snipeit
+      MYSQL_PASSWORD: ${DB_PASS_SNIPEIT}
+      PGID: ${PGID}
+      PUID: ${PUID}
+    labels:
+      port: 80
+      host: it.${SERVER_DOMAIN}

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  funkwhale:
+    container_name: funkwhale
+    image: funkwhale/all-in-one
+    volumes:
+      - ${NAS}/music/beets/Music:/music:ro
+      - ${NAS}/docker/funkwhale:/data
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - FUNKWHALE_HOSTNAME=fw.${SERVER_DOMAIN}
+      - FUNKWHALE_PROTOCOL=https
+      - NGINX_MAX_BODY_SIZE=100M
+      - FUNKWHALE_API_IP=127.0.0.1
+      - FUNKWHALE_API_PORT=5000
+      - DJANGO_SECRET_KEY=${FW_DJANGO_SECRET_KEY}
+      - NESTED_PROXY=1
+      - THROTTLING_ENABLED=false
+    labels:
+      port: 80
+      host: fw.${SERVER_DOMAIN}
+      custom_response_headers:
+        X-Frame-Options: ""

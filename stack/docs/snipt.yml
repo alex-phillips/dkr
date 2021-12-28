@@ -1,0 +1,15 @@
+version: '3'
+services:
+  snipt:
+    container_name: snipt
+    image: alexphillips/snipt
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/snipt/config:/config
+      - ${NAS}/docker/snipt/data:/data
+    labels:
+      port: 8000
+      host: gist.${SERVER_DOMAIN}

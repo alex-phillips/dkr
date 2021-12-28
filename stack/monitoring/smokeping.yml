@@ -1,0 +1,16 @@
+version: "3"
+services:
+  smokeping:
+    container_name: smokeping
+    image: ghcr.io/linuxserver/smokeping
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/smokeping/config:/config
+      - ${NAS}/docker/smokeping/data:/data
+    labels:
+      port: 80
+      host: ping.${SERVER_DOMAIN}
+      auth: true

@@ -1,0 +1,48 @@
+version: "2"
+services:
+#   jonpowelllaw:
+#     container_name: jonpowelllaw
+#     image: wordpress:latest
+#     depends_on:
+#       - mariadb
+#     volumes:
+#       - ${NAS}/docker/jonpowelllaw:/var/www/html
+#     environment:
+#       - WORDPRESS_DB_HOST=mariadb
+#       - WORDPRESS_DB_USER=root
+#       - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#       - WORDPRESS_DB_NAME=jonpowelllaw
+#     labels:
+#       port: 80
+#       - traefik.domain=jonpowelllaw.com
+#       - traefik.frontend.rule=Host:www.jonpowelllaw.com
+
+  wootables:
+    container_name: wootables
+    image: ghcr.io/linuxserver/nginx
+    volumes:
+      - ${NAS}/docker/wootables:/config
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    labels:
+      port: 443
+      protocol: https
+      host: www.wootables.com
+      auth: False
+
+  wptest:
+    container_name: wptest
+    image: alexphillips/wordpress
+    volumes:
+      - ${NAS}/docker/wptest:/config
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    labels:
+      port: 443
+      protocol: https
+      host: wordpress.local
+      auth: False

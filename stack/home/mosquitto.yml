@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto
+    ports:
+      - 1883:1883
+    volumes:
+      - ${HOME}/docker/mosquitto/config:/mosquitto/config
+      - ${HOME}/docker/mosquitto/log:/mosquitto/log
+      - ${HOME}/docker/mosquitto/data:/mosquitto/data
+    labels:
+      port: 9001
+      host: mqtt.${SERVER_DOMAIN}

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  zwavejs:
+    container_name: zwavejs
+    image: zwavejs/zwavejs2mqtt
+    stop_signal: SIGINT
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - ${NAS}/docker/zwavejs:/usr/src/app/store
+    ports:
+      - 3010:3000
+    labels:
+      port: 8091
+      host: zwave.${SERVER_DOMAIN}
+      auth: true

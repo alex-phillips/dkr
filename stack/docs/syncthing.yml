@@ -1,0 +1,18 @@
+version: "3"
+services:
+  syncthing:
+    image: ghcr.io/linuxserver/syncthing
+    container_name: syncthing
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/syncthing/config:/config
+      - ${NAS}:${NAS}
+    ports:
+      - 22000:22000
+    labels:
+      port: 8384
+      host: sync.${SERVER_DOMAIN}
+      auth: true

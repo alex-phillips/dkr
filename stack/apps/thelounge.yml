@@ -1,0 +1,14 @@
+version: "3"
+services:
+  thelounge:
+    container_name: thelounge
+    image: ghcr.io/linuxserver/thelounge
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/thelounge:/config
+    labels:
+      port: 9000
+      host: irc.${SERVER_DOMAIN}

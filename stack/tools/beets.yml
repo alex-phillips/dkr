@@ -1,0 +1,15 @@
+version: '2'
+services:
+  beets:
+    container_name: beets
+    image: ghcr.io/linuxserver/beets:nightly
+    volumes:
+      - ${NAS}/docker/beets/config:/config
+      - ${NAS}/docker/beets/downloads:/downloads
+      - ${NAS}:${NAS}
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+    labels:
+      host: beets.${SERVER_DOMAIN}

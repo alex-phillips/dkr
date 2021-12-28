@@ -1,0 +1,34 @@
+version: '3'
+services:
+  owntracks:
+    container_name: owntracks
+    image: owntracks/recorder
+    environment:
+      OTR_HOST: mosquitto
+      OTR_USER: owntracks
+      OTR_PASS: GtgJ57nUjjNgQft7Kd8FowKHxHXpFQG
+      OTR_HTTPHOST: gps.${SERVER_DOMAIN}
+    volumes:
+      - ${NAS}/docker/owntracks/config:/config
+      - ${NAS}/docker/owntracks/store:/store
+    labels:
+      traefik.http.middlewares.owntracks-auth.basicauth.users: alex:$$apr1$$Z9az.K3c$$PFwbpjz0q5vjX91LXmm1G.
+      traefik.http.middlewares.owntracks-header.headers.accesscontrolalloworiginlist: https://ot.${SERVER_DOMAIN}
+      traefik.http.middlewares.owntracks-header.headers.accessControlAllowCredentials: true
+      traefik.http.routers.owntracks.middlewares: owntracks-header@docker
+      port: 8083
+      host: ot.${SERVER_DOMAIN}
+      auth: true
+
+  owntracks-ui:
+    container_name: owntracks-ui
+    image: owntracks/frontend
+    volumes:
+      - ${NAS}/docker/owntracks/ui-config.js:/usr/share/nginx/html/config/config.js
+    environment:
+      SERVER_HOST: owntracks
+      SERVER_PORT: 8083
+    labels:
+      port: 80
+      host: gps.${SERVER_DOMAIN}
+      auth: true

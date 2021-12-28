@@ -1,0 +1,20 @@
+version: '2'
+services:
+  radarr:
+    container_name: radarr
+    image: ghcr.io/linuxserver/radarr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${NAS}/docker/radarr:/config
+      - ${NAS}:${NAS}
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+      DOCKER_MODS: ghcr.io/linuxserver/mods:universal-stdout-logs
+      LOGS_TO_STDOUT: /config/logs/radarr.txt|/config/logs/radarr.debug.txt|/config/logs/radarr.trace.txt
+    restart: unless-stopped
+    labels:
+      namespace: media
+      port: 7878
+      host: rdr.${SERVER_DOMAIN}

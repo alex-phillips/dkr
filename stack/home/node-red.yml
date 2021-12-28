@@ -1,0 +1,13 @@
+version: '3'
+services:
+  node-red:
+    container_name: node-red
+    image: nodered/node-red
+    environment:
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/node-red:/data
+    labels:
+      port: 1880
+      host: node.${SERVER_DOMAIN}
+      logs: true

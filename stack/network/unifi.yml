@@ -1,0 +1,16 @@
+version: '2'
+services:
+  unifi:
+    container_name: unifi
+    image: ghcr.io/linuxserver/unifi-controller
+    volumes:
+      - ${NAS}/docker/unifi/config:/config
+    network_mode: host
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+#    labels:
+#      host: unifi.${SERVER_DOMAIN}
+#      port: 8443
+#      protocol: https
+#      upstream: 192.168.1.91

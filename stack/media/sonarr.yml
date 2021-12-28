@@ -1,0 +1,20 @@
+version: '2'
+services:
+  sonarr:
+    container_name: sonarr
+    image: ghcr.io/linuxserver/sonarr
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${NAS}/docker/sonarr:/config
+      - ${NAS}:${NAS}
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+      DOCKER_MODS: ghcr.io/linuxserver/mods:universal-stdout-logs
+      LOGS_TO_STDOUT: /config/logs/sonarr.txt|/config/logs/sonarr.debug.txt|/config/logs/sonarr.trace.txt
+    restart: unless-stopped
+    labels:
+      namespace: media
+      port: 8989
+      host: snr.${SERVER_DOMAIN}

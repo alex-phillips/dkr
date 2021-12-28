@@ -1,0 +1,41 @@
+version: '3'
+services:
+  mullvad:
+    container_name: mullvad
+    image: ghcr.io/linuxserver/wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    ports:
+      - 3129:3128
+    restart: 'unless-stopped'
+    volumes:
+      - ${HOME}/docker/mullvad:/config
+      - /lib/modules:/lib/modules
+      - ${NAS}:${NAS}
+
+  mullvad-misc:
+    container_name: mullvad-misc
+    image: ghcr.io/linuxserver/wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    restart: 'unless-stopped'
+    volumes:
+      - ${HOME}/docker/mullvad-misc:/config
+      - /lib/modules:/lib/modules
+      - ${NAS}:${NAS}
+    labels:
+      post_up: 'docker cp /usr/local/bin/megatools mullvad-misc:/usr/local/bin/'

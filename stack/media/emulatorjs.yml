@@ -1,0 +1,17 @@
+version: "2.1"
+services:
+  emulatorjs:
+    container_name: emulatorjs
+    image: lscr.io/linuxserver/emulatorjs
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/emulatorjs:/data
+    labels:
+      ingress:
+        - port: 80
+          host: emu.w00t.cloud
+        - port: 3000
+          host: roms.w00t.cloud

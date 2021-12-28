@@ -1,0 +1,20 @@
+version: "3"
+services:
+  calibre:
+    container_name: calibre
+    image: ghcr.io/linuxserver/calibre
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      #      CALIBRE_OVERRIDE_DATABASE_PATH: /config/metadata.db
+    volumes:
+      - ${NAS}/docker/calibre:/config
+      - ${NAS}/media/books:/books
+      - ${NAS}/torrents/downloads/books:/downloads:ro
+      - ${NAS}/docker/transfer:/transfer:ro
+      - ${NAS}/docker/firefox/downloads:/firefox:ro
+    labels:
+      port: 8080
+      host: calibre.${SERVER_DOMAIN}
+      auth: true

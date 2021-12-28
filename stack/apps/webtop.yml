@@ -1,0 +1,19 @@
+version: "3"
+services:
+  webtop:
+    container_name: webtop
+    image: ghcr.io/linuxserver/webtop:ubuntu-xfce
+    #    network_mode: service:mullvad
+    # privileged: true
+    shm_size: "2gb"
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/webtop:/config
+      - ${NAS}:${NAS}
+    labels:
+      port: 3000
+      host: wt.${SERVER_DOMAIN}
+      auth: true

@@ -1,0 +1,12 @@
+version: '3'
+services:
+  snapdrop:
+    container_name: snapdrop
+    image: linuxserver/snapdrop
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    labels:
+      port: 80
+      host: drop.${SERVER_DOMAIN}

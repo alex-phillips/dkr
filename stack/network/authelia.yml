@@ -1,0 +1,13 @@
+version: "2.1"
+services:
+  authelia:
+    container_name: authelia
+    restart: unless-stopped
+    image: authelia/authelia
+    environment:
+      TZ: ${TIMEZONE}
+    volumes:
+       - ${NAS}/docker/authelia:/config
+    labels:
+      port: 9091
+      host: auth.${SERVER_DOMAIN}

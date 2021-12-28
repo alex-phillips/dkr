@@ -1,0 +1,15 @@
+# version: "2"
+# services:
+#   budge:
+#     container_name: budge
+#     image: alexphillips/budg-e:entity-refactor
+#     volumes:
+#       - ${NAS}/docker/budg-e:/config
+#     environment:
+#       - PUID=${PUID}
+#       - PGID=${PGID}
+#       - TZ=${TIMEZONE}
+#     labels:
+#       port: 80
+#       host: budg-e.w00t.cloud
+#       auth: False

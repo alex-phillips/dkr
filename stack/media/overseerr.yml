@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+  overseerr:
+    image: lscr.io/linuxserver/overseerr
+    container_name: overseerr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/overseerr:/config
+    labels:
+      port: 5055
+      host: request.w00t.cloud

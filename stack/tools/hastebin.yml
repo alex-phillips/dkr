@@ -1,0 +1,15 @@
+version: '2'
+services:
+  hastebin:
+    container_name: hastebin
+    image: alexphillips/haste-server
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/hastebin/config:/config
+      - ${NAS}/docker/hastebin/data:/data
+    labels:
+      port: 7777
+      host: haste.${SERVER_DOMAIN}

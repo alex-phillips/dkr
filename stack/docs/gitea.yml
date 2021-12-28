@@ -1,0 +1,19 @@
+version: '3'
+services:
+  gitea:
+    container_name: gitea
+    image: gitea/gitea
+    depends_on:
+      - mariadb
+    environment:
+      USER_UID: ${PUID}
+      USER_GID: ${PGID}
+    ports:
+      - "10022:22"
+    volumes:
+      - ${NAS}/docker/gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      port: 3000
+      host: git.${SERVER_DOMAIN}

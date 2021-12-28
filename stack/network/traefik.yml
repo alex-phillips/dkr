@@ -1,0 +1,37 @@
+version: "3.3"
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: always
+    depends_on:
+      - dockerproxy
+    networks:
+      - default
+      - traefik
+    environment:
+      - CF_API_EMAIL=ahp118@gmail.com
+      - CF_API_KEY=${CLOUDFLARE_API_KEY}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ${NAS}/docker/traefik:/etc/traefik
+    labels:
+      port: 8080
+      host: tr.${SERVER_DOMAIN}
+
+  dockerproxy:
+    container_name: dockerproxy
+    image: tecnativa/docker-socket-proxy
+    privileged: true
+    environment:
+      CONTAINERS: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  traefik:
+    driver: bridge
+  default:
+    driver: bridge

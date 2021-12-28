@@ -1,0 +1,17 @@
+version: '3'
+services:
+  wikijs:
+    container_name: wikijs
+    image: ghcr.io/linuxserver/wikijs
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/wikijs/config:/config
+      - ${NAS}/docker/wikijs/data:/data
+    labels:
+      port: 3000
+      host: wikijs.${SERVER_DOMAIN}
+      custom_response_headers:
+        X-Frame-Options: ""

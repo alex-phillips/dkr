@@ -1,0 +1,27 @@
+version: '3'
+services:
+  qbittorrent:
+    container_name: qbittorrent
+    image: ghcr.io/linuxserver/qbittorrent
+    network_mode: service:mullvad
+    depends_on:
+      - mullvad
+    volumes:
+      - ${NAS}/docker/qbittorrent:/config
+      - ${NAS}/torrents:${NAS}/torrents
+      - ${NAS}/media:${NAS}/media
+      - ${NAS}/other:${NAS}/other
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TIMEZONE}
+        #      - WEBUI_PORT=8080
+      # - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
+      - DOCKER_MODS=ghcr.io/linuxserver/mods:universal-stdout-logs
+      - LOGS_TO_STDOUT=/config/qBittorrent/logs/qbittorrent.log
+        #      - TP_THEME=plex
+    labels:
+      namespace: media
+      port: 8080
+      host: qb.${SERVER_DOMAIN}
+      upstream: mullvad

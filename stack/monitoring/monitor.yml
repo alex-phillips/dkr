@@ -1,0 +1,48 @@
+version: '2'
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    user: "1000:1000"
+    environment:
+      - GF_SERVER_ROOT_URL=https://graf.${SERVER_DOMAIN}
+      - GF_RENDERING_SERVER_URL=http://grafana-renderer:8081/render
+      - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
+      - GF_LOG_FILTERS=rendering:debug
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+    volumes:
+      - ${NAS}/docker/grafana/data:/var/lib/grafana
+    labels:
+      port: 3000
+      host: graf.${SERVER_DOMAIN}
+
+  grafana-renderer:
+    container_name: grafana-renderer
+    image: grafana/grafana-image-renderer:latest
+    environment:
+      ENABLE_METRICS: 'true'
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    volumes:
+      - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+  loki:
+    container_name: loki
+    image: grafana/loki:2.4.0
+    environment:
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/loki:/config:ro
+    ports:
+      - 3100:3100
+    command: "-config.file=/config/config.yaml"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.4.0
+    volumes:
+      - ${NAS}/docker/promtail:/config
+      - ${NAS}/docker:/${NAS}/docker:ro
+    command: "-config.file=/config/config.yaml"

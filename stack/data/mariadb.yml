@@ -1,0 +1,26 @@
+version: '2'
+services:
+  mariadb:
+    container_name: mariadb
+    image: ghcr.io/linuxserver/mariadb
+    volumes:
+      - ${NAS}/docker/mariadb:/config
+    ports:
+      - 3306:3306
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - mariadb
+    labels:
+      port: 80
+      host: db.${SERVER_DOMAIN}
+      auth: true

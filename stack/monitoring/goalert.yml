@@ -1,0 +1,11 @@
+version: '3'
+services:
+  goalert:
+    container_name: goalert
+    image: goalert/goalert:v0.29.0
+    environment:
+      GOALERT_DATA_ENCRYPTION_KEY: ${GOALERT_DATA_ENCRYPTION_KEY}
+      GOALERT_DB_URL: ${GOALERT_DB_URL}
+    labels:
+      port: 8081
+      host: pager.w00t.cloud

@@ -1,0 +1,39 @@
+version: '3'
+services:
+  nextcloud:
+    container_name: nextcloud
+    image: ghcr.io/linuxserver/nextcloud
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/nextcloud/data:/data
+      - ${NAS}/docker/nextcloud/config:/config
+      - ${NAS}:${NAS}:ro
+    labels:
+      port: 443
+      protocol: https
+      host: nc.${SERVER_DOMAIN}
+      traefik.http.middlewares.nextcloud-headers.headers.stsSeconds: 15552000
+      traefik.http.routers.nextcloud.middlewares: nextcloud-headers@docker
+
+  redis-nextcloud:
+    container_name: redis-nextcloud
+    image: redis:alpine
+    ports:
+      - 6379:6379
+
+  onlyoffice:
+    container_name: onlyoffice
+    image: onlyoffice/documentserver
+    volumes:
+      - ${HOME}/docker/onlyoffice:/var/log/onlyoffice
+    environment:
+      JWT_ENABLED: 'true'
+      JWT_SECRET: errWbW6vttFFSczLo329X2omeKrvX5qLdahCGB8yVU
+    labels:
+      port: 80
+      host: office.${SERVER_DOMAIN}
+      custom_request_headers:
+        X-Forwarded-Proto: https

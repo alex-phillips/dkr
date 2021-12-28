@@ -1,0 +1,14 @@
+version: '3'
+services:
+  minio:
+    container_name: minio
+    image: minio/minio
+    command: server /data --address "0.0.0.0:9010" --console-address "0.0.0.0:9011"
+    volumes:
+      - /mnt/storage/minio/merged:/data
+    ports:
+      - 9010:9010
+      - 9011:9011
+    labels:
+      port: 9010
+      host: s3.${SERVER_DOMAIN}

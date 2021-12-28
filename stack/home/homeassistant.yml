@@ -1,0 +1,36 @@
+version: '2'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant
+    ports:
+      - 8123:8123
+    volumes:
+      - ${NAS}/docker/home-assistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - mariadb
+    labels:
+      port: 8123
+      host: ha.${SERVER_DOMAIN}
+#       nginx_directives: proxy_hide_header X-Frame-Options;
+
+#       #  ha-code-server:
+#       #    container_name: ha-code-server
+#       #    image: ghcr.io/linuxserver/code-server
+#       #    environment:
+#       #      - PUID=${PUID}
+#       #      - PGID=${PGID}
+#       #      - TZ=${TIMEZONE}
+#       ##      - PASSWORD=password #optional
+#       ##      - HASHED_PASSWORD= #optional
+#       ##      - SUDO_PASSWORD=password #optional
+#       ##      - SUDO_PASSWORD_HASH= #optional
+#       #      - PROXY_DOMAIN=ha-code.${SERVER_DOMAIN} #optional
+#       #    volumes:
+#       #      - ${NAS}/docker/home-assistant/code-server:/config
+#       #      - ${NAS}/docker/home-assistant:/config/workspace
+#       #    labels:
+#       #      port: 8443
+#       #      host: ha-code.${SERVER_DOMAIN}
+#       #      auth: true

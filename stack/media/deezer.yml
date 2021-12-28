@@ -1,0 +1,20 @@
+version: '3'
+services:
+  deezer:
+    container_name: deezer
+    image: registry.gitlab.com/bockiii/deemix-docker
+    network_mode: service:mullvad
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      ARL: ${ARL_TOKEN}
+      #ARL: d5c3295e1e140a8ed47efbc06b1c82a268c3d41047939f88a38ef68a1519d198d86d12bb2e13b3979e1aaecabceebb900faa94e6ffca748338698cbd4b23226c9ebd9d2476b8c2504429840ac0391fd0b26f2c5674327419c8a5a13655e61575
+      REVERSEPROXY: "true"
+    volumes:
+      - ${HOME}/docker/deemix:/config
+      - ${NAS}/deezer:/downloads
+    labels:
+      port: 6595
+      host: dl.${SERVER_DOMAIN}
+      auth: true

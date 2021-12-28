@@ -1,0 +1,32 @@
+version: '3'
+services:
+  scrutiny-web:
+    container_name: scrutiny
+    image: ghcr.io/linuxserver/scrutiny
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - SYS_RAWIO
+#    devices:
+#      - /dev/sdi:/dev/sdi
+#      - /dev/sdh:/dev/sdh
+#      - /dev/sdg:/dev/sdg
+#      - /dev/sdd:/dev/sdd
+#      - /dev/sde:/dev/sde
+#      - /dev/sdf:/dev/sdf
+#      - /dev/sdc:/dev/sdc
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+      - SCRUTINY_WEB=true
+      - SCRUTINY_COLLECTOR=false
+    volumes:
+      - ${NAS}/docker/scrutiny:/config
+      - /run/udev:/run/udev:ro
+    ports:
+      - 8081:8080
+    labels:
+      port: 8080
+      host: smart.${SERVER_DOMAIN}
+      auth: true

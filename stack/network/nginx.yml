@@ -1,0 +1,14 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    image: ghcr.io/linuxserver/nginx
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/nginx:/config
+    labels:
+      host: static.${SERVER_DOMAIN}
+      port: 80

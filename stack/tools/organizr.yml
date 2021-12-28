@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+  organizr:
+    image: organizr/organizr
+    container_name: organizr
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      branch: dev
+    volumes:
+      - ${NAS}/docker/organizr:/config
+    labels:
+      port: 80
+      host: org.${SERVER_DOMAIN}

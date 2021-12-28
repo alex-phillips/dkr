@@ -1,0 +1,111 @@
+version: '3.5'
+
+# Example Docker Compose config file for PhotoPrism (Linux / AMD64)
+#
+# Documentation : https://docs.photoprism.org/getting-started/docker-compose/
+# Docker Hub URL: https://hub.docker.com/r/photoprism/photoprism/
+#
+# Please run behind a reverse proxy like Caddy, Traefik or Nginx if you need HTTPS / SSL support
+# e.g. when running PhotoPrism on a public server outside your home network.
+#
+# ------------------------------------------------------------------
+# DOCKER COMPOSE COMMAND REFERENCE
+# ------------------------------------------------------------------
+# Start    | docker-compose up -d
+# Stop     | docker-compose stop
+# Update   | docker-compose pull
+# Logs     | docker-compose logs --tail=25 -f
+# Terminal | docker-compose exec photoprism bash
+# Help     | docker-compose exec photoprism photoprism help
+# Config   | docker-compose exec photoprism photoprism config
+# Reset    | docker-compose exec photoprism photoprism reset
+# Backup   | docker-compose exec photoprism photoprism backup -a -i
+# Restore  | docker-compose exec photoprism photoprism restore -a -i
+# Index    | docker-compose exec photoprism photoprism index
+# Reindex  | docker-compose exec photoprism photoprism index -a
+# Import   | docker-compose exec photoprism photoprism import
+# -------------------------------------------------------------------
+# Note: All commands may have to be prefixed with "sudo" when not running as root.
+#       This will change the home directory "~" to "/root" in your configuration.
+
+services:
+  photoprism-family:
+    container_name: photoprism-family
+    # Use photoprism/photoprism:preview instead for testing preview builds:
+    image: photoprism/photoprism:latest
+    # Only enable automatic restarts once your installation is properly
+    # configured as it otherwise may get stuck in a restart loop:
+    # https://docs.photoprism.org/getting-started/faq/#why-is-photoprism-getting-stuck-in-a-restart-loop
+    # restart: unless-stopped
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+#    ports:
+#      - 2342:2342 # [local port]:[container port]
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1'
+    environment:
+      TZ: America/New_York
+      PHOTOPRISM_SPONSOR: "true"
+      PHOTOPRISM_HTTP_PORT: 2342
+      PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # PLEASE CHANGE: Your initial admin password (min 4 characters)
+      PHOTOPRISM_DEBUG: "false"                      # Run in debug mode (shows additional log messages)
+      PHOTOPRISM_PUBLIC: "false"                     # No authentication required (disables password protection)
+      PHOTOPRISM_READONLY: "true"                    # Don't modify originals directory (reduced functionality)
+      PHOTOPRISM_EXPERIMENTAL: "false"               # Enable experimental features
+      PHOTOPRISM_DISABLE_WEBDAV: "false"             # Disable built-in WebDAV server
+      PHOTOPRISM_DISABLE_SETTINGS: "false"           # Users can not view or change settings
+      PHOTOPRISM_DISABLE_TENSORFLOW: "false"         # Don't use TensorFlow for image classification
+      PHOTOPRISM_DETECT_NSFW: "false"                # Flag photos as private that MAY be offensive (requires TensorFlow)
+      PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
+      PHOTOPRISM_DATABASE_DRIVER: "mysql"            # Use MariaDB (or MySQL) instead of SQLite for improved performance
+      PHOTOPRISM_DATABASE_SERVER: "192.168.1.91:3306"     # MariaDB database server (hostname:port)
+      PHOTOPRISM_DATABASE_NAME: "photoprism-family"         # MariaDB database schema name
+      PHOTOPRISM_DATABASE_USER: "photoprism-family"         # MariaDB database user name
+      PHOTOPRISM_DATABASE_PASSWORD: ${DB_PASS_PHOTOPRISM_FAMILY}       # MariaDB database user password
+      PHOTOPRISM_SITE_URL: "https://pics2.${SERVER_DOMAIN}/"  # Public PhotoPrism URL
+      PHOTOPRISM_SITE_TITLE: "Phillips Family"
+      PHOTOPRISM_SITE_CAPTION: "Browse Your Life"
+      PHOTOPRISM_SITE_DESCRIPTION: ""
+      PHOTOPRISM_SITE_AUTHOR: ""
+      PHOTOPRISM_WORKERS: 1
+      PHOTOPRISM_ORIGINALS_LIMIT: 99999
+      PHOTOPRISM_DISABLE_CHOWN: 1
+      # PHOTOPRISM_DISABLE_FFMPEG: "true"
+      PHOTOPRISM_UID: 1000
+      PHOTOPRISM_GID: 1000
+      # Uncomment and edit the following line to set a specific user / group id (native):
+      # user: "1000:1000"
+    volumes:
+      # Your photo and video files ([local path]:[container path]):
+      - ${NAS}/pictures/Organized/2013:/photoprism/originals/2013:ro
+      - ${NAS}/pictures/Organized/2014:/photoprism/originals/2014:ro
+      - ${NAS}/pictures/Organized/2015:/photoprism/originals/2015:ro
+      - ${NAS}/pictures/Organized/2016:/photoprism/originals/2016:ro
+      - ${NAS}/pictures/Organized/2017:/photoprism/originals/2017:ro
+      - ${NAS}/pictures/Organized/2018:/photoprism/originals/2018:ro
+      - ${NAS}/pictures/Organized/2019:/photoprism/originals/2019:ro
+      - ${NAS}/pictures/Organized/2020:/photoprism/originals/2020:ro
+      - ${NAS}/pictures/Organized/2021:/photoprism/originals/2021:ro
+
+      # Multiple folders can be indexed by mounting them as sub-folders of /photoprism/originals:
+      # - "/mnt/Family:/photoprism/originals/Family"    # [folder_1]:/photoprism/originals/[folder_1]
+      # - "/mnt/Friends:/photoprism/originals/Friends"  # [folder_2]:/photoprism/originals/[folder_2]
+      # Mounting an import folder is optional (see docs):
+      # - "~/Import:/photoprism/import"
+      # Permanent storage for settings, index & sidecar files (DON'T REMOVE):
+      - ${NAS}/docker/photoprism-family:/photoprism/storage
+    labels:
+      namespace: media
+      port: 2342
+      host: pics2.${SERVER_DOMAIN}
+
+# Uncomment the following lines to upgrade automatically, whenever there is a new Docker image available:
+#
+#  watchtower:
+#    image: containrrr/watchtower
+#    restart: unless-stopped
+#    volumes:
+#      - "/var/run/docker.sock:/var/run/docker.sock"
