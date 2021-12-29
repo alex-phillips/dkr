@@ -1,5 +1,18 @@
 {
   "extends": [
-    "config:base"
-  ]
+    "config:base",
+    ":disableRateLimiting",
+    "github>whitesource/merge-confidence:beta"
+  ],
+  "timezone": "America/New_York",
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "rebaseWhen": "conflicted",
+  "commitBodyTable": true,
+  // "ignorePaths": [".archived/**"],
+  "fetchReleaseNotes": true,
+  "labels": ["renovate"],
+  "docker-compose": {
+    "fileMatch": "(^|/)\/stack\/.*\.ya?ml$"
+  }
 }
