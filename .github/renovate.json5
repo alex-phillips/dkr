@@ -13,6 +13,6 @@
   "fetchReleaseNotes": true,
   "labels": ["renovate"],
   "docker-compose": {
-    "fileMatch": "(^|/)\\/stack\\/.*\\.ya?ml$"
+    "filematch": "(^|\/)stack\/.*\.ya?ml$"
   }
 }
