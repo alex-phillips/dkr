@@ -30,7 +30,7 @@ services:
 
   loki:
     container_name: loki
-    image: grafana/loki:2.4.0
+    image: grafana/loki:2.4.1
     environment:
       - TZ=${TIMEZONE}
     volumes:
