@@ -14,7 +14,7 @@
   "labels": ["renovate"],
   "docker-compose": {
     "filematch": [
-      "(^|\/)stack\/*\.ya?ml$"
+      "(^|\/)stack\/.*\.ya?ml$"
     ]
   }
 }
