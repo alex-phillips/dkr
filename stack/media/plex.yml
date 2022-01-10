@@ -36,6 +36,12 @@ services:
       port: 32400
       host: plx.${SERVER_DOMAIN}
 
+  # plex-meta-manager:
+  #   container_name: plex-meta-manager
+  #   image: meisnate12/plex-meta-manager
+  #   volumes:
+  #     - ${NAS}/docker/plex-meta-manager:/config
+
 #  moviematch:
 #    container_name: moviematch
 #    image: lukechannings/moviematch

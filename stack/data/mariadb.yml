@@ -12,6 +12,8 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    labels:
+      namespace: data
 
   phpmyadmin:
     container_name: phpmyadmin

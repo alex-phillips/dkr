@@ -1,0 +1,19 @@
+version: '3'
+services:
+  wallpapers:
+    container_name: wallpapers
+    image: ghcr.io/linuxserver/lychee
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TIMEZONE}
+      - DB_HOST=mariadb
+      - DB_DATABASE=wallpapers
+      - DB_USERNAME=wallpapers
+      - DB_PASSWORD=${DB_PASS_WALLPAPERS}
+    volumes:
+      - ${NAS}/docker/wallpapers/config:/config
+      - ${NAS}/docker/wallpapers/pictures:/pictures
+    labels:
+      host: walls.${SERVER_DOMAIN}
+      port: 80

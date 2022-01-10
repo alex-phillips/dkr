@@ -12,6 +12,7 @@ services:
       - ${NAS}/media/books:/books
       - ${NAS}/docker/calibre-web/config/kindlegen:/app/calibre-web/vendor/kindlegen
     labels:
+      namespace: media
       port: 8083
       host: books.${SERVER_DOMAIN}
       nginx_directives: proxy_hide_header X-Frame-Options;

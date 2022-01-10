@@ -7,5 +7,6 @@ services:
       GOALERT_DATA_ENCRYPTION_KEY: ${GOALERT_DATA_ENCRYPTION_KEY}
       GOALERT_DB_URL: ${GOALERT_DB_URL}
     labels:
+      namespace: monitoring
       port: 8081
       host: pager.w00t.cloud

@@ -32,7 +32,7 @@ services:
   photoprism-family:
     container_name: photoprism-family
     # Use photoprism/photoprism:preview instead for testing preview builds:
-    image: photoprism/photoprism:latest
+    image: photoprism/photoprism:20211215
     # Only enable automatic restarts once your installation is properly
     # configured as it otherwise may get stuck in a restart loop:
     # https://docs.photoprism.org/getting-started/faq/#why-is-photoprism-getting-stuck-in-a-restart-loop
@@ -46,6 +46,8 @@ services:
 #      resources:
 #        limits:
 #          cpus: '1'
+    depends_on:
+      - mariadb
     environment:
       TZ: America/New_York
       PHOTOPRISM_SPONSOR: "true"
@@ -89,6 +91,7 @@ services:
       - ${NAS}/pictures/Organized/2019:/photoprism/originals/2019:ro
       - ${NAS}/pictures/Organized/2020:/photoprism/originals/2020:ro
       - ${NAS}/pictures/Organized/2021:/photoprism/originals/2021:ro
+      - ${NAS}/pictures/Organized/2021:/photoprism/originals/2022:ro
 
       # Multiple folders can be indexed by mounting them as sub-folders of /photoprism/originals:
       # - "/mnt/Family:/photoprism/originals/Family"    # [folder_1]:/photoprism/originals/[folder_1]

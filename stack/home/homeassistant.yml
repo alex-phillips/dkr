@@ -2,7 +2,7 @@ version: '2'
 services:
   homeassistant:
     container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant
+    image: ghcr.io/home-assistant/home-assistant:2021.12.7
     ports:
       - 8123:8123
     volumes:
@@ -11,6 +11,7 @@ services:
     depends_on:
       - mariadb
     labels:
+      namespace: home
       port: 8123
       host: ha.${SERVER_DOMAIN}
 #       nginx_directives: proxy_hide_header X-Frame-Options;

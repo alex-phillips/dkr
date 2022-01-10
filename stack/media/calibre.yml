@@ -15,6 +15,7 @@ services:
       - ${NAS}/docker/transfer:/transfer:ro
       - ${NAS}/docker/firefox/downloads:/firefox:ro
     labels:
+      namespace: media
       port: 8080
       host: calibre.${SERVER_DOMAIN}
       auth: true

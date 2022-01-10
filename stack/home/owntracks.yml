@@ -12,6 +12,7 @@ services:
       - ${NAS}/docker/owntracks/config:/config
       - ${NAS}/docker/owntracks/store:/store
     labels:
+      namespace: home
       traefik.http.middlewares.owntracks-auth.basicauth.users: alex:$$apr1$$Z9az.K3c$$PFwbpjz0q5vjX91LXmm1G.
       traefik.http.middlewares.owntracks-header.headers.accesscontrolalloworiginlist: https://ot.${SERVER_DOMAIN}
       traefik.http.middlewares.owntracks-header.headers.accessControlAllowCredentials: true
@@ -29,6 +30,7 @@ services:
       SERVER_HOST: owntracks
       SERVER_PORT: 8083
     labels:
+      namespace: home
       port: 80
       host: gps.${SERVER_DOMAIN}
       auth: true

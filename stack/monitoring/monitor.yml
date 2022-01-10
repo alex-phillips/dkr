@@ -13,6 +13,7 @@ services:
     volumes:
       - ${NAS}/docker/grafana/data:/var/lib/grafana
     labels:
+      namespace: monitoring
       port: 3000
       host: graf.${SERVER_DOMAIN}
 
@@ -21,12 +22,16 @@ services:
     image: grafana/grafana-image-renderer:latest
     environment:
       ENABLE_METRICS: 'true'
+    labels:
+      namespace: monitoring
 
   telegraf:
     container_name: telegraf
     image: telegraf
     volumes:
       - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    labels:
+      namespace: monitoring
 
   loki:
     container_name: loki
@@ -38,6 +43,8 @@ services:
     ports:
       - 3100:3100
     command: "-config.file=/config/config.yaml"
+    labels:
+      namespace: monitoring
 
   promtail:
     container_name: promtail
@@ -46,3 +53,5 @@ services:
       - ${NAS}/docker/promtail:/config
       - ${NAS}/docker:/${NAS}/docker:ro
     command: "-config.file=/config/config.yaml"
+    labels:
+      namespace: monitoring
