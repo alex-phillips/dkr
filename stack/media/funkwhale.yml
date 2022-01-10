@@ -35,7 +35,7 @@ services:
 
   celeryworker:
     container_name: funkwhale-celery-worker
-    image: funkwhale/funkwhale:1.2.0
+    image: funkwhale/funkwhale:1.2.1
     depends_on:
       - postgres
       - funkwhale-redis
@@ -59,7 +59,7 @@ services:
 
   funkwhale-celerybeat:
     container_name: funkwhale-celerybeat
-    image: funkwhale/funkwhale:1.2.0
+    image: funkwhale/funkwhale:1.2.1
     depends_on:
       - postgres
       - funkwhale-redis
@@ -70,7 +70,7 @@ services:
 
   funkwhale:
     container_name: funkwhale
-    image: funkwhale/funkwhale:1.2.0
+    image: funkwhale/funkwhale:1.2.1
     depends_on:
       - postgres
       - funkwhale-redis
