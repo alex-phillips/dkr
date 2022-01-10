@@ -27,7 +27,7 @@ services:
 
   funkwhale-redis:
     container_name: funkwhale-redis
-    image: redis:5
+    image: redis:6
     volumes:
       - ${NAS}/docker/funkwhale/redis:/data
     labels:
