@@ -10,6 +10,8 @@ services:
       - ${NAS}/docker/postgres:/var/lib/postgresql/data/pgdata
     ports:
       - 5432:5432
+    labels:
+      namespace: data
 
   pgadmin:
     container_name: pgadmin

@@ -3,6 +3,9 @@ services:
   nextcloud:
     container_name: nextcloud
     image: ghcr.io/linuxserver/nextcloud
+    depends_on:
+      - mariadb
+      - redis-nextcloud
     environment:
       PGID: ${PGID}
       PUID: ${PUID}

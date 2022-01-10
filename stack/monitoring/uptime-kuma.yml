@@ -6,5 +6,6 @@ services:
     volumes:
       - ${NAS}/docker/uptime-kuma:/app/data
     labels:
+      namespace: monitoring
       port: 3001
       host: status.${SERVER_DOMAIN}

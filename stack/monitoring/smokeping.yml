@@ -11,6 +11,7 @@ services:
       - ${NAS}/docker/smokeping/config:/config
       - ${NAS}/docker/smokeping/data:/data
     labels:
+      namespace: monitoring
       port: 80
       host: ping.${SERVER_DOMAIN}
       auth: true

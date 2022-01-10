@@ -5,6 +5,8 @@ services:
     image: ghcr.io/linuxserver/healthchecks
     volumes:
       - ${NAS}/docker/healthchecks:/config
+    depends_on:
+      - mariadb
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
@@ -13,5 +15,6 @@ services:
       - SITE_NAME=${SERVER_DOMAIN}
       - REGENERATE_SETTINGS="False"
     labels:
+      namespace: monitoring
       port: 8000
       host: hc.${SERVER_DOMAIN}

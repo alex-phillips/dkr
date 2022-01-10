@@ -1,0 +1,19 @@
+version: '2'
+services:
+  jellyfin:
+    container_name: jellyfin
+    image: ghcr.io/linuxserver/jellyfin
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/jellyfin:/config
+      - ${MEDIA_PATH}/movies:/data/movies:ro
+      - ${MEDIA_PATH}/tv:/data/tv:ro
+      - ${NAS}:${NAS}:ro
+      - ${NAS}/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
+    labels:
+      namespace: media
+      port: 8096
+      host: jf.w00t.cloud

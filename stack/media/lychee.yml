@@ -3,6 +3,8 @@ services:
   lychee:
     container_name: lychee
     image: ghcr.io/linuxserver/lychee
+    depends_on:
+      - mariadb
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

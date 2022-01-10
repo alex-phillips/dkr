@@ -3,6 +3,8 @@ services:
   invoiceninja:
     container_name: invoiceninja
     image: ghcr.io/linuxserver-labs/invoiceninja:5.3.40
+    depends_on:
+      - mariadb
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

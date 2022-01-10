@@ -5,6 +5,8 @@ services:
     image: ghcr.io/linuxserver/snipe-it
     volumes:
       - ${NAS}/docker/snipeit:/config
+    depends_on:
+      - mariadb
     environment:
       APP_URL: https://it.${SERVER_DOMAIN}
       MYSQL_PORT_3306_TCP_ADDR: mariadb

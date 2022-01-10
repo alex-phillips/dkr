@@ -10,5 +10,6 @@ services:
       - ${HOME}/docker/mosquitto/log:/mosquitto/log
       - ${HOME}/docker/mosquitto/data:/mosquitto/data
     labels:
+      namespace: home
       port: 9001
       host: mqtt.${SERVER_DOMAIN}

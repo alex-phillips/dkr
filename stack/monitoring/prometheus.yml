@@ -13,11 +13,13 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=365d'
       - '--web.enable-lifecycle'
+    labels:
+      namespace: monitoring
 
-  pushgateway:
-    image: prom/pushgateway:v1.4.2
-    container_name: pushgateway
-    restart: unless-stopped
+  # pushgateway:
+  #   image: prom/pushgateway:v1.4.2
+  #   container_name: pushgateway
+  #   restart: unless-stopped
 
   alertmanager:
     container_name: alertmanager
@@ -28,6 +30,7 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     labels:
+      namespace: monitoring
       port: 9093
       host: alerts.${SERVER_DOMAIN}
 
@@ -45,6 +48,8 @@ services:
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
     restart: unless-stopped
     network_mode: host
+    labels:
+      namespace: monitoring
 
   cadvisor:
     image: gcr.io/google-containers/cadvisor:latest
@@ -64,3 +69,5 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    labels:
+      namespace: monitoring

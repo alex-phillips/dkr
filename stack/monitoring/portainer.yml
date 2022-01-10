@@ -7,6 +7,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${NAS}/docker/portainer:/data
     labels:
+      namespace: monitoring
       port: 9443
       host: dkr.w00t.cloud
       protocol: https
