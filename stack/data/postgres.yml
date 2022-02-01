@@ -2,12 +2,11 @@ version: '3'
 services:
   postgres:
     container_name: postgres
-    image: postgres:11
+    image: postgres:14-alpine
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
-      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ${NAS}/docker/postgres:/var/lib/postgresql/data/pgdata
+      - ${NAS}/docker/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     labels:
