@@ -1,45 +1,24 @@
-version: '3'
+version: "3"
 services:
-#   funkwhale:
-#     container_name: funkwhale
-#     image: funkwhale/all-in-one:1.2.0
-#     entrypoint: /bin/sh
-#     command: "sleep infinity"
-#     volumes:
-#       - ${NAS}/music/beets/Music:/music:ro
-#       - ${NAS}/docker/funkwhale:/data
-#     environment:
-#       - PUID=${PUID}
-#       - PGID=${PGID}
-#       - FUNKWHALE_HOSTNAME=fw.${SERVER_DOMAIN}
-#       - FUNKWHALE_PROTOCOL=https
-#       - NGINX_MAX_BODY_SIZE=100M
-#       - FUNKWHALE_API_IP=127.0.0.1
-#       - FUNKWHALE_API_PORT=5000
-#       - DJANGO_SECRET_KEY=${FW_DJANGO_SECRET_KEY}
-#       - NESTED_PROXY=1
-#       - THROTTLING_ENABLED=false
-#     labels:
-#       port: 80
-#       host: fw.${SERVER_DOMAIN}
-#       custom_response_headers:
-#         X-Frame-Options: ""
-
   funkwhale-redis:
     container_name: funkwhale-redis
-    image: redis:6
+    networks:
+      - default
+    env_file: .env
+    image: redis:5
     volumes:
       - ${NAS}/docker/funkwhale/redis:/data
     labels:
       namespace: media
+      app: funkwhale
 
-  celeryworker:
-    container_name: funkwhale-celery-worker
-    image: funkwhale/funkwhale:1.2.1
+  funkwhale-celeryworker:
+    container_name: funkwhale-celeryworker
+    image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
     depends_on:
       - postgres
       - funkwhale-redis
-    env_file: .env
+    env_file: .env.funkwhale
     # Celery workers handle background tasks (such file imports or federation
     # messaging). The more processes a worker gets, the more tasks
     # can be processed in parallel. However, more processes also means
@@ -47,57 +26,58 @@ services:
     # By default, a worker will span a number of process equal to your number
     # of CPUs. You can adjust this, by explicitly setting the --concurrency
     # flag:
-    #   celery -A funkwhale_api.taskapp worker -l INFO --concurrency=4
-    command: celery -A funkwhale_api.taskapp worker -l INFO --concurrency=${CELERYD_CONCURRENCY-0}
+    command: celery -A funkwhale_api.taskapp worker -l INFO --concurrency=4
     environment:
       - C_FORCE_ROOT=true
     volumes:
-      - "${MUSIC_DIRECTORY_SERVE_PATH-/srv/funkwhale/data/music}:${MUSIC_DIRECTORY_PATH-/music}:ro"
+      - "${NAS}/music/beets/Music:/music:ro"
       - "${MEDIA_ROOT}:${MEDIA_ROOT}"
     labels:
       namespace: media
+      app: funkwhale
 
   funkwhale-celerybeat:
     container_name: funkwhale-celerybeat
-    image: funkwhale/funkwhale:1.2.1
+    image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
     depends_on:
       - postgres
       - funkwhale-redis
-    env_file: .env
+    env_file: .env.funkwhale
     command: celery -A funkwhale_api.taskapp beat --pidfile= -l INFO
     labels:
       namespace: media
+      app: funkwhale
 
   funkwhale:
     container_name: funkwhale
-    image: funkwhale/funkwhale:1.2.1
+    image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
     depends_on:
       - postgres
       - funkwhale-redis
-    env_file: .env
-    environment:
-      DJANGO_SECRET_KEY: d408036f4009de055a1eaf3a9b28a3540862ef365c29abd281f7d490c2b07b016f396293805d2bd9e9aafbd590
+    env_file: .env.funkwhale
     volumes:
-      - "${MUSIC_DIRECTORY_SERVE_PATH-/srv/funkwhale/data/music}:${MUSIC_DIRECTORY_PATH-/music}:ro"
+      - "${NAS}/music/beets/Music:/music:ro"
       - "${MEDIA_ROOT}:${MEDIA_ROOT}"
       - "${STATIC_ROOT}:${STATIC_ROOT}"
       - "${FUNKWHALE_FRONTEND_PATH}:/frontend"
     labels:
       namespace: media
+      app: funkwhale
 
   funkwhale-proxy:
     container_name: funkwhale-proxy
     image: nginx
     depends_on:
       - funkwhale
-    env_file: .env
+    env_file:
+      - .env.funkwhale
     environment:
       # Override those variables in your .env file if needed
       - "NGINX_MAX_BODY_SIZE=${NGINX_MAX_BODY_SIZE-100M}"
     volumes:
-      - "${NAS}/docker/funkwhale/nginx/funkwhale.template:/etc/nginx/conf.d/funkwhale.template:ro"
-      - "${NAS}/docker/funkwhale/nginx/funkwhale_proxy.conf:/etc/nginx/funkwhale_proxy.conf:ro"
-      - "${MUSIC_DIRECTORY_SERVE_PATH-/srv/funkwhale/data/music}:${MUSIC_DIRECTORY_PATH-/music}:ro"
+      - "/mnt/storage/docker/funkwhale/nginx/funkwhale.template:/etc/nginx/conf.d/funkwhale.template:ro"
+      - "/mnt/storage/docker/funkwhale/nginx/funkwhale_proxy.conf:/etc/nginx/funkwhale_proxy.conf:ro"
+      - "${NAS}/music/beets/Music:/music:ro"
       - "${MEDIA_ROOT}:${MEDIA_ROOT}:ro"
       - "${STATIC_ROOT}:${STATIC_ROOT}:ro"
       - "${FUNKWHALE_FRONTEND_PATH}:/frontend:ro"
@@ -108,6 +88,7 @@ services:
         && cat /etc/nginx/conf.d/default.conf
         && nginx -g 'daemon off;'"
     labels:
-      namespace: media
       port: 80
       host: fw.w00t.cloud
+      namespace: media
+      app: funkwhale
