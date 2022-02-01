@@ -1,0 +1,16 @@
+version: '3'
+services:
+  wyze-bridge:
+    container_name: wyze-bridge
+    image: mrlt8/wyze-bridge:latest
+    environment:
+      WYZE_EMAIL: ${GOOGLE_EMAIL}
+      WYZE_PASSWORD: ${WYZE_PASSWORD}
+      NET_MODE: LAN
+      #      FRESH_DATA: "true"
+      SNAPSHOT: RTSP30
+    volumes:
+      - ${NAS}/docker/nginx/www/wyze:/img
+    labels:
+      port: 8888
+      host: wyze.w00t.cloud
