@@ -5,6 +5,7 @@ services:
     container_name: traefik
     depends_on:
       - dockerproxy
+      - authelia
     networks:
       - default
       - traefik
@@ -16,9 +17,13 @@ services:
       - 443:443
     volumes:
       - ${NAS}/docker/traefik:/etc/traefik
+      - /var/log/traefik:/var/log/traefik
     labels:
       port: 8080
       host: tr.${SERVER_DOMAIN}
+      traefik.http.routers.traefik.tls.certresolver: cloudflare
+      traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
+      traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN"
 
   dockerproxy:
     container_name: dockerproxy
