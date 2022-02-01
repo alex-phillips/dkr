@@ -1,0 +1,7 @@
+version: '3'
+services:
+  plex-meta-manager:
+    container_name: plex-meta-manager
+    image: ghcr.io/linuxserver/plex-meta-manager:1.15.1
+    volumes:
+      - ${NAS}/docker/plex/meta-manager:/config
