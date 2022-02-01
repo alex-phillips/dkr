@@ -11,7 +11,8 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/webtop:/config
+      - ${HOME}/docker/webtop:/config
+      - ${NAS}/docker/webtop/Downloads:/config/Downloads
       - ${NAS}:${NAS}
     labels:
       port: 3000
