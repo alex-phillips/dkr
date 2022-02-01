@@ -28,3 +28,4 @@ services:
     labels:
       port: 51821
       host: vpn.${SERVER_DOMAIN}
+      namespace: network

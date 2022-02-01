@@ -3,6 +3,8 @@ services:
   goalert:
     container_name: goalert
     image: goalert/goalert:v0.29.0
+    depends_on:
+      - postgres
     environment:
       GOALERT_DATA_ENCRYPTION_KEY: ${GOALERT_DATA_ENCRYPTION_KEY}
       GOALERT_DB_URL: ${GOALERT_DB_URL}

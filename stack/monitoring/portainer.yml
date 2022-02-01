@@ -2,7 +2,8 @@ version: '3'
 services:
   portainer:
     container_name: portainer
-    image: portainer/portainer-ce:2.11.0
+    #image: portainer/portainer-ce:2.11.0
+    image: portainer/portainer-ee:2.10.0
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${NAS}/docker/portainer:/data
