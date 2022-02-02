@@ -2,7 +2,7 @@ version: '3'
 services:
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:v2.33.0
+    image: prom/prometheus:v2.33.1
     volumes:
       - ${NAS}/docker/prometheus/config:/etc/prometheus
       - ${NAS}/docker/prometheus/data:/prometheus
