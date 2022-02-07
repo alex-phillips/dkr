@@ -22,6 +22,3 @@ services:
         #      - TP_THEME=plex
     labels:
       namespace: media
-      port: 8080
-      host: qb.${SERVER_DOMAIN}
-      upstream: mullvad

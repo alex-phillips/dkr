@@ -20,6 +20,8 @@ services:
   wootables:
     container_name: wootables
     image: ghcr.io/linuxserver/nginx
+    networks:
+      - data
     volumes:
       - ${NAS}/docker/wootables:/config
     environment:

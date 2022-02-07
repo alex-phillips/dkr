@@ -1,0 +1,17 @@
+version: '3'
+services:
+  goaccess:
+    container_name: goaccess
+    image: ghcr.io/linuxserver/nginx
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      DOCKER_MODS: alexphillips/swag-dashboard:latest
+    volumes:
+      - ${NAS}/docker/goaccess:/config
+      - ${NAS}/docker/fail2ban/db:/config/fail2ban:ro
+      - /var/log/traefik:/dashboard/logs:ro
+    labels:
+      host: goaccess.${SERVER_DOMAIN}
+      port: 80

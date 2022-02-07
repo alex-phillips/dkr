@@ -12,4 +12,4 @@ services:
     labels:
       namespace: media
       port: 5055
-      host: request.w00t.cloud
+      host: request.${SERVER_DOMAIN}

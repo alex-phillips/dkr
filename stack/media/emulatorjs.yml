@@ -12,6 +12,6 @@ services:
     labels:
       ingress:
         - port: 80
-          host: emu.w00t.cloud
+          host: emu.${SERVER_DOMAIN}
         - port: 3000
-          host: roms.w00t.cloud
+          host: roms.${SERVER_DOMAIN}

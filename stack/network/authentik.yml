@@ -1,0 +1,74 @@
+---
+version: '3.2'
+
+services:
+  authentik-redis:
+    container_name: authentik-redis
+    image: redis:alpine
+    labels:
+      app: authentik
+
+  authentik:
+    container_name: authentik
+    image: ghcr.io/goauthentik/server:2022.1.2
+    command: server
+    networks:
+      - default
+      - data
+    depends_on:
+      - postgres
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: postgres
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${DB_PASS_AUTHENTIK}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      # AUTHENTIK_ERROR_REPORTING__ENABLED: "true"
+      # WORKERS: 2
+    volumes:
+      - ${NAS}/docker/authentik/media:/media
+      - ${NAS}/docker/authentik/custom-templates:/templates
+      - ${NAS}/docker/authentik/geoip:/geoip
+    labels:
+      port: 9443
+      host: authentik.${SERVER_DOMAIN}
+      protocol: https
+      app: authentik
+    # ports:
+    #   - "0.0.0.0:${AUTHENTIK_PORT_HTTP:-9000}:9000"
+    #   - "0.0.0.0:${AUTHENTIK_PORT_HTTPS:-9443}:9443"
+
+  authentik-worker:
+    container_name: authentik-worker
+    image: ghcr.io/goauthentik/server:2022.1.2
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_POSTGRESQL__HOST: postgres
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${DB_PASS_AUTHENTIK}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      # AUTHENTIK_ERROR_REPORTING__ENABLED: "true"
+    # This is optional, and can be removed. If you remove this, the following will happen
+    # - The permissions for the /backups and /media folders aren't fixed, so make sure they are 1000:1000
+    # - The docker socket can't be accessed anymore
+    user: root
+    volumes:
+      - ${NAS}/docker/authentik/backups:/backups
+      - ${NAS}/docker/authentik/media:/media
+      - ${NAS}/docker/authentik/certs:/certs
+      - ${NAS}/docker/authentik/custom-templates:/templates
+      - ${NAS}/docker/authentik/geoip:/geoip
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      app: authentik
+
+  geoipupdate:
+    image: maxmindinc/geoipupdate:latest
+    volumes:
+      - ${NAS}/docker/authentik/geoip:/usr/share/GeoIP
+    environment:
+      GEOIPUPDATE_EDITION_IDS: "GeoLite2-City"
+      GEOIPUPDATE_FREQUENCY: "8"

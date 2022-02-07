@@ -1,0 +1,11 @@
+version: "2.4"
+services:
+  whoogle:
+    container_name: whoogle
+    image: benbusby/whoogle-search
+    network_mode: service:mullvad
+    environment:
+      WHOOGLE_CONFIG_TOR: false
+    labels:
+      port: 5000
+      host: search.${SERVER_DOMAIN}

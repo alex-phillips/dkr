@@ -1,0 +1,15 @@
+networks:
+  default:
+    driver: bridge
+
+  web:
+    name: web
+    driver: bridge
+
+  data:
+    name: data
+    driver: bridge
+
+  dockerproxy:
+    name: dockerproxy
+    driver: bridge

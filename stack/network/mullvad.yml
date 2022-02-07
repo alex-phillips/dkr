@@ -19,10 +19,12 @@ services:
       - ${HOME}/docker/mullvad:/config
       - /lib/modules:/lib/modules
       - ${NAS}:${NAS}
-#    labels:
-#      ingress:
-#        - host: qb.w00t.cloud
-#          port: 8080
+    labels:
+      ingress:
+        - host: qb.${SERVER_DOMAIN}
+          port: 8080
+        - host: search.${SERVER_DOMAIN}
+          port: 5000
 
   mullvad-misc:
     container_name: mullvad-misc

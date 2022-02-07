@@ -5,6 +5,9 @@ services:
     image: ghcr.io/linuxserver-labs/invoiceninja:5.3.42
     depends_on:
       - mariadb
+    networks:
+      - default
+      - data
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

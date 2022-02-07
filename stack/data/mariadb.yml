@@ -3,6 +3,8 @@ services:
   mariadb:
     container_name: mariadb
     image: ghcr.io/linuxserver/mariadb
+    networks:
+      - data
     volumes:
       - ${NAS}/docker/mariadb:/config
     ports:
@@ -18,6 +20,8 @@ services:
   phpmyadmin:
     container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin
+    networks:
+      - data
     environment:
       - PMA_ARBITRARY=1
     depends_on:

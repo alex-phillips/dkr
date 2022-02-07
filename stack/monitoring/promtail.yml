@@ -1,0 +1,12 @@
+version: '3'
+services:
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.4.2
+    volumes:
+      - ${NAS}/docker/promtail:/config
+      - ${NAS}/docker:/${NAS}/docker:ro
+      - /var/log/traefik:/var/log/traefik:ro
+    command: "-config.file=/config/config.yaml"
+    labels:
+      namespace: monitoring

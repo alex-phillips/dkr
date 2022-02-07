@@ -7,6 +7,9 @@ services:
       - ${NAS}/docker/snipeit:/config
     depends_on:
       - mariadb
+    networks:
+      - default
+      - data
     environment:
       APP_URL: https://it.${SERVER_DOMAIN}
       MYSQL_PORT_3306_TCP_ADDR: mariadb

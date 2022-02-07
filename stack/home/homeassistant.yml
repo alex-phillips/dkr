@@ -3,6 +3,9 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:2022.2.2
+    networks:
+      - default
+      - data
     ports:
       - 8123:8123
     volumes:

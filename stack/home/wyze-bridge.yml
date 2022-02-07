@@ -13,4 +13,4 @@ services:
       - ${NAS}/docker/nginx/www/wyze:/img
     labels:
       port: 8888
-      host: wyze.w00t.cloud
+      host: wyze.${SERVER_DOMAIN}

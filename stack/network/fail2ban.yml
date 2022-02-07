@@ -1,0 +1,14 @@
+version: '2'
+services:
+  fail2ban:
+    container_name: fail2ban
+    image: crazymax/fail2ban:latest
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      TZ: ${TIMEZONE}
+    volumes:
+      - /var/log/traefik:/var/log/traefik:ro
+      - ${NAS}/docker/fail2ban:/data

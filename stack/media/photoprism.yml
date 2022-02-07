@@ -46,6 +46,9 @@ services:
 #      resources:
 #        limits:
 #          cpus: '1'
+    networks:
+      - default
+      - data
     depends_on:
       - mariadb
     environment:

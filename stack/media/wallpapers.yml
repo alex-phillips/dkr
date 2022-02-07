@@ -3,6 +3,11 @@ services:
   wallpapers:
     container_name: wallpapers
     image: ghcr.io/linuxserver/lychee
+    networks:
+      - default
+      - data
+    depends_on:
+      - mariadb
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

@@ -3,6 +3,9 @@ services:
   goalert:
     container_name: goalert
     image: goalert/goalert:v0.29.0
+    networks:
+      - default
+      - data
     depends_on:
       - postgres
     environment:
@@ -11,4 +14,4 @@ services:
     labels:
       namespace: monitoring
       port: 8081
-      host: pager.w00t.cloud
+      host: pager.${SERVER_DOMAIN}

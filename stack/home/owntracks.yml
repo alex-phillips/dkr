@@ -16,7 +16,7 @@ services:
       traefik.http.middlewares.owntracks-auth.basicauth.users: alex:$$apr1$$Z9az.K3c$$PFwbpjz0q5vjX91LXmm1G.
       traefik.http.middlewares.owntracks-header.headers.accesscontrolalloworiginlist: https://ot.${SERVER_DOMAIN}
       traefik.http.middlewares.owntracks-header.headers.accessControlAllowCredentials: true
-      traefik.http.routers.owntracks.middlewares: owntracks-header@docker
+      traefik.http.routers.owntracks-8083.middlewares: owntracks-header@docker
       port: 8083
       host: ot.${SERVER_DOMAIN}
       auth: true

@@ -3,6 +3,9 @@ services:
   nextcloud:
     container_name: nextcloud
     image: ghcr.io/linuxserver/nextcloud
+    networks:
+      - default
+      - data
     depends_on:
       - mariadb
       - redis-nextcloud
@@ -21,7 +24,7 @@ services:
       protocol: https
       host: nc.${SERVER_DOMAIN}
       traefik.http.middlewares.nextcloud-headers.headers.stsSeconds: 15552000
-      traefik.http.routers.nextcloud.middlewares: nextcloud-headers@docker
+      traefik.http.routers.nextcloud-443.middlewares: nextcloud-headers@docker
 
   redis-nextcloud:
     container_name: redis-nextcloud

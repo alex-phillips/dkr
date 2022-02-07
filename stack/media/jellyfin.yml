@@ -16,4 +16,4 @@ services:
     labels:
       namespace: media
       port: 8096
-      host: jf.w00t.cloud
+      host: jf.${SERVER_DOMAIN}

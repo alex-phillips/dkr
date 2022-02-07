@@ -2,10 +2,10 @@ version: "3"
 services:
   funkwhale-redis:
     container_name: funkwhale-redis
-    networks:
-      - default
     env_file: .env
     image: redis:5
+    networks:
+      - data
     volumes:
       - ${NAS}/docker/funkwhale/redis:/data
     labels:
@@ -15,6 +15,8 @@ services:
   funkwhale-celeryworker:
     container_name: funkwhale-celeryworker
     image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
+    networks:
+      - data
     depends_on:
       - postgres
       - funkwhale-redis
@@ -39,6 +41,8 @@ services:
   funkwhale-celerybeat:
     container_name: funkwhale-celerybeat
     image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
+    networks:
+      - data
     depends_on:
       - postgres
       - funkwhale-redis
@@ -51,6 +55,8 @@ services:
   funkwhale:
     container_name: funkwhale
     image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
+    networks:
+      - data
     depends_on:
       - postgres
       - funkwhale-redis
@@ -89,6 +95,6 @@ services:
         && nginx -g 'daemon off;'"
     labels:
       port: 80
-      host: fw.w00t.cloud
+      host: fw.${SERVER_DOMAIN}
       namespace: media
       app: funkwhale

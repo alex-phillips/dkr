@@ -1,0 +1,20 @@
+version: '2.4'
+services:
+  octoprint:
+    container_name: octoprint
+    image: octoprint/octoprint
+    devices:
+      - /dev/ttyUSB1:/dev/ttyUSB0
+    # devices:
+    # use `python -m serial.tools.miniterm` to see what the name is of the printer
+    #  - /dev/ttyACM0:/dev/ttyACM0
+    #  - /dev/video0:/dev/video0
+    volumes:
+      - ${NAS}/docker/octoprint:/octoprint
+    # uncomment the lines below to ensure camera streaming is enabled when
+    # you add a video device
+    #environment:
+    #  - ENABLE_MJPG_STREAMER=true
+    labels:
+      port: 80
+      host: 3d.${SERVER_DOMAIN}

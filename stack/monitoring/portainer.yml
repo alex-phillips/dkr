@@ -10,5 +10,5 @@ services:
     labels:
       namespace: monitoring
       port: 9443
-      host: dkr.w00t.cloud
+      host: dkr.${SERVER_DOMAIN}
       protocol: https

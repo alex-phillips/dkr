@@ -7,8 +7,8 @@ services:
       - dockerproxy
       - authelia
     networks:
-      - default
-      - traefik
+      - web
+      - dockerproxy
     environment:
       - CF_API_EMAIL=ahp118@gmail.com
       - CF_API_KEY=${CLOUDFLARE_API_KEY}
@@ -22,20 +22,16 @@ services:
       port: 8080
       host: tr.${SERVER_DOMAIN}
       traefik.http.routers.traefik.tls.certresolver: cloudflare
-      traefik.http.routers.traefik.tls.domains[0].main: ${SERVER_DOMAIN}
-      traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN"
+      traefik.http.routers.traefik.tls.domains[0].main: "${SERVER_DOMAIN}"
+      traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
 
   dockerproxy:
     container_name: dockerproxy
     image: tecnativa/docker-socket-proxy
     privileged: true
+    networks:
+      - dockerproxy
     environment:
       CONTAINERS: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-networks:
-  traefik:
-    driver: bridge
-  default:
-    driver: bridge

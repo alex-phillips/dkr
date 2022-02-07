@@ -1,0 +1,9 @@
+version: '3'
+services:
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    volumes:
+      - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    labels:
+      namespace: monitoring

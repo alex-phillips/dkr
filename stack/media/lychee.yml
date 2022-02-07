@@ -3,6 +3,9 @@ services:
   lychee:
     container_name: lychee
     image: ghcr.io/linuxserver/lychee
+    networks:
+      - default
+      - data
     depends_on:
       - mariadb
     environment:

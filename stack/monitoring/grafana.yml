@@ -20,38 +20,9 @@ services:
   grafana-renderer:
     container_name: grafana-renderer
     image: grafana/grafana-image-renderer:latest
+    depends_on:
+      - grafana
     environment:
       ENABLE_METRICS: 'true'
-    labels:
-      namespace: monitoring
-
-  telegraf:
-    container_name: telegraf
-    image: telegraf
-    volumes:
-      - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    labels:
-      namespace: monitoring
-
-  loki:
-    container_name: loki
-    image: grafana/loki:2.4.2
-    environment:
-      - TZ=${TIMEZONE}
-    volumes:
-      - ${NAS}/docker/loki:/config:ro
-    ports:
-      - 3100:3100
-    command: "-config.file=/config/config.yaml"
-    labels:
-      namespace: monitoring
-
-  promtail:
-    container_name: promtail
-    image: grafana/promtail:2.4.2
-    volumes:
-      - ${NAS}/docker/promtail:/config
-      - ${NAS}/docker:/${NAS}/docker:ro
-    command: "-config.file=/config/config.yaml"
     labels:
       namespace: monitoring

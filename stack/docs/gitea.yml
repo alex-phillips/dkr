@@ -3,6 +3,9 @@ services:
   gitea:
     container_name: gitea
     image: gitea/gitea
+    networks:
+      - default
+      - data
     depends_on:
       - mariadb
     environment:

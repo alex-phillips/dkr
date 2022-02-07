@@ -3,6 +3,8 @@ services:
   postgres:
     container_name: postgres
     image: postgres:14-alpine
+    networks:
+      - data
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
     volumes:
@@ -15,6 +17,8 @@ services:
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
+    networks:
+      - data
     environment:
       PGADMIN_DEFAULT_EMAIL: ${GOOGLE_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: applepie

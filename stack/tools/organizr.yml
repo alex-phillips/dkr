@@ -12,3 +12,21 @@ services:
     labels:
       port: 80
       host: org.${SERVER_DOMAIN}
+      # traefik.http.middlewares.organizr-0.forwardauth.address": http://organizr/api/v2/auth?group=0
+      # traefik.http.middlewares.organizr-0.forwardauth.trustforwardheader: true
+      # traefik.http.middlewares.organizr-0.forwardauth.authresponseheaders: Remote-User, Remote-Groups
+      # traefik.http.middlewares.organizr-1.forwardauth.address": http://organizr/api/v2/auth?group=0
+      # traefik.http.middlewares.organizr-1.forwardauth.trustforwardheader: true
+      # traefik.http.middlewares.organizr-1.forwardauth.authresponseheaders: Remote-User, Remote-Groups
+      # traefik.http.middlewares.organizr-2.forwardauth.address": http://organizr/api/v2/auth?group=0
+      # traefik.http.middlewares.organizr-2.forwardauth.trustforwardheader: true
+      # traefik.http.middlewares.organizr-2.forwardauth.authresponseheaders: Remote-User, Remote-Groups
+      # traefik.http.middlewares.organizr-3.forwardauth.address": http://organizr/api/v2/auth?group=0
+      # traefik.http.middlewares.organizr-3.forwardauth.trustforwardheader: true
+      # traefik.http.middlewares.organizr-3.forwardauth.authresponseheaders: Remote-User, Remote-Groups
+      # traefik.http.middlewares.organizr-4.forwardauth.address": http://organizr/api/v2/auth?group=0
+      # traefik.http.middlewares.organizr-4.forwardauth.trustforwardheader: true
+      # traefik.http.middlewares.organizr-4.forwardauth.authresponseheaders: Remote-User, Remote-Groups
+      # traefik.http.middlewares.organizr-5.forwardauth.address": http://organizr/api/v2/auth?group=0
+      # traefik.http.middlewares.organizr-5.forwardauth.trustforwardheader: true
+      # traefik.http.middlewares.organizr-5.forwardauth.authresponseheaders: Remote-User, Remote-Groups
