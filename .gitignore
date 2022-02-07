@@ -1,5 +1,7 @@
 .env
+.env.funkwhale
 docker-compose.yml
 .history/
 .vscode/
 venv/
+.dkr.state
