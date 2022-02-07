@@ -16,7 +16,6 @@ steps:
         from_secret: ssh_key
       script_stop: true
       script:
-        - source .profile
         - cd code/docker/htpc
         - git pull
         - dkr up
