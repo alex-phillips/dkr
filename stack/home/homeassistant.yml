@@ -2,7 +2,7 @@ version: '2'
 services:
   homeassistant:
     container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:2022.2.1
+    image: ghcr.io/home-assistant/home-assistant:2022.2.2
     ports:
       - 8123:8123
     volumes:
