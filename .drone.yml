@@ -8,7 +8,7 @@ steps:
     image: appleboy/drone-ssh
     when:
       branch:
-      - master
+      - main
       event:
       - push
     settings:
