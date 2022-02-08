@@ -3,15 +3,14 @@ kind: pipeline
 type: docker
 name: deploy
 
-when:
-  branch:
-  - master
-  event:
-  - push
-
 steps:
   - name: ssh commands
     image: appleboy/drone-ssh
+    when:
+      branch:
+      - master
+      event:
+      - push
     settings:
       port: 22
       host:
