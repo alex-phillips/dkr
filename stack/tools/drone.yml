@@ -1,0 +1,31 @@
+version: '3'
+services:
+  drone:
+    container_name: drone
+    image: drone/drone:2.9.1
+    environment:
+      - DRONE_GIT_ALWAYS_AUTH=true
+      - DRONE_SERVER_HOST=ci.w00t.cloud
+      - DRONE_SERVER_PROTO=https
+      - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}
+      - DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_SECRET}
+      - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+      - DRONE_USER_CREATE=username:alex-phillips,admin:true
+    labels:
+      app: drone
+      port: 80
+      host: ci.${SERVER_DOMAIN}
+
+  drone-runner-docker:
+    container_name: drone-runner-docker
+    image: drone/drone-runner-docker:1.8.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_RPC_PROTO=https
+      - DRONE_RPC_HOST=ci.${SERVER_DOMAIN}
+      - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=whatsinaname
+    labels:
+      app: drone
