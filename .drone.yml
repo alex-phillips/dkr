@@ -3,6 +3,9 @@ kind: pipeline
 type: docker
 name: deploy
 
+concurrency:
+  limit: 1
+
 steps:
   - name: ssh commands
     image: appleboy/drone-ssh
