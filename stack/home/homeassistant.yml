@@ -2,7 +2,7 @@ version: '2'
 services:
   homeassistant:
     container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:2022.2.6
+    image: ghcr.io/home-assistant/home-assistant:2022.2.7
     networks:
       - default
       - data
