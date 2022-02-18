@@ -13,3 +13,7 @@ networks:
   dockerproxy:
     name: dockerproxy
     driver: bridge
+
+  monitoring:
+    name: monitoring
+    driver: bridge
