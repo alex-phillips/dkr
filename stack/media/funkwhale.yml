@@ -5,6 +5,7 @@ services:
     env_file: .env
     image: redis:5
     networks:
+      - default
       - data
     volumes:
       - ${NAS}/docker/funkwhale/redis:/data
@@ -16,6 +17,7 @@ services:
     container_name: funkwhale-celeryworker
     image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
     networks:
+      - default
       - data
     depends_on:
       - postgres
@@ -42,6 +44,7 @@ services:
     container_name: funkwhale-celerybeat
     image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
     networks:
+      - default
       - data
     depends_on:
       - postgres
@@ -56,6 +59,7 @@ services:
     container_name: funkwhale
     image: funkwhale/funkwhale:${FUNKWHALE_VERSION:-latest}
     networks:
+      - default
       - data
     depends_on:
       - postgres
