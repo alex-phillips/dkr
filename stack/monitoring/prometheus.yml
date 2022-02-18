@@ -3,6 +3,8 @@ services:
   prometheus:
     container_name: prometheus
     image: prom/prometheus:v2.33.3
+    networks:
+      - monitoring
     volumes:
       - ${NAS}/docker/prometheus/config:/etc/prometheus
       - ${NAS}/docker/prometheus/data:/prometheus
@@ -24,6 +26,8 @@ services:
   alertmanager:
     container_name: alertmanager
     image: prom/alertmanager:v0.23.0
+    networks:
+      - monitoring
     volumes:
       - ${NAS}/docker/alertmanager:/etc/alertmanager
     command:
@@ -54,6 +58,8 @@ services:
   cadvisor:
     image: gcr.io/google-containers/cadvisor:latest
     container_name: cadvisor
+    networks:
+      - monitoring
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro

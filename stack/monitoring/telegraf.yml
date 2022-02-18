@@ -3,6 +3,8 @@ services:
   telegraf:
     container_name: telegraf
     image: telegraf
+    networks:
+      - monitoring
     volumes:
       - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     labels:

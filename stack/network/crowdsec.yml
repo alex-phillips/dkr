@@ -1,0 +1,34 @@
+version: '3'
+services:
+  crowdsec:
+    container_name: crowdsec
+    image: crowdsecurity/crowdsec:v1.3.0
+    networks:
+      - web
+      - monitoring
+    environment:
+      GID: ${PGID}
+      COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
+      TZ: ${TIMEZONE}
+    depends_on:  #uncomment if running traefik in the same compose file
+      - traefik
+    volumes:
+      - ${NAS}/docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - ${NAS}/docker/crowdsec/data:/var/lib/crowdsec/data
+      - ${NAS}/docker/crowdsec:/config:/etc/crowdsec
+      - /var/log/traefik:/var/log/traefik/:ro
+    labels:
+      app: crowdsec
+
+  traefik-bouncer:
+    container_name: traefik-bouncer
+    image: fbonalair/traefik-crowdsec-bouncer:0.3.3
+    networks:
+      - web
+    depends_on:
+      - crowdsec
+    environment:
+      CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY}
+      CROWDSEC_AGENT_HOST: crowdsec:8080
+    labels:
+      app: crowdsec

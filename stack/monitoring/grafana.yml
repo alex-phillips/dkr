@@ -4,6 +4,8 @@ services:
     container_name: grafana
     image: grafana/grafana
     user: "1000:1000"
+    networks:
+      - monitoring
     environment:
       - GF_SERVER_ROOT_URL=https://graf.${SERVER_DOMAIN}
       - GF_RENDERING_SERVER_URL=http://grafana-renderer:8081/render
@@ -20,6 +22,8 @@ services:
   grafana-renderer:
     container_name: grafana-renderer
     image: grafana/grafana-image-renderer:latest
+    networks:
+      - monitoring
     depends_on:
       - grafana
     environment:
