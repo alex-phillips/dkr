@@ -11,6 +11,7 @@ services:
       - DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_SECRET}
       - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
       - DRONE_USER_CREATE=username:alex-phillips,admin:true
+      - DRONE_USER_FILTER=alex-phillips
     labels:
       app: drone
       port: 80
