@@ -16,6 +16,7 @@ services:
     volumes:
       - ${NAS}/docker/nextcloud/data:/data
       - ${NAS}/docker/nextcloud/config:/config
+      - ${HOME}/docker/nextcloud/updater-ocbwyci0d295:/data/updater-ocbwyci0d295
       - ${NAS}:${NAS}:ro
     labels:
       namespace: docs
