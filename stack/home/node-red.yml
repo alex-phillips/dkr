@@ -2,7 +2,7 @@ version: '3'
 services:
   node-red:
     container_name: node-red
-    image: nodered/node-red:2.2.1
+    image: nodered/node-red:2.2.2
     environment:
       TZ: ${TIMEZONE}
     volumes:
