@@ -22,7 +22,7 @@ services:
 
   traefik-bouncer:
     container_name: traefik-bouncer
-    image: fbonalair/traefik-crowdsec-bouncer:0.3.3
+    image: fbonalair/traefik-crowdsec-bouncer:0.3.4
     networks:
       - web
     depends_on:
