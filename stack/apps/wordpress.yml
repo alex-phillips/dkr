@@ -19,7 +19,7 @@ services:
 
   wootables:
     container_name: wootables
-    image: ghcr.io/linuxserver/nginx
+    image: ghcr.io/linuxserver/nginx:1.20.2
     networks:
       - data
     volumes:

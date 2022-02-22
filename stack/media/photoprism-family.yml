@@ -94,7 +94,7 @@ services:
       - ${NAS}/pictures/Organized/2019:/photoprism/originals/2019:ro
       - ${NAS}/pictures/Organized/2020:/photoprism/originals/2020:ro
       - ${NAS}/pictures/Organized/2021:/photoprism/originals/2021:ro
-      - ${NAS}/pictures/Organized/2021:/photoprism/originals/2022:ro
+      - ${NAS}/pictures/Organized/2022:/photoprism/originals/2022:ro
 
       # Multiple folders can be indexed by mounting them as sub-folders of /photoprism/originals:
       # - "/mnt/Family:/photoprism/originals/Family"    # [folder_1]:/photoprism/originals/[folder_1]

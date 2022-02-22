@@ -2,7 +2,7 @@ version: '2'
 services:
   grafana:
     container_name: grafana
-    image: grafana/grafana
+    image: grafana/grafana:8.4.1
     user: "1000:1000"
     networks:
       - monitoring
@@ -21,7 +21,7 @@ services:
 
   grafana-renderer:
     container_name: grafana-renderer
-    image: grafana/grafana-image-renderer:latest
+    image: grafana/grafana-image-renderer:3.4.0
     networks:
       - monitoring
     depends_on:
