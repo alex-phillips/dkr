@@ -27,3 +27,4 @@ steps:
         - cd code/docker/htpc
         - git pull
         - dkr up
+        - dkr clean
