@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, yaml, re, argparse, logging
+import os, yaml, re, argparse, logging, json, subprocess
 from pathlib import Path
 
 
@@ -19,40 +19,20 @@ def build_docker_compose(args):
 
     def add_traefik_labels(labels, service_name, service):
         if "auth" not in labels:
-            labels["auth"] = True  # default to true
-        auth_service = args.auth_service
-        auth_middleware = None
-        if labels["auth"] == True:
-            if auth_service == "organizr":
-                # Default auth level to 4 ('User')
-                if labels["auth"] == True:
-                    auth_middleware = f"{auth_service}-4@docker"
-                elif isinstance(labels["auth"], int):
-                    auth_middleware = f"{auth_service}-{labels['auth']}@docker"
-            else:
-                if labels["auth"] == True:
-                    auth_middleware = f"{auth_service}@docker"
-                elif isinstance(labels["auth"], int):
-                    auth_middleware = f"{auth_service}@docker"
+            # all services require auth unless set to false
+            labels["auth"] = True
 
+        auth_middleware = args.auth_service if labels["auth"] == True else None
+
+        # support the 'old' way of doing things, convert port / host to ingress
         if "port" in labels and "host" in labels:
-            service["labels"].update(
-                {
-                    "host": labels["host"],
-                    "traefik.enable": True,
-                    f"traefik.http.routers.{service_name}.rule": f"Host(`{labels['host']}`)",
-                    f"traefik.http.routers.{service_name}.entrypoints": "websecure",
-                    f"traefik.http.routers.{service_name}.tls": "true",
-                    f"traefik.http.services.{service_name}.loadbalancer.server.port": labels[
-                        "port"
-                    ],
-                }
-            )
+            labels["ingress"] = [{
+                "port": labels["port"],
+                "host": labels["host"],
+            }]
 
             if "protocol" in labels:
-                service["labels"][
-                    f"traefik.http.services.{service_name}.loadbalancer.server.scheme"
-                ] = labels["protocol"]
+                labels["ingress"][0]["protocol"] = labels["protocol"]
 
         if "ingress" in labels:
             for ingress in labels["ingress"]:
@@ -82,70 +62,47 @@ def build_docker_compose(args):
                         auth_middleware,
                     )
 
+            # cleanup - can't leave this here because docker-compose doesn't support data structures
+            # in labels...
             del service["labels"]["ingress"]
 
-        if "custom_response_headers" in labels:
-            # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
-            for header in service["labels"]["custom_response_headers"]:
-                service["labels"][
-                    f"traefik.http.middlewares.{service_name}-custom-response-headers.headers.customResponseHeaders.{header}"
-                ] = service["labels"]["custom_response_headers"][header]
+            # if we're exposing port / host, ensure it's in the 'web' network but if no networks
+            # already defined, include the default
+            if "networks" not in service:
+                service["networks"] = ["default"]
 
-            service["labels"] = append_label(
-                service["labels"],
-                f"traefik.http.routers.{service_name}.middlewares",
-                f"{service_name}-custom-response-headers",
-            )
+            if "web" not in service["networks"]:
+                service["networks"].append("web")
+
+            service["labels"].update({"traefik.docker.network": "web"})
+
+        if "custom_response_headers" in labels:
+        #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
+        #     for header in service["labels"]["custom_response_headers"]:
+        #         service["labels"][
+        #             f"traefik.http.middlewares.{service_name}-custom-response-headers.headers.customResponseHeaders.{header}"
+        #         ] = service["labels"]["custom_response_headers"][header]
+
+        #     service["labels"] = append_label(
+        #         service["labels"],
+        #         f"traefik.http.routers.{service_name}.middlewares",
+        #         f"{service_name}-custom-response-headers",
+        #     )
             del service["labels"]["custom_response_headers"]
 
         if "custom_request_headers" in labels:
-            # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
-            for header in service["labels"]["custom_request_headers"]:
-                service["labels"][
-                    f"traefik.http.middlewares.{service_name}-custom-request-headers.headers.customRequestHeaders.{header}"
-                ] = service["labels"]["custom_request_headers"][header]
+        #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
+        #     for header in service["labels"]["custom_request_headers"]:
+        #         service["labels"][
+        #             f"traefik.http.middlewares.{service_name}-custom-request-headers.headers.customRequestHeaders.{header}"
+        #         ] = service["labels"]["custom_request_headers"][header]
 
-            service["labels"] = append_label(
-                service["labels"],
-                f"traefik.http.routers.{service_name}.middlewares",
-                f"{service_name}-custom-request-headers",
-            )
+        #     service["labels"] = append_label(
+        #         service["labels"],
+        #         f"traefik.http.routers.{service_name}.middlewares",
+        #         f"{service_name}-custom-request-headers",
+        #     )
             del service["labels"]["custom_request_headers"]
-
-        if auth_middleware is not None:
-            service["labels"] = append_label(
-                service["labels"],
-                f"traefik.http.routers.{service_name}.middlewares",
-                auth_middleware,
-            )
-
-        if service_name == "traefik":
-            if auth_service == "organizr":
-                # handle all levels of auth
-                for x in range(0, 5):
-                    service["labels"].update(
-                        {
-                            f"traefik.http.middlewares.{auth_service}-{x}.forwardauth.address": f"http://organizr/api/v2/auth?group={x}",
-                            f"traefik.http.middlewares.{auth_service}-{x}.forwardauth.trustforwardheader": True,
-                            f"traefik.http.middlewares.{auth_service}-{x}.forwardauth.authresponseheaders": "Remote-User, Remote-Groups",
-                        }
-                    )
-            else:
-                service["labels"].update(
-                    {
-                        f"traefik.http.middlewares.{auth_service}.forwardauth.address": f"http://authelia:9091/api/verify?rd=https://auth.w00t.cloud",
-                        f"traefik.http.middlewares.{auth_service}.forwardauth.trustforwardheader": True,
-                        f"traefik.http.middlewares.{auth_service}.forwardauth.authresponseheaders": "Remote-User, Remote-Groups",
-                    }
-                )
-
-            service["labels"].update(
-                {
-                    f"traefik.http.routers.{service_name}.tls.certresolver": "cloudflare",
-                    f"traefik.http.routers.{service_name}.tls.domains[0].main": "w00t.cloud",
-                    f"traefik.http.routers.{service_name}.tls.domains[0].sans": "*.w00t.cloud",
-                }
-            )
 
     # Remove existing docker-compose file if it exists
     if os.path.exists("docker-compose.yml"):
@@ -160,7 +117,7 @@ def build_docker_compose(args):
 
     files = [
         os.path.join(root, name)
-        for root, dirs, files in os.walk("./stack")
+        for root, dirs, files in os.walk(args.project_dir)
         for name in files
         if name.endswith((".yml", ".yaml"))
     ]
@@ -175,7 +132,7 @@ def build_docker_compose(args):
         # if re.search(r"^\.", filename):
         #     continue
 
-        logging.debug(f"Reading file ${filename}")
+        logging.debug(f"Reading file {filename}")
         with open(filename, "r") as fh:
             contents = yaml.load(fh, Loader=yaml.FullLoader)
 
@@ -186,32 +143,38 @@ def build_docker_compose(args):
 
         if "networks" in contents:
             networks.update(contents["networks"])
+            del contents["networks"]
 
-        for service_name in contents["services"]:
-            service = contents["services"][service_name]
+        if "services" in contents:
+            for service_name in contents["services"]:
+                service = contents["services"][service_name]
 
-            # Allow disabling a service via a YAML property (do I even use this anymore?)
-            if "enabled" in service:
-                if service["enabled"] == False:
-                    logging.debug(f"DISABLED: {service}")
-                    continue
+                # Allow disabling a service via a YAML property (do I even use this anymore?)
+                if "enabled" in service:
+                    if service["enabled"] == False:
+                        logging.debug(f"DISABLED: {service}")
+                        continue
 
-                del service["enabled"]
+                    del service["enabled"]
 
-            if "labels" in service:
-                add_traefik_labels(service["labels"], service_name, service)
+                if "labels" in service:
+                    add_traefik_labels(service["labels"], service_name, service)
 
-            retval["services"][service_name] = service
+                retval["services"][service_name] = service
+
+            del contents["services"]
 
         if len(networks) > 0:
             retval["networks"] = networks
+
+        retval.update(contents)
 
     return retval
 
 
 def build_nginx(nginx_dir):
     if nginx_dir is None:
-        logging.info("No SWAG directory specified, skipping.")
+        logging.debug("No SWAG directory specified, skipping.")
         return
 
     if os.path.exists("./reverse-proxy-confs") == False:
@@ -263,11 +226,6 @@ def build_nginx(nginx_dir):
 
             conf = None
             labels = service["labels"]
-
-            if "host" in labels:
-                labels["host"] = labels["host"].replace(
-                    "${SERVER_DOMAIN}", "w00t.cloud"
-                )
 
             # labels = dict(label.split('=') for label in service['labels'])
             template_name = labels["template"] if "template" in labels else service_name
@@ -352,6 +310,16 @@ def build_nginx(nginx_dir):
                     f.write(conf)
 
 
+def get_containers_by_label(services, label, value):
+    return [
+        service_name
+        for service_name in services
+        if "labels" in services[service_name]
+        and label in services[service_name]["labels"]
+        and services[service_name]["labels"][label] == value
+    ]
+
+
 def post_up():
     with open("./docker-compose.yml", "r") as fh:
         contents = yaml.load(fh, Loader=yaml.FullLoader)
@@ -369,7 +337,7 @@ def post_up():
         os.system(service["labels"]["post_up"])
 
 
-def docker_actions(args):
+def build_stack(args):
     stack = build_docker_compose(args)
 
     # Write all valid services to the docker-compose file
@@ -386,7 +354,7 @@ def nginx_actions(args):
 
 
 def up_actions(args):
-    docker_actions(args)
+    build_stack(args)
     nginx_actions(args)
 
     # check if mergerfs is mounted
@@ -395,13 +363,47 @@ def up_actions(args):
         logging.error("Mountpoint is not present. Exiting.")
         quit(256)
 
-    os.system("docker-compose up -d --remove-orphans")
+    state = retrieve_state()
+    running_containers = []
+    for service in state:
+        if service["State"] == "running":
+            running_containers.append(service["Service"])
+
+    os.system(f"docker compose up -d --remove-orphans {' '.join(running_containers)}")
     post_up()
+
+
+def run_actions(args):
+    if args.rm == True:
+        os.system(f"docker compose run --rm {args.container} {args.cmd}")
+    else:
+        os.system(f"docker compose run {args.container} {args.cmd}")
+
+
+def save_state(args):
+    if args.ignore_state == True:
+        return
+
+    logging.debug("Saving state")
+    state = subprocess.run(
+        ["docker", "compose", "ps", "--format", "json"], stdout=subprocess.PIPE
+    ).stdout.decode("utf-8")
+    with open(".dkr.state", "w") as fh:
+        fh.write(state)
+
+
+def retrieve_state():
+    state = []
+    if os.path.exists(".dkr.state"):
+        with open(".dkr.state") as fh:
+            state = json.load(fh)
+
+    return state
 
 
 def add_global_args(parser):
     parser.add_argument(
-        "-c",
+        # "-c",
         "--conf-dir",
         help="SWAG proxy-confs directory",
         default=os.getenv("SWAG_DIR", default=None),
@@ -409,8 +411,8 @@ def add_global_args(parser):
     parser.add_argument(
         "-a",
         "--auth-service",
-        help="Specify the auth service to use (organizr, authelia, etc)",
-        default="authelia",
+        help="Specify the traefik auth middleware (ex: authelia@docker)",
+        default="authelia@docker",
     )
     parser.add_argument(
         "-v",
@@ -419,10 +421,23 @@ def add_global_args(parser):
         action="store_true",
     )
     parser.add_argument(
+        "--ignore-state",
+        help="Skip updating the state file",
+        action="store_true",
+    )
+    parser.add_argument(
         "-d",
         "--project-dir",
         help="Directory of the compose files",
-        default="./stack",
+        default=os.getenv("DKR_PROJECT_DIR", default="./stack"),
+    )
+    parser.add_argument(
+        "-w",
+        "--work-dir",
+        help="Working directory to run in (default: location of this script)",
+        default=os.getenv(
+            "DKR_WORK_DIR", default=os.path.dirname(os.path.realpath(__file__))
+        ),
     )
 
 
@@ -431,12 +446,15 @@ add_global_args(parser)
 
 subparsers = parser.add_subparsers(dest="action")
 
+######################################################
+#                      ACTIONS                       #
+######################################################
 add_global_args(
     subparsers.add_parser(
         "up", help="Build docker-compose.yml and start all containers"
     )
 )
-add_global_args(subparsers.add_parser("docker", help="Build docker-compose.yml"))
+add_global_args(subparsers.add_parser("build", help="Build docker-compose.yml"))
 add_global_args(
     subparsers.add_parser("nginx", help="Create all nginx configs for SWAG")
 )
@@ -449,17 +467,37 @@ scale_parser = subparsers.add_parser(
 scale_parser.add_argument(
     "scale_action", choices=["up", "down"], help="Start or stop the container(s)"
 )
-scale_parser.add_argument("-n", "--namespace", help="Specify containers by 'namespace'")
-scale_parser.add_argument("containers", nargs="*", help="Container(s) to scale")
-add_global_args(scale_parser)
 
-add_global_args(subparsers.add_parser("pull", help="Pull latest container images"))
-add_global_args(subparsers.add_parser("clean", help="Prune docker files"))
-add_global_args(
-    subparsers.add_parser("update", help="Pull latest images and bring up the stack")
+pull_parser = subparsers.add_parser("pull", help="Pull latest container images")
+
+run_parser = subparsers.add_parser(
+    "run", help="Run a container with the specified args"
 )
+run_parser.add_argument("container", help="Container to issue the 'run' command to")
+run_parser.add_argument(
+    "--rm", action="store_true", help="Remove container after execution"
+)
+run_parser.add_argument("-c", "--cmd", help="Arguments to pass to the 'run' command")
+add_global_args(run_parser)
+
+# shared args for parsers that specify containers
+for sub_parser in [scale_parser, pull_parser]:
+    sub_parser.add_argument(
+        "-n", "--namespace", help="Specify containers by 'namespace' label"
+    )
+    sub_parser.add_argument(
+        "-l", "--label", help="Specify containers by label key-value pair"
+    )
+    sub_parser.add_argument("containers", nargs="*", help="Container(s) to scale")
+    add_global_args(sub_parser)
+
+
+add_global_args(subparsers.add_parser("clean", help="Prune docker files"))
 
 args = parser.parse_args()
+
+# cd into directory of the script
+os.chdir(args.work_dir)
 
 logging.basicConfig(
     level=logging.DEBUG if args.verbose == True else logging.INFO,
@@ -473,40 +511,58 @@ if args.action is None:
 if args.action == "up":
     up_actions(args)
 
-if args.action == "docker":
-    docker_actions(args)
+if args.action == "build":
+    build_stack(args)
 
 if args.action == "nginx":
     nginx_actions(args)
 
 if args.action in ["stop", "down"]:
-    os.system(f"docker-compose {args.action}")
+    os.system(f"docker compose {args.action}")
 
 if args.action == "scale":
-    services = docker_actions(args)["services"]
+    services = build_stack(args)["services"]
 
     containers = args.containers
     if args.namespace:
-        containers = [
-            service_name
-            for service_name in services
-            if "labels" in services[service_name]
-            and "namespace" in services[service_name]["labels"]
-            and services[service_name]["labels"]["namespace"] == args.namespace
-        ]
+        containers = containers + get_containers_by_label(
+            services, "namespace", args.namespace
+        )
+    if args.label:
+        label, value = args.label.split("=")
+        containers = containers + get_containers_by_label(services, label, value)
+
+    if len(containers) == 0:
+        logging.error("No containers match the specified criteria")
+        quit(1)
 
     if args.scale_action == "up":
-        os.system(f"docker-compose up -d {' '.join(args.containers)}")
+        os.system(f"docker compose up -d {' '.join(containers)}")
+        post_up()
     else:
-        os.system(f"docker-compose stop {' '.join(args.containers)}")
+        os.system(f"docker compose stop {' '.join(containers)}")
 
-if args.action in ["pull", "update"]:
-    docker_actions(args)
-    os.system("docker-compose pull --ignore-pull-failures")
+    save_state(args)
 
-if args.action == "update":
-    up_actions(args)
-    os.system("docker system prune -af --volumes")
+if args.action == "pull":
+    services = build_stack(args)["services"]
+
+    containers = args.containers
+    if args.namespace:
+        containers = containers + get_containers_by_label(
+            services, "namespace", args.namespace
+        )
+    if args.label:
+        label, value = args.label.split("=")
+        containers = containers + get_containers_by_label(services, label, value)
+
+    # it's ok for containers to be empty, because it'll pull / update all
+
+    os.system(f"docker compose pull --ignore-pull-failures {' '.join(containers)}")
 
 if args.action == "clean":
     os.system("docker system prune -af --volumes")
+
+if args.action == "run":
+    build_stack(args)
+    run_actions(args)
