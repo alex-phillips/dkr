@@ -26,10 +26,12 @@ def build_docker_compose(args):
 
         # support the 'old' way of doing things, convert port / host to ingress
         if "port" in labels and "host" in labels:
-            labels["ingress"] = [{
-                "port": labels["port"],
-                "host": labels["host"],
-            }]
+            labels["ingress"] = [
+                {
+                    "port": labels["port"],
+                    "host": labels["host"],
+                }
+            ]
 
             if "protocol" in labels:
                 labels["ingress"][0]["protocol"] = labels["protocol"]
@@ -77,31 +79,31 @@ def build_docker_compose(args):
             service["labels"].update({"traefik.docker.network": "web"})
 
         if "custom_response_headers" in labels:
-        #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
-        #     for header in service["labels"]["custom_response_headers"]:
-        #         service["labels"][
-        #             f"traefik.http.middlewares.{service_name}-custom-response-headers.headers.customResponseHeaders.{header}"
-        #         ] = service["labels"]["custom_response_headers"][header]
+            #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
+            #     for header in service["labels"]["custom_response_headers"]:
+            #         service["labels"][
+            #             f"traefik.http.middlewares.{service_name}-custom-response-headers.headers.customResponseHeaders.{header}"
+            #         ] = service["labels"]["custom_response_headers"][header]
 
-        #     service["labels"] = append_label(
-        #         service["labels"],
-        #         f"traefik.http.routers.{service_name}.middlewares",
-        #         f"{service_name}-custom-response-headers",
-        #     )
+            #     service["labels"] = append_label(
+            #         service["labels"],
+            #         f"traefik.http.routers.{service_name}.middlewares",
+            #         f"{service_name}-custom-response-headers",
+            #     )
             del service["labels"]["custom_response_headers"]
 
         if "custom_request_headers" in labels:
-        #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
-        #     for header in service["labels"]["custom_request_headers"]:
-        #         service["labels"][
-        #             f"traefik.http.middlewares.{service_name}-custom-request-headers.headers.customRequestHeaders.{header}"
-        #         ] = service["labels"]["custom_request_headers"][header]
+            #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
+            #     for header in service["labels"]["custom_request_headers"]:
+            #         service["labels"][
+            #             f"traefik.http.middlewares.{service_name}-custom-request-headers.headers.customRequestHeaders.{header}"
+            #         ] = service["labels"]["custom_request_headers"][header]
 
-        #     service["labels"] = append_label(
-        #         service["labels"],
-        #         f"traefik.http.routers.{service_name}.middlewares",
-        #         f"{service_name}-custom-request-headers",
-        #     )
+            #     service["labels"] = append_label(
+            #         service["labels"],
+            #         f"traefik.http.routers.{service_name}.middlewares",
+            #         f"{service_name}-custom-request-headers",
+            #     )
             del service["labels"]["custom_request_headers"]
 
     # Remove existing docker-compose file if it exists
