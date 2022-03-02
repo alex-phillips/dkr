@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os, yaml, re, argparse, logging, json, subprocess
+from queue import Empty
 from pathlib import Path
 
 
@@ -365,11 +366,7 @@ def up_actions(args):
         logging.error("Mountpoint is not present. Exiting.")
         quit(256)
 
-    state = retrieve_state()
-    running_containers = []
-    for service in state:
-        if service["State"] == "running":
-            running_containers.append(service["Service"])
+    running_containers = get_running_containers()
 
     os.system(f"docker compose up -d --remove-orphans {' '.join(running_containers)}")
     post_up()
@@ -401,6 +398,15 @@ def retrieve_state():
             state = json.load(fh)
 
     return state
+
+def get_running_containers():
+    state = retrieve_state()
+    running_containers = []
+    for service in state:
+        if service["State"] == "running":
+            running_containers.append(service["Service"])
+
+    return running_containers
 
 
 def add_global_args(parser):
@@ -549,7 +555,7 @@ if args.action == "scale":
 if args.action == "pull":
     services = build_stack(args)["services"]
 
-    containers = args.containers
+    containers = get_running_containers()
     if args.namespace:
         containers = containers + get_containers_by_label(
             services, "namespace", args.namespace
