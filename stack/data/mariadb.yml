@@ -24,8 +24,8 @@ services:
       - data
     environment:
       - PMA_ARBITRARY=1
-    # depends_on:
-    #   - mariadb
+    depends_on:
+      - mariadb
     labels:
       port: 80
       host: db.${SERVER_DOMAIN}

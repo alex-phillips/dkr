@@ -11,8 +11,8 @@ services:
     volumes:
       - ${NAS}/docker/home-assistant:/config
       - /etc/localtime:/etc/localtime:ro
-    # depends_on:
-    #   - mariadb
+    depends_on:
+      - mariadb
     labels:
       namespace: home
       port: 8123

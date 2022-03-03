@@ -2,7 +2,7 @@ version: '3'
 services:
   goaccess:
     container_name: goaccess
-    image: ghcr.io/linuxserver/nginx
+    image: ghcr.io/linuxserver/nginx:1.20.2
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

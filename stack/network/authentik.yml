@@ -15,8 +15,8 @@ services:
     networks:
       - default
       - data
-    # depends_on:
-    #   - postgres
+    depends_on:
+      - postgres
     environment:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: postgres

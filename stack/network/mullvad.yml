@@ -25,6 +25,9 @@ services:
           port: 8080
         - host: search.${SERVER_DOMAIN}
           port: 5000
+        - host: dl.${SERVER_DOMAIN}
+          port: 6595
+          auth: true
 
   mullvad-misc:
     container_name: mullvad-misc

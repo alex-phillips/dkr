@@ -6,8 +6,8 @@ services:
     networks:
       - default
       - data
-    # depends_on:
-    #   - postgres
+    depends_on:
+      - postgres
     environment:
       GOALERT_DATA_ENCRYPTION_KEY: ${GOALERT_DATA_ENCRYPTION_KEY}
       GOALERT_DB_URL: ${GOALERT_DB_URL}

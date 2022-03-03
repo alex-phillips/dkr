@@ -65,7 +65,7 @@ def build_docker_compose(args):
                         auth_middleware,
                     )
 
-            # cleanup - can't leave this here because docker-compose doesn't support data structures
+            # cleanup - can't leave this here because docker compose doesn't support data structures
             # in labels...
             del service["labels"]["ingress"]
 
@@ -107,9 +107,9 @@ def build_docker_compose(args):
             #     )
             del service["labels"]["custom_request_headers"]
 
-    # Remove existing docker-compose file if it exists
-    if os.path.exists("docker-compose.yml"):
-        os.remove("docker-compose.yml")
+    # Remove existing docker compose file if it exists
+    if os.path.exists("docker compose.yml"):
+        os.remove("docker compose.yml")
 
     retval = {
         "version": "2.4",
@@ -185,11 +185,11 @@ def build_nginx(nginx_dir):
     else:
         os.system("cd reverse-proxy-confs && git pull")
 
-    with open("docker-compose.yml", "r") as fh:
+    with open("docker compose.yml", "r") as fh:
         contents = yaml.load(fh, Loader=yaml.FullLoader)
 
     if contents is None:
-        logging.error("No docker-compose.yml file found.")
+        logging.error("No docker compose.yml file found.")
         quit()
 
     logging.info(f"Removing existing nginx confs from {nginx_dir}...")
@@ -211,7 +211,7 @@ def build_nginx(nginx_dir):
 
     onlyfiles = [f for f in os.listdir(".") if os.path.isfile(os.path.join(".", f))]
     for filename in onlyfiles:
-        if re.search(r"^docker-compose", filename):
+        if re.search(r"^docker compose", filename):
             continue
         if not re.search(r"\.ya?ml$", filename):
             continue
@@ -324,7 +324,7 @@ def get_containers_by_label(services, label, value):
 
 
 def post_up():
-    with open("./docker-compose.yml", "r") as fh:
+    with open("./docker compose.yml", "r") as fh:
         contents = yaml.load(fh, Loader=yaml.FullLoader)
 
     for service_name in contents["services"]:
@@ -343,8 +343,8 @@ def post_up():
 def build_stack(args):
     stack = build_docker_compose(args)
 
-    # Write all valid services to the docker-compose file
-    with open("./docker-compose.yml", "w") as fh:
+    # Write all valid services to the docker compose file
+    with open("./docker compose.yml", "w") as fh:
         yaml.dump(stack, fh, default_flow_style=False)
 
     return stack
@@ -459,10 +459,10 @@ subparsers = parser.add_subparsers(dest="action")
 ######################################################
 add_global_args(
     subparsers.add_parser(
-        "up", help="Build docker-compose.yml and start all containers"
+        "up", help="Build docker compose.yml and start all containers"
     )
 )
-add_global_args(subparsers.add_parser("build", help="Build docker-compose.yml"))
+add_global_args(subparsers.add_parser("build", help="Build docker compose.yml"))
 add_global_args(
     subparsers.add_parser("nginx", help="Create all nginx configs for SWAG")
 )

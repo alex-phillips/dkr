@@ -6,9 +6,9 @@ services:
     networks:
       - default
       - data
-    # depends_on:
-    #   - mariadb
-    #   - redis-nextcloud
+    depends_on:
+      - mariadb
+      - redis-nextcloud
     environment:
       PGID: ${PGID}
       PUID: ${PUID}

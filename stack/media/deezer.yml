@@ -14,7 +14,3 @@ services:
     volumes:
       - ${HOME}/docker/deemix:/config
       - ${NAS}/deezer:/downloads
-    labels:
-      port: 6595
-      host: dl.${SERVER_DOMAIN}
-      auth: true

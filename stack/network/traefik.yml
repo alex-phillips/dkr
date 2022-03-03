@@ -3,9 +3,9 @@ services:
   traefik:
     image: traefik:v2.6.1
     container_name: traefik
-    # depends_on:
-    #   - dockerproxy
-    #   - authelia
+    depends_on:
+      - dockerproxy
+      - authelia
     networks:
       - web
       - dockerproxy

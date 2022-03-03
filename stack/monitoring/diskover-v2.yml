@@ -4,8 +4,8 @@ services:
     container_name: diskover
     image: diskover-v2
     #image: alexphillips/diskover
-    # depends_on:
-    #   - elasticsearch
+    depends_on:
+      - elasticsearch
     environment:
       PUID: 1000
       PGID: 1000
