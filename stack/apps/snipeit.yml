@@ -5,8 +5,8 @@ services:
     image: ghcr.io/linuxserver/snipe-it:5.4.0
     volumes:
       - ${NAS}/docker/snipeit:/config
-    depends_on:
-      - mariadb
+    # depends_on:
+    #   - mariadb
     networks:
       - default
       - data

@@ -6,8 +6,8 @@ services:
     networks:
       - default
       - data
-    depends_on:
-      - mariadb
+    # depends_on:
+    #   - mariadb
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

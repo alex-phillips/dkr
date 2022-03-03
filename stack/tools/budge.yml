@@ -2,7 +2,7 @@ version: "2"
 services:
   budge:
     container_name: budge
-    image: alexphillips/budge
+    image: ghcr.io/linuxserver/budge
     volumes:
       - ${NAS}/docker/budg-e:/config
     environment:

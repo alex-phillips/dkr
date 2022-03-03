@@ -19,9 +19,9 @@ services:
     networks:
       - default
       - data
-    depends_on:
-      - postgres
-      - funkwhale-redis
+    # depends_on:
+    #   - postgres
+    #   - funkwhale-redis
     env_file: .env.funkwhale
     # Celery workers handle background tasks (such file imports or federation
     # messaging). The more processes a worker gets, the more tasks
@@ -46,9 +46,9 @@ services:
     networks:
       - default
       - data
-    depends_on:
-      - postgres
-      - funkwhale-redis
+    # depends_on:
+    #   - postgres
+    #   - funkwhale-redis
     env_file: .env.funkwhale
     command: celery -A funkwhale_api.taskapp beat --pidfile= -l INFO
     labels:
@@ -61,9 +61,9 @@ services:
     networks:
       - default
       - data
-    depends_on:
-      - postgres
-      - funkwhale-redis
+    # depends_on:
+    #   - postgres
+    #   - funkwhale-redis
     env_file: .env.funkwhale
     volumes:
       - "${NAS}/music/beets/Music:/music:ro"
@@ -77,8 +77,8 @@ services:
   funkwhale-proxy:
     container_name: funkwhale-proxy
     image: nginx
-    depends_on:
-      - funkwhale
+    # depends_on:
+    #   - funkwhale
     env_file:
       - .env.funkwhale
     environment:

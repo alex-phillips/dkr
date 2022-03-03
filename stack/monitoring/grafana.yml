@@ -24,8 +24,8 @@ services:
     image: grafana/grafana-image-renderer:3.4.1
     networks:
       - monitoring
-    depends_on:
-      - grafana
+    # depends_on:
+    #   - grafana
     environment:
       ENABLE_METRICS: 'true'
     labels:

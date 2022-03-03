@@ -4,8 +4,8 @@ services:
     container_name: qbittorrent
     image: ghcr.io/linuxserver/qbittorrent:4.4.1
     network_mode: service:mullvad
-    depends_on:
-      - mullvad
+    # depends_on:
+    #   - mullvad
     volumes:
       - ${NAS}/docker/qbittorrent:/config
       - ${NAS}/torrents:${NAS}/torrents

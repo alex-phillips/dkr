@@ -10,8 +10,8 @@ services:
       GID: ${PGID}
       COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
       TZ: ${TIMEZONE}
-    depends_on:  #uncomment if running traefik in the same compose file
-      - traefik
+    # depends_on:  #uncomment if running traefik in the same compose file
+    #   - traefik
     volumes:
       - ${NAS}/docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - ${NAS}/docker/crowdsec/data:/var/lib/crowdsec/data
@@ -25,8 +25,8 @@ services:
     image: fbonalair/traefik-crowdsec-bouncer:0.3.4
     networks:
       - web
-    depends_on:
-      - crowdsec
+    # depends_on:
+    #   - crowdsec
     environment:
       CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY}
       CROWDSEC_AGENT_HOST: crowdsec:8080

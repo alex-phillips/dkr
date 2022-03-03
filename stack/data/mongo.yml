@@ -3,19 +3,27 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    networks:
+      - data
     environment:
       MONGO_DATA_DIR: /data
     ports:
       - 27017:27017
     volumes:
       - ${NAS}/docker/mongo:/data/db
+    labels:
+      namespace: data
+      app: mongo
 
   mongo-express:
     container_name: mongo-express
     image: mongo-express
+    networks:
+      - data
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SERVER: mongo`
     labels:
+      app: mongo
       port: 8081
       host: mongo.${SERVER_DOMAIN}
       auth: true

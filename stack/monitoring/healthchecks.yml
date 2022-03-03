@@ -5,8 +5,8 @@ services:
     image: ghcr.io/linuxserver/healthchecks:1.25.0
     volumes:
       - ${NAS}/docker/healthchecks:/config
-    depends_on:
-      - mariadb
+    # depends_on:
+    #   - mariadb
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

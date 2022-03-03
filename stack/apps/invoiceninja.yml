@@ -3,8 +3,8 @@ services:
   invoiceninja:
     container_name: invoiceninja
     image: ghcr.io/linuxserver-labs/invoiceninja:5.3.42
-    depends_on:
-      - mariadb
+    # depends_on:
+    #   - mariadb
     networks:
       - default
       - data

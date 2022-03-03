@@ -4,8 +4,8 @@ services:
     container_name: diskover
     image: diskover-v2
     #image: alexphillips/diskover
-    depends_on:
-      - elasticsearch
+    # depends_on:
+    #   - elasticsearch
     environment:
       PUID: 1000
       PGID: 1000
@@ -37,18 +37,18 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
-    depends_on:
-      - elasticsearch-helper
+    # depends_on:
+    #   - elasticsearch-helper
     restart: unless-stopped
     labels:
       app: diskover
 
-  elasticsearch-helper:
-    image: alpine
-    command: sh -c "sysctl -w vm.max_map_count=262144"
-    privileged: true
-    labels:
-      app: diskover
+  # elasticsearch-helper:
+  #   image: alpine
+  #   command: sh -c "sysctl -w vm.max_map_count=262144"
+  #   privileged: true
+  #   labels:
+  #     app: diskover
 
 #  kibana:
 #    image: docker.elastic.co/kibana/kibana:7.10.2
