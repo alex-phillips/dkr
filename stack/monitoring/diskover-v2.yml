@@ -4,8 +4,6 @@ services:
     container_name: diskover
     image: diskover-v2
     #image: alexphillips/diskover
-    depends_on:
-      - elasticsearch
     environment:
       PUID: 1000
       PGID: 1000
@@ -23,6 +21,7 @@ services:
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+    network_mode: service:diskover
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
@@ -34,9 +33,9 @@ services:
     volumes:
       # local ES data directory
       - ${HOME}/docker/diskover-v2/esdata:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-      - 9300:9300
+#    ports:
+#      - 9200:9200
+#      - 9300:9300
     # depends_on:
     #   - elasticsearch-helper
     restart: unless-stopped
