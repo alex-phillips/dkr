@@ -2,7 +2,7 @@ version: '2.4'
 services:
   invoiceninja:
     container_name: invoiceninja
-    image: ghcr.io/linuxserver-labs/invoiceninja:5.3.42
+    image: ghcr.io/linuxserver-labs/invoiceninja:5.3.66
     depends_on:
       - mariadb
     networks:
