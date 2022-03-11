@@ -555,14 +555,16 @@ if args.action == "scale":
 if args.action == "pull":
     services = build_stack(args)["services"]
 
-    containers = get_running_containers()
+    if args.namespace is None and args.label is None:
+        containers = get_running_containers()
+
     if args.namespace:
-        containers = containers + get_containers_by_label(
+        containers = get_containers_by_label(
             services, "namespace", args.namespace
         )
     if args.label:
         label, value = args.label.split("=")
-        containers = containers + get_containers_by_label(services, label, value)
+        containers = get_containers_by_label(services, label, value)
 
     # it's ok for containers to be empty, because it'll pull / update all
 
