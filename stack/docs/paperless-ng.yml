@@ -2,7 +2,8 @@ version: '3'
 services:
   paperless-ng:
     container_name: paperless-ng
-    image: ghcr.io/linuxserver/paperless-ng:1.5.0
+    # image: ghcr.io/linuxserver/paperless-ng:1.5.0
+    image: test
     environment:
       PUID: 1000
       GUID: 1000
@@ -13,7 +14,7 @@ services:
       PAPERLESS_TIME_ZONE: America/New_York
       #REDIS_URL: redis://localhost:6379
     volumes:
-      - ${NAS}/docker/paperless-ng:/config
+      - ${NAS}/docker/paperless-ngx:/config
       - ${NAS}/documents:/data
     labels:
       host: docs.${SERVER_DOMAIN}
