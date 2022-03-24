@@ -3,6 +3,8 @@ services:
   promtail:
     container_name: promtail
     image: grafana/promtail:2.4.2
+    networks:
+      - monitoring
     volumes:
       - ${NAS}/docker/promtail:/config
       - ${NAS}/docker:/${NAS}/docker:ro
