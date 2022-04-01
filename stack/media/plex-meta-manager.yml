@@ -2,7 +2,7 @@ version: '3'
 services:
   plex-meta-manager:
     container_name: plex-meta-manager
-    image: ghcr.io/linuxserver/plex-meta-manager:1.16.2
+    image: ghcr.io/linuxserver/plex-meta-manager:1.16.3
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
