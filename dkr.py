@@ -160,6 +160,16 @@ def build_docker_compose(args):
 
                     del service["enabled"]
 
+                if "logging" not in service:
+                    service["logging"] = {
+                        "driver": "json-file",
+                        "options": {
+                            "max-size": "10m",
+                            "max-file": "3",
+                            "tag": "{{.ImageName}}|{{.Name}}"
+                        }
+                    }
+
                 if "labels" in service:
                     add_traefik_labels(service["labels"], service_name, service)
 
