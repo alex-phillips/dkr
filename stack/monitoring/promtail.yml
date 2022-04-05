@@ -9,6 +9,7 @@ services:
       - ${NAS}/docker/promtail:/config
       - ${NAS}/docker:/${NAS}/docker:ro
       - /var/log/traefik:/var/log/traefik:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
     command: "-config.file=/config/config.yaml"
     labels:
       namespace: monitoring

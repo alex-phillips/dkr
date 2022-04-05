@@ -1,8 +1,13 @@
 version: '3'
 services:
-  paperless-ng:
-    container_name: paperless-ng
+  paperless-ngx:
+    container_name: paperless-ngx
     image: ghcr.io/linuxserver/paperless-ngx:1.6.0
+    logging:
+      driver: json-file
+      options:
+        #tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+        tag: "{{.ImageName}}|{{.Name}}"
     environment:
       PUID: 1000
       GUID: 1000
