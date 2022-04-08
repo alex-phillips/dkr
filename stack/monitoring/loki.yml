@@ -9,6 +9,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ${NAS}/docker/loki:/config:ro
+      - ${NAS}/docker/loki/rules.yaml:/etc/loki/rules/fake/rules.yml
     ports:
       - 3100:3100
     command: "-config.file=/config/config.yaml"
