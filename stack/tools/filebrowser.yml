@@ -2,14 +2,16 @@ version: '3'
 services:
   filebrowser:
     container_name: filebrowser
-    image: filebrowser/filebrowser
+    image: filebrowser/filebrowser:s6
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
+      TZ: ${TIMEZONE}
     volumes:
-      - /mnt/storage:/srv/nas
+      - ${NAS}:/srv/nas
       - ${HOME}:/srv/home
       - ${NAS}/docker/filebrowser/database.db:/database/filebrowser.db
+      - ${NAS}/docker/filebrowser/settings.json:/config/settings.json
     labels:
       port: 80
       host: fb.${SERVER_DOMAIN}
