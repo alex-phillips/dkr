@@ -70,7 +70,7 @@ services:
       PHOTOPRISM_DATABASE_NAME: "photoprism-family"         # MariaDB database schema name
       PHOTOPRISM_DATABASE_USER: "photoprism-family"         # MariaDB database user name
       PHOTOPRISM_DATABASE_PASSWORD: ${DB_PASS_PHOTOPRISM_FAMILY}       # MariaDB database user password
-      PHOTOPRISM_SITE_URL: "https://pics2.${SERVER_DOMAIN}/"  # Public PhotoPrism URL
+      PHOTOPRISM_SITE_URL: "https://pics.${SERVER_DOMAIN}/"  # Public PhotoPrism URL
       PHOTOPRISM_SITE_TITLE: "Phillips Family"
       PHOTOPRISM_SITE_CAPTION: "Browse Your Life"
       PHOTOPRISM_SITE_DESCRIPTION: ""
@@ -106,7 +106,7 @@ services:
     labels:
       namespace: media
       port: 2342
-      host: pics2.${SERVER_DOMAIN}
+      host: pics.${SERVER_DOMAIN}
 
 # Uncomment the following lines to upgrade automatically, whenever there is a new Docker image available:
 #

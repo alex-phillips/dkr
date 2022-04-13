@@ -22,5 +22,5 @@ services:
       - ${NAS}:${NAS}:ro
     labels:
       namespace: media
-      host: pics.${SERVER_DOMAIN}
+      host: pics2.${SERVER_DOMAIN}
       port: 80
