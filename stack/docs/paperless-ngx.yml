@@ -2,7 +2,8 @@ version: '3'
 services:
   paperless-ngx:
     container_name: paperless-ngx
-    image: ghcr.io/linuxserver/paperless-ngx:1.6.0
+    # image: ghcr.io/linuxserver/paperless-ngx:1.6.0
+    image: paperless-ngx
     logging:
       driver: json-file
       options:
