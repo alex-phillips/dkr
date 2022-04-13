@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/prowlarr:/config
+    labels:
+      ingress:
+        - port: 9696
+          host: plr.${SERVER_DOMAIN}

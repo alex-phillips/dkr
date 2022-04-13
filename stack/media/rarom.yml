@@ -1,0 +1,22 @@
+version: "2.1"
+services:
+  rarom:
+    image: randomninjaatk/raromprocessor
+    container_name: rarom
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+      - AutoStart=true
+      - ScriptInterval=1h
+      - DeDupe=true
+      - AquireRomSets=false
+      - ConcurrentDownloadThreads=5
+      - ScreenscraperUsername=z6ByYELyi24tRY893KmmZaq
+      - ScreenscraperPassword=CrCmfrNAntaCGBa8E9rPP93
+    volumes:
+      - ${NAS}/docker/rarom/config:/config
+      - ${NAS}/docker/rarom/skyscraper_cache:/cache
+      - ${NAS}/docker/rarom/input:/input
+      - ${NAS}/docker/rarom/backup:/backup
+      - ${NAS}/docker/rarom/output:/output
