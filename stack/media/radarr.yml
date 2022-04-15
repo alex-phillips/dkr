@@ -2,7 +2,7 @@ version: '2'
 services:
   radarr:
     container_name: radarr
-    image: ghcr.io/linuxserver/radarr:4.0.5
+    image: ghcr.io/linuxserver/radarr:4.1.0
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${NAS}/docker/radarr:/config
