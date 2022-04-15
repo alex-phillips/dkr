@@ -25,6 +25,6 @@ steps:
       script_stop: true
       script:
         - cd code/docker/htpc
-        - git pull --rebase
+        - git pull --rebase --autostash
         - dkr up
         - dkr clean
