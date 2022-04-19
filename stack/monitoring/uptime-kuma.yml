@@ -2,7 +2,7 @@ version: '3'
 services:
   uptime-kuma:
     container_name: uptime-kuma
-    image: louislam/uptime-kuma:1.14.0
+    image: louislam/uptime-kuma:1.14.1
     volumes:
       - ${NAS}/docker/uptime-kuma:/app/data
     labels:
