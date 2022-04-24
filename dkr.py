@@ -166,8 +166,8 @@ def build_docker_compose(args):
                         "options": {
                             "max-size": "10m",
                             "max-file": "3",
-                            "tag": "{{.ImageName}}|{{.Name}}"
-                        }
+                            "tag": "{{.ImageName}}|{{.Name}}",
+                        },
                     }
 
                 if "labels" in service:
@@ -378,7 +378,9 @@ def up_actions(args):
 
     running_containers = get_running_containers()
 
-    os.system(f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}")
+    os.system(
+        f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}"
+    )
     post_up()
 
 
@@ -408,6 +410,7 @@ def retrieve_state():
             state = json.load(fh)
 
     return state
+
 
 def get_running_containers():
     state = retrieve_state()
@@ -569,9 +572,7 @@ if args.action == "pull":
         containers = get_running_containers()
     else:
         if args.namespace:
-            containers = get_containers_by_label(
-                services, "namespace", args.namespace
-            )
+            containers = get_containers_by_label(services, "namespace", args.namespace)
         if args.label:
             label, value = args.label.split("=")
             containers = get_containers_by_label(services, label, value)
