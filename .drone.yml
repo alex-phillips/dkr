@@ -29,5 +29,4 @@ steps:
         - dkr up
         - dkr clean
         # - sudo systemctl restart wg-quick@wg0
-        - sudo journalctl -xe
-        - sudo systemctl status wg-quick@wg0
+        - docker restart wireguard
