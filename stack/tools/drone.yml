@@ -2,7 +2,7 @@ version: '3'
 services:
   drone:
     container_name: drone
-    image: drone/drone:2.11.1
+    image: drone/drone:2.12.0
     environment:
       - DRONE_GIT_ALWAYS_AUTH=true
       - DRONE_SERVER_HOST=ci.w00t.cloud
