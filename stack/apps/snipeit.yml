@@ -2,7 +2,7 @@ version: '3'
 services:
   snipeit:
     container_name: snipeit
-    image: ghcr.io/linuxserver/snipe-it:6.0.0
+    image: ghcr.io/linuxserver/snipe-it:6.0.1
     volumes:
       - ${NAS}/docker/snipeit:/config
     depends_on:
