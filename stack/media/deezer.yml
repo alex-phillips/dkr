@@ -3,7 +3,12 @@ services:
   deezer:
     container_name: deezer
     image: registry.gitlab.com/bockiii/deemix-docker
-    network_mode: service:mullvad
+    # network_mode: service:mullvad
+    networks:
+      - vlan10
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -14,3 +19,8 @@ services:
     volumes:
       - ${HOME}/docker/deemix:/config
       - ${NAS}/deezer:/downloads
+    labels:
+      ingress:
+        - host: dl.${SERVER_DOMAIN}
+          port: 6595
+          auth: true

@@ -3,6 +3,8 @@ services:
   nginx:
     container_name: nginx
     image: ghcr.io/linuxserver/nginx:1.20.2
+    networks:
+      - vlan10
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

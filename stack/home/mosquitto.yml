@@ -6,9 +6,9 @@ services:
     ports:
       - 1883:1883
     volumes:
-      - ${HOME}/docker/mosquitto/config:/mosquitto/config
-      - ${HOME}/docker/mosquitto/log:/mosquitto/log
-      - ${HOME}/docker/mosquitto/data:/mosquitto/data
+      - ${NAS}/docker/mosquitto/config:/mosquitto/config
+      - ${NAS}/docker/mosquitto/log:/mosquitto/log
+      - ${NAS}/docker/mosquitto/data:/mosquitto/data
     labels:
       namespace: home
       port: 9001

@@ -3,6 +3,12 @@ services:
   whoogle:
     container_name: whoogle
     image: benbusby/whoogle-search
-    network_mode: service:mullvad
+    # network_mode: service:mullvad
+    networks:
+      - vlan10
     environment:
       WHOOGLE_CONFIG_TOR: "false"
+    labels:
+      ingress:
+        - host: search.${SERVER_DOMAIN}
+          port: 5000

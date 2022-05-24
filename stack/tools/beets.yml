@@ -4,8 +4,7 @@ services:
     container_name: beets
     image: ghcr.io/linuxserver/beets:nightly
     volumes:
-      - ${NAS}/docker/beets/config:/config
-      - ${NAS}/docker/beets/downloads:/downloads
+      - ${NAS}/docker/beets:/config
       - ${NAS}:${NAS}
     environment:
       PGID: ${PGID}

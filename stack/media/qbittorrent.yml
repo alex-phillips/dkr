@@ -3,9 +3,12 @@ services:
   qbittorrent:
     container_name: qbittorrent
     image: ghcr.io/linuxserver/qbittorrent:4.4.3
-    network_mode: service:mullvad
-    depends_on:
-      - mullvad
+    # network_mode: service:mullvad
+    # depends_on:
+      # - mullvad
+    networks:
+      vlan10:
+        ipv4_address: 192.168.10.50
     volumes:
       - ${NAS}/docker/qbittorrent:/config
       - ${NAS}/torrents:${NAS}/torrents
@@ -21,4 +24,7 @@ services:
       - LOGS_TO_STDOUT=/config/qBittorrent/logs/qbittorrent.log
         #      - TP_THEME=plex
     labels:
+      ingress:
+        - port: 8080
+          host: qb.${SERVER_DOMAIN}
       namespace: media
