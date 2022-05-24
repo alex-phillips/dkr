@@ -4,6 +4,8 @@ services:
     container_name: webtop
     image: ghcr.io/linuxserver/webtop:ubuntu-xfce
     #    network_mode: service:mullvad
+    networks:
+      - vlan10
     # privileged: true
     shm_size: "2gb"
     environment:
@@ -18,3 +20,4 @@ services:
       port: 3000
       host: wt.${SERVER_DOMAIN}
       auth: true
+      post_up: 'docker cp /usr/local/bin/megatools webtop:/usr/local/bin/'
