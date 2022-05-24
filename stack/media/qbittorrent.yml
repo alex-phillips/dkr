@@ -2,7 +2,7 @@ version: '3'
 services:
   qbittorrent:
     container_name: qbittorrent
-    image: ghcr.io/linuxserver/qbittorrent:4.4.2
+    image: ghcr.io/linuxserver/qbittorrent:4.4.3
     network_mode: service:mullvad
     depends_on:
       - mullvad
