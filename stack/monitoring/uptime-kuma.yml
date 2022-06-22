@@ -2,7 +2,7 @@ version: '3'
 services:
   uptime-kuma:
     container_name: uptime-kuma
-    image: louislam/uptime-kuma:1.16.1
+    image: louislam/uptime-kuma:1.17.0
     dns:
       - 1.1.1.1
       - 8.8.8.8
