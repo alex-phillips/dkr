@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import os, yaml, re, argparse, logging, json, subprocess
-from queue import Empty
-from pathlib import Path
 
 
 def build_docker_compose(args):
@@ -23,7 +21,7 @@ def build_docker_compose(args):
             # all services require auth unless set to false
             labels["auth"] = True
 
-        auth_middleware = args.auth_service if labels["auth"] == True else None
+        auth_middleware = args.auth_middleware if labels["auth"] == True else None
 
         # support the 'old' way of doing things, convert port / host to ingress
         if "port" in labels and "host" in labels:
@@ -75,7 +73,10 @@ def build_docker_compose(args):
                 service["networks"] = ["default"]
 
             if "web" not in service["networks"]:
-                service["networks"].append("web")
+                if isinstance(service["networks"], list):
+                    service["networks"].append("web")
+                else:
+                    service["networks"]["web"] = {}
 
             service["labels"].update({"traefik.docker.network": "web"})
 
@@ -333,11 +334,36 @@ def get_containers_by_label(services, label, value):
     ]
 
 
-def post_up():
+def get_containers_by_args(args):
+    services = build_stack(args)["services"]
+
+    containers = args.containers
+    if args.namespace:
+        containers = containers + get_containers_by_label(
+            services, "namespace", args.namespace
+        )
+    if args.label:
+        label, value = args.label.split("=")
+        containers = containers + get_containers_by_label(services, label, value)
+
+    if not containers:
+        if args.containers or args.namespace or args.label:
+            logging.error("No containers match the specified criteria")
+            quit(1)
+
+        containers = list(services.keys())
+
+    return containers
+
+
+def post_up(containers):
     with open("./docker-compose.yml", "r") as fh:
         contents = yaml.load(fh, Loader=yaml.FullLoader)
 
     for service_name in contents["services"]:
+        if len(containers) > 0 and service_name not in containers:
+            continue
+
         service = contents["services"][service_name]
 
         if "labels" not in service:
@@ -366,8 +392,7 @@ def nginx_actions(args):
         os.system("docker restart swag")
 
 
-def up_actions(args):
-    build_stack(args)
+def up_actions(state, args):
     nginx_actions(args)
 
     # check if mergerfs is mounted
@@ -376,12 +401,24 @@ def up_actions(args):
         logging.error("Mountpoint is not present. Exiting.")
         quit(256)
 
-    running_containers = get_running_containers()
+    running_containers = []
+    disabled_containers = []
+    for service in state:
+        if state[service]["enabled"] == True:
+            running_containers.append(service)
+        else:
+            disabled_containers.append(service)
 
+    print(f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}")
     os.system(
         f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}"
     )
-    post_up()
+
+    post_up(running_containers)
+
+    if args.no_prune == False:
+        logging.info("Pruning disabled containers...")
+        os.system(f"docker compose stop {' '.join(disabled_containers)}")
 
 
 def run_actions(args):
@@ -391,33 +428,44 @@ def run_actions(args):
         os.system(f"docker compose run {args.container} {args.cmd}")
 
 
-def save_state(args):
+def save_state(state, args):
     if args.ignore_state == True:
         return
 
     logging.debug("Saving state")
-    state = subprocess.run(
-        ["docker", "compose", "ps", "--format", "json"], stdout=subprocess.PIPE
-    ).stdout.decode("utf-8")
+    # state = subprocess.run(
+    #     ["docker", "compose", "ps", "--format", "json"], stdout=subprocess.PIPE
+    # ).stdout.decode("utf-8")
     with open(".dkr.state", "w") as fh:
-        fh.write(state)
+        fh.write(json.dumps(state))
 
 
-def retrieve_state():
-    state = []
+def load_state(services):
+    state = {}
     if os.path.exists(".dkr.state"):
         with open(".dkr.state") as fh:
             state = json.load(fh)
 
+    for service in services:
+        if service not in state:
+            # if service isn't in state, assume we want it up
+            state["service"] = {
+                "enabled": True,
+            }
+
+    # clean up state file
+    for service in list(state):
+        if service not in services:
+            del state[service]
+
     return state
 
 
-def get_running_containers():
-    state = retrieve_state()
+def get_running_containers(state):
     running_containers = []
     for service in state:
-        if service["State"] == "running":
-            running_containers.append(service["Service"])
+        if service[service]["enabled"] == True:
+            running_containers.append(service)
 
     return running_containers
 
@@ -431,8 +479,8 @@ def add_global_args(parser):
     )
     parser.add_argument(
         "-a",
-        "--auth-service",
-        help="Specify the traefik auth middleware (ex: authelia@docker)",
+        "--auth-middleware",
+        help="Specify the traefik auth middleware [default: authelia@docker]",
         default="authelia@docker",
     )
     parser.add_argument(
@@ -442,6 +490,7 @@ def add_global_args(parser):
         action="store_true",
     )
     parser.add_argument(
+        "-i",
         "--ignore-state",
         help="Skip updating the state file",
         action="store_true",
@@ -449,13 +498,13 @@ def add_global_args(parser):
     parser.add_argument(
         "-d",
         "--project-dir",
-        help="Directory of the compose files",
+        help="Directory of the compose YAML files (overrides DKR_PROJECT_DIR)",
         default=os.getenv("DKR_PROJECT_DIR", default="./stack"),
     )
     parser.add_argument(
         "-w",
         "--work-dir",
-        help="Working directory to run in (default: location of this script)",
+        help="Working directory to run in (overrides DKR_WORK_DIR) [default: dkr.py directory]",
         default=os.getenv(
             "DKR_WORK_DIR", default=os.path.dirname(os.path.realpath(__file__))
         ),
@@ -470,26 +519,35 @@ subparsers = parser.add_subparsers(dest="action")
 ######################################################
 #                      ACTIONS                       #
 ######################################################
-add_global_args(
-    subparsers.add_parser(
-        "up", help="Build docker-compose.yml and start all containers"
-    )
+up_parser = subparsers.add_parser(
+    "up", help="Build docker-compose.yml and start all enabled containers"
 )
+add_global_args(up_parser)
+up_parser.add_argument("--no-prune", "-P", action="store_true", help="Do not prune disabled containers")
+
 add_global_args(subparsers.add_parser("build", help="Build docker-compose.yml"))
 add_global_args(
     subparsers.add_parser("nginx", help="Create all nginx configs for SWAG")
 )
-add_global_args(subparsers.add_parser("stop", help="Stop all containers"))
-add_global_args(subparsers.add_parser("down", help="Stop and remove all containers"))
-
-scale_parser = subparsers.add_parser(
-    "scale", help="Scale one or more containers up or down"
+add_global_args(
+    subparsers.add_parser("start", help="Start containers (ignores state file)")
 )
-scale_parser.add_argument(
-    "scale_action", choices=["up", "down"], help="Start or stop the container(s)"
+
+start_parser = subparsers.add_parser(
+    "start", help="Start containers (ignores state file)"
+)
+stop_parser = subparsers.add_parser("stop", help="Stop containers (ignores state file)")
+
+enable_parser = subparsers.add_parser(
+    "enable", help="Enable and start a container in the stack"
+)
+disable_parser = subparsers.add_parser(
+    "disable", help="Disable and stop a container in the stack"
 )
 
 pull_parser = subparsers.add_parser("pull", help="Pull latest container images")
+
+logs_parser = subparsers.add_parser("logs", help="View and tail container logs")
 
 run_parser = subparsers.add_parser(
     "run", help="Run a container with the specified args"
@@ -502,14 +560,23 @@ run_parser.add_argument("-c", "--cmd", help="Arguments to pass to the 'run' comm
 add_global_args(run_parser)
 
 # shared args for parsers that specify containers
-for sub_parser in [scale_parser, pull_parser]:
+for sub_parser in [
+    pull_parser,
+    logs_parser,
+    start_parser,
+    stop_parser,
+    enable_parser,
+    disable_parser,
+]:
     sub_parser.add_argument(
         "-n", "--namespace", help="Specify containers by 'namespace' label"
     )
     sub_parser.add_argument(
         "-l", "--label", help="Specify containers by label key-value pair"
     )
-    sub_parser.add_argument("containers", nargs="*", help="Container(s) to scale")
+    sub_parser.add_argument(
+        "containers", nargs="*", help="Specify containers individually"
+    )
     add_global_args(sub_parser)
 
 
@@ -529,57 +596,68 @@ if args.action is None:
     parser.print_help()
     quit()
 
-if args.action == "up":
-    up_actions(args)
+services = build_stack(args)
+state = load_state(services["services"])
 
 if args.action == "build":
-    build_stack(args)
+    quit()
+
+if args.action == "up":
+    up_actions(state, args)
 
 if args.action == "nginx":
     nginx_actions(args)
 
-if args.action in ["stop", "down"]:
-    os.system(f"docker compose {args.action}")
+if args.action in ["start", "stop", "enable", "disable"]:
+    containers = get_containers_by_args(args)
 
-if args.action == "scale":
-    services = build_stack(args)["services"]
-
-    containers = args.containers
-    if args.namespace:
-        containers = containers + get_containers_by_label(
-            services, "namespace", args.namespace
-        )
-    if args.label:
-        label, value = args.label.split("=")
-        containers = containers + get_containers_by_label(services, label, value)
-
-    if len(containers) == 0:
-        logging.error("No containers match the specified criteria")
-        quit(1)
-
-    if args.scale_action == "up":
+    if args.action in ["start", "enable"]:
         os.system(f"docker compose up -d {' '.join(containers)}")
-        post_up()
-    else:
+        post_up(containers)
+    elif args.action in ["stop", "disable"]:
         os.system(f"docker compose stop {' '.join(containers)}")
 
-    save_state(args)
+    if args.action in ["enable", "disable"]:
+        for service in containers:
+            if service in services["services"]:
+                if service not in state:
+                    state[service] = {}
+
+                state[service]["enabled"] = args.action == "enable"
 
 if args.action == "pull":
-    services = build_stack(args)["services"]
+    # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
+    containers = get_containers_by_args(args)
 
-    if args.namespace is None and args.label is None:
-        containers = get_running_containers()
-    else:
-        if args.namespace:
-            containers = get_containers_by_label(services, "namespace", args.namespace)
-        if args.label:
-            label, value = args.label.split("=")
-            containers = get_containers_by_label(services, label, value)
+    if args.containers or args.namespace or args.label:
+        if not containers:
+            logging.error("No containers match the specified criteria")
+            quit(1)
 
-    # it's ok for containers to be empty, because it'll pull / update all
+
+    # filter out containers that aren't enabled, unless it was specifically stated
+    for service in state:
+        if service in containers and state[service]["enabled"] == False:
+            containers.remove(service)
 
     os.system(f"docker compose pull --ignore-pull-failures {' '.join(containers)}")
+
+if args.action == "logs":
+    # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
+    containers = get_containers_by_args(args)
+
+    if args.containers or args.namespace or args.label:
+        if not containers:
+            logging.error("No containers match the specified criteria")
+            quit(1)
+
+
+    # filter out containers that aren't enabled, unless it was specifically stated
+    for service in state:
+        if service in containers and state[service]["enabled"] == False:
+            containers.remove(service)
+
+    os.system(f"docker compose logs -f --tail 100 {' '.join(containers)}")
 
 if args.action == "clean":
     os.system("docker system prune -af --volumes")
@@ -587,3 +665,5 @@ if args.action == "clean":
 if args.action == "run":
     build_stack(args)
     run_actions(args)
+
+save_state(state, args)
