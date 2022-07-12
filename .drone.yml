@@ -62,7 +62,7 @@ steps:
       - if (git diff --quiet --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
 
   - name: ansible
-    image: plugins/ansible:3
+    image: plugins/ansible
     when:
       branch:
         - main
@@ -72,8 +72,8 @@ steps:
       ANSIBLE_VAULT_PASSWORD:
         from_secret: ansible_vault_password
       ANSIBLE_CONFIG: ansible/ansible.cfg
-    settings:
-      playbook: ansible/main.yml
-      galaxy: ansible/galaxy-requirements.yml
-      inventory: ansible/hosts
-      syntax_check: true
+    commands:
+      - apk install python3 py3-pip && pip3 install ansible
+      - cd ansible
+      - pwd
+      - ansible-playbook main.yml
