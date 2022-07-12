@@ -75,6 +75,7 @@ steps:
       envs:
         - ansible_vault_password
       script:
+        - export ANSIBLE_VAULT_PASSWORD=$ansible_vault_password
         - cd code/docker/htpc/ansible
         - source ./venv/bin/activate
         - ansible-galaxy install -r galaxy-requirements.yml
