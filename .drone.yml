@@ -16,6 +16,7 @@ steps:
         - push
     commands:
       - git fetch origin $DRONE_BRANCH
+      - git diff HEAD HEAD^ stack
       - git diff --quiet HEAD HEAD^ stack || exit 78
 
 ---
