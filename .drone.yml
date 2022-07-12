@@ -75,5 +75,6 @@ steps:
     commands:
       - apk install python3 py3-pip && pip3 install ansible
       - cd ansible
+      - ansible-galaxy install -r galaxy-requirements.yml
       - pwd
       - ansible-playbook main.yml

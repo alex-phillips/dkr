@@ -9,7 +9,6 @@
       become: yes
 
   roles:
-    # - role: general
     - role: geerlingguy.security
       become_method: sudo
     - role: geerlingguy.docker
