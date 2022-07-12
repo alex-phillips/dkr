@@ -1,19 +1,39 @@
 ---
 kind: pipeline
 type: docker
-name: deploy
+name: compose-gate
 
 concurrency:
   limit: 1
 
 steps:
-  - name: ssh commands
-    image: appleboy/drone-ssh
+  - name: gate
+    image: bitnami/git
     when:
       branch:
-      - main
+        - main
       event:
-      - push
+        - push
+    commands:
+      - git fetch origin +refs/heads/master
+      - git show-ref
+      - git diff --quiet HEAD HEAD^ stack || exit 78
+
+---
+kind: pipeline
+type: docker
+name: compose
+
+depends_on:
+  - compose-gate
+
+trigger:
+  status:
+    - failure # if git diff fails, then there are changes
+
+steps:
+  - name: dkr up
+    image: appleboy/drone-ssh
     settings:
       port: 22
       host:
@@ -28,3 +48,25 @@ steps:
         - git pull --rebase --autostash
         - dkr up
         - dkr clean
+
+# ---
+# kind: pipeline
+# type: docker
+# name: ansible
+
+# concurrency:
+#   limit: 1
+
+# steps:
+#   - name: ansible deploy
+#     image: plugins/ansible:3
+#     when:
+#       branch:
+#         - main
+#       event:
+#         - push
+#     settings:
+#       playbook: ansible/playbook.yml
+#       galaxy: ansible/requirements.yml
+#       inventory: ansible/inventory
+#       syntax_check: true
