@@ -15,8 +15,7 @@ steps:
       event:
         - push
     commands:
-      - git fetch origin +refs/heads/master
-      - git show-ref
+      - git fetch origin
       - git diff --quiet HEAD HEAD^ stack || exit 78
 
 ---
