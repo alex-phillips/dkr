@@ -5,4 +5,3 @@
 - src: ironicbadger.proxmox_nag_removal
 - src: geerlingguy.docker
 - src: ironicbadger.snapraid
-- src: community.docker
