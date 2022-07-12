@@ -73,8 +73,7 @@ steps:
         from_secret: ssh_key
       script_stop: true
       envs:
-        ANSIBLE_VAULT_PASSWORD:
-          from_secret: ansible_vault_password
+        - ansible_vault_password
       script:
         - cd code/docker/htpc/ansible
         - source ./venv/bin/activate
