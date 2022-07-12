@@ -15,7 +15,7 @@ steps:
       event:
         - push
     commands:
-      - if (git diff --exit-code HEAD^ HEAD -- stack); then exit 78; fi
+      - if (git diff --quiet --exit-code HEAD^ HEAD -- stack); then exit 78; fi
 
   - name: deploy
     image: appleboy/drone-ssh
@@ -59,7 +59,7 @@ steps:
       event:
         - push
     commands:
-      - if (git diff --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
+      - if (git diff --quiet --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
 
   - name: ansible
     image: plugins/ansible:3
