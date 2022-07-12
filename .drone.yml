@@ -1,13 +1,13 @@
 ---
 kind: pipeline
 type: docker
-name: compose-gate
+name: docker compose
 
 concurrency:
   limit: 1
 
 steps:
-  - name: gate
+  - name: check for stack changes
     image: alpine/git
     when:
       branch:
@@ -17,7 +17,7 @@ steps:
     commands:
       - if (git diff --exit-code HEAD^ HEAD -- stack); then exit 78; fi
 
-  - name: dkr up
+  - name: deploy
     image: appleboy/drone-ssh
     settings:
       port: 22
@@ -33,6 +33,7 @@ steps:
         - git pull --rebase --autostash
         - dkr up
         - dkr clean
+
 # ---
 # kind: pipeline
 # type: docker
