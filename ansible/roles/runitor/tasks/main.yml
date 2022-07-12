@@ -1,0 +1,25 @@
+---
+- name: Create temporary working directory
+  file:
+    path: "/tmp/runitor-setup"
+    state: directory
+    mode: '0775'
+
+- name: Get latest version
+  shell: curl -sX GET "https://api.github.com/repos/bdd/runitor/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]'
+  register: runitor_version
+
+- name: Get runitor version {{ runitor_version.stdout }}
+  get_url:
+    url: https://github.com/bdd/runitor/releases/download/{{ runitor_version.stdout }}/runitor-{{ runitor_version.stdout }}-linux-amd64
+    dest: "/tmp/runitor-setup/runitor-{{ runitor_version.stdout }}-linux-amd64"
+
+- name: Copy runitor binary
+  copy:
+    src: "/tmp/runitor-setup/runitor-{{ runitor_version.stdout }}-linux-amd64"
+    dest: "/usr/local/bin/runitor"
+    mode: '0755'
+    owner: root
+    group: root
+    remote_src: true
+  become: true

@@ -1,0 +1,182 @@
+---
+# geerlingguy.security
+# security_ssh_port: 27222
+security_ssh_password_authentication: "no"
+security_ssh_permit_root_login: "no"
+security_ssh_usedns: "no"
+security_autoupdate_enabled: true
+security_fail2ban_enabled: true
+security_sudoers_passwordless:
+  - "{{ ansible_user }}"
+
+docker_compose_path: /usr/local/lib/docker/cli-plugins/docker-compose
+docker_compose_version: v2.6.1
+
+snapraid_force_install: True
+snapraid_bin_path: /usr/bin/snapraid
+
+bash_aliases:
+  - name: beet
+    command: docker exec -it -u abc beets beet --config /config/config.yaml
+  - name: dlogs
+    command: docker logs --tail 100 -f
+  - name: de
+    command: docker exec -it
+
+packages:
+  - ssh
+  - make
+  - php
+
+hosts:
+  - { ip: 192.168.1.1, name: "bulbasaur" }
+  - { ip: 192.168.1.2, name: "ivysaur" }
+  - { ip: 192.168.1.3, name: "venusaur" }
+  - { ip: 192.168.1.4, name: "charmander" }
+  - { ip: 192.168.1.5, name: "charmeleon" }
+  - { ip: 192.168.1.6, name: "charizard" }
+  - { ip: 192.168.1.7, name: "squirtle" }
+  - { ip: 192.168.1.8, name: "wartortle" }
+  - { ip: 192.168.1.9, name: "blastoise" }
+  - { ip: 192.168.1.10, name: "caterpie" }
+  - { ip: 192.168.1.11, name: "metapod" }
+  - { ip: 192.168.1.12, name: "butterfree" }
+  - { ip: 192.168.1.13, name: "weedle" }
+  - { ip: 192.168.1.14, name: "kakuna" }
+  - { ip: 192.168.1.15, name: "beedrill" }
+  - { ip: 192.168.1.16, name: "pidgey" }
+  - { ip: 192.168.1.17, name: "pidgeotto" }
+  - { ip: 192.168.1.18, name: "pidgeot" }
+  - { ip: 192.168.1.19, name: "rattata" }
+  - { ip: 192.168.1.20, name: "raticate" }
+  - { ip: 192.168.1.21, name: "spearow" }
+  - { ip: 192.168.1.22, name: "fearow" }
+  - { ip: 192.168.1.23, name: "ekans" }
+  - { ip: 192.168.1.24, name: "arbok" }
+  - { ip: 192.168.1.25, name: "pikachu" }
+  - { ip: 192.168.1.26, name: "raichu" }
+  - { ip: 192.168.1.27, name: "sandshrew" }
+  - { ip: 192.168.1.28, name: "sandslash" }
+  - { ip: 192.168.1.29, name: "nidoran-f" }
+  - { ip: 192.168.1.30, name: "nidorina" }
+  - { ip: 192.168.1.31, name: "nidoqueen" }
+  - { ip: 192.168.1.32, name: "nidoran-m" }
+  - { ip: 192.168.1.33, name: "nidorino" }
+  - { ip: 192.168.1.34, name: "nidoking" }
+  - { ip: 192.168.1.35, name: "clefairy" }
+  - { ip: 192.168.1.36, name: "clefable" }
+  - { ip: 192.168.1.37, name: "vulpix" }
+  - { ip: 192.168.1.38, name: "ninetales" }
+  - { ip: 192.168.1.39, name: "jigglypuff" }
+  - { ip: 192.168.1.40, name: "wigglytuff" }
+  - { ip: 192.168.1.41, name: "zubat" }
+  - { ip: 192.168.1.42, name: "golbat" }
+  - { ip: 192.168.1.43, name: "oddish" }
+  - { ip: 192.168.1.44, name: "gloom" }
+  - { ip: 192.168.1.45, name: "vileplume" }
+  - { ip: 192.168.1.46, name: "paras" }
+  - { ip: 192.168.1.47, name: "parasect" }
+  - { ip: 192.168.1.48, name: "venonat" }
+  - { ip: 192.168.1.49, name: "venomoth" }
+  - { ip: 192.168.1.50, name: "diglett" }
+  - { ip: 192.168.1.51, name: "dugtrio" }
+  - { ip: 192.168.1.52, name: "meowth" }
+  - { ip: 192.168.1.53, name: "persian" }
+  - { ip: 192.168.1.54, name: "psyduck" }
+  - { ip: 192.168.1.55, name: "golduck" }
+  - { ip: 192.168.1.56, name: "mankey" }
+  - { ip: 192.168.1.57, name: "primeape" }
+  - { ip: 192.168.1.58, name: "growlithe" }
+  - { ip: 192.168.1.59, name: "arcanine" }
+  - { ip: 192.168.1.60, name: "poliwag" }
+  - { ip: 192.168.1.61, name: "poliwhirl" }
+  - { ip: 192.168.1.62, name: "poliwrath" }
+  - { ip: 192.168.1.63, name: "abra" }
+  - { ip: 192.168.1.64, name: "kadabra" }
+  - { ip: 192.168.1.65, name: "alakazam" }
+  - { ip: 192.168.1.66, name: "machop" }
+  - { ip: 192.168.1.67, name: "machoke" }
+  - { ip: 192.168.1.68, name: "machamp" }
+  - { ip: 192.168.1.69, name: "bellsprout" }
+  - { ip: 192.168.1.70, name: "weepinbell" }
+  - { ip: 192.168.1.71, name: "victreebel" }
+  - { ip: 192.168.1.72, name: "tentacool" }
+  - { ip: 192.168.1.73, name: "tentacruel" }
+  - { ip: 192.168.1.74, name: "geodude" }
+  - { ip: 192.168.1.75, name: "graveler" }
+  - { ip: 192.168.1.76, name: "golem" }
+  - { ip: 192.168.1.77, name: "ponyta" }
+  - { ip: 192.168.1.78, name: "rapidash" }
+  - { ip: 192.168.1.79, name: "slowpoke" }
+  - { ip: 192.168.1.80, name: "slowbro" }
+  - { ip: 192.168.1.81, name: "magnemite" }
+  - { ip: 192.168.1.82, name: "magneton" }
+  - { ip: 192.168.1.83, name: "farfetch'd" }
+  - { ip: 192.168.1.84, name: "doduo" }
+  - { ip: 192.168.1.85, name: "dodrio" }
+  - { ip: 192.168.1.86, name: "seel" }
+  - { ip: 192.168.1.87, name: "dewgong" }
+  - { ip: 192.168.1.88, name: "grimer" }
+  - { ip: 192.168.1.89, name: "muk" }
+  - { ip: 192.168.1.90, name: "shellder" }
+  - { ip: 192.168.1.91, name: "cloyster" }
+  - { ip: 192.168.1.92, name: "gastly" }
+  - { ip: 192.168.1.93, name: "haunter" }
+  - { ip: 192.168.1.94, name: "gengar" }
+  - { ip: 192.168.1.95, name: "onix" }
+  - { ip: 192.168.1.96, name: "drowzee" }
+  - { ip: 192.168.1.97, name: "hypno" }
+  - { ip: 192.168.1.98, name: "krabby" }
+  - { ip: 192.168.1.99, name: "kingler" }
+  - { ip: 192.168.1.100, name: "voltorb" }
+  - { ip: 192.168.1.101, name: "electrode" }
+  - { ip: 192.168.1.102, name: "exeggcute" }
+  - { ip: 192.168.1.103, name: "exeggutor" }
+  - { ip: 192.168.1.104, name: "cubone" }
+  - { ip: 192.168.1.105, name: "marowak" }
+  - { ip: 192.168.1.106, name: "hitmonlee" }
+  - { ip: 192.168.1.107, name: "hitmonchan" }
+  - { ip: 192.168.1.108, name: "lickitung" }
+  - { ip: 192.168.1.109, name: "koffing" }
+  - { ip: 192.168.1.110, name: "weezing" }
+  - { ip: 192.168.1.111, name: "rhyhorn" }
+  - { ip: 192.168.1.112, name: "rhydon" }
+  - { ip: 192.168.1.113, name: "chansey" }
+  - { ip: 192.168.1.114, name: "tangela" }
+  - { ip: 192.168.1.115, name: "kangaskhan" }
+  - { ip: 192.168.1.116, name: "horsea" }
+  - { ip: 192.168.1.117, name: "seadra" }
+  - { ip: 192.168.1.118, name: "goldeen" }
+  - { ip: 192.168.1.119, name: "seaking" }
+  - { ip: 192.168.1.120, name: "staryu" }
+  - { ip: 192.168.1.121, name: "starmie" }
+  - { ip: 192.168.1.122, name: "mr. mime" }
+  - { ip: 192.168.1.123, name: "scyther" }
+  - { ip: 192.168.1.124, name: "jynx" }
+  - { ip: 192.168.1.125, name: "electabuzz" }
+  - { ip: 192.168.1.126, name: "magmar" }
+  - { ip: 192.168.1.127, name: "pinsir" }
+  - { ip: 192.168.1.128, name: "tauros" }
+  - { ip: 192.168.1.129, name: "magikarp" }
+  - { ip: 192.168.1.130, name: "gyarados" }
+  - { ip: 192.168.1.131, name: "lapras" }
+  - { ip: 192.168.1.132, name: "ditto" }
+  - { ip: 192.168.1.133, name: "eevee" }
+  - { ip: 192.168.1.134, name: "vaporeon" }
+  - { ip: 192.168.1.135, name: "jolteon" }
+  - { ip: 192.168.1.136, name: "flareon" }
+  - { ip: 192.168.1.137, name: "porygon" }
+  - { ip: 192.168.1.138, name: "omanyte" }
+  - { ip: 192.168.1.139, name: "omastar" }
+  - { ip: 192.168.1.140, name: "kabuto" }
+  - { ip: 192.168.1.141, name: "kabutops" }
+  - { ip: 192.168.1.142, name: "aerodactyl" }
+  - { ip: 192.168.1.143, name: "snorlax" }
+  - { ip: 192.168.1.144, name: "articuno" }
+  - { ip: 192.168.1.145, name: "zapdos" }
+  - { ip: 192.168.1.146, name: "moltres" }
+  - { ip: 192.168.1.147, name: "dratini" }
+  - { ip: 192.168.1.148, name: "dragonair" }
+  - { ip: 192.168.1.149, name: "dragonite" }
+  - { ip: 192.168.1.150, name: "mewtwo" }
+  - { ip: 192.168.1.151, name: "mew" }

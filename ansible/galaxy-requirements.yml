@@ -1,0 +1,9 @@
+- src: geerlingguy.security
+# - src: ironicbadger.ansible_role_create_users
+- src: stefangweichinger.ansible_rclone
+  name: rclone
+- src: ironicbadger.proxmox_nag_removal
+- src: geerlingguy.docker
+- src: ironicbadger.snapraid
+- src: cloudalchemy.node-exporter
+- src: community.docker

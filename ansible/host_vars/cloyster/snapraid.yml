@@ -1,0 +1,85 @@
+snapraid_parity_disks:
+  - path: /mnt/parity1
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi2-part1
+    fs: xfs
+    opts: defaults
+    content: false
+  - path: /mnt/parity2
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi3-part1
+    fs: xfs
+    opts: defaults
+    content: false
+
+# data drives
+snapraid_data_disks:
+  - path: /mnt/disk1
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi4-part1
+    fs: xfs
+    opts: defaults
+    content: true
+  - path: /mnt/disk2
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi5-part1
+    fs: xfs
+    opts: defaults
+    content: true
+  - path: /mnt/disk3
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi6-part1
+    fs: xfs
+    opts: defaults
+    content: false
+  - path: /mnt/disk4
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi7-part1
+    fs: xfs
+    opts: defaults
+    content: false
+  - path: /mnt/disk5
+    diskbyid: /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi8-part1
+    fs: xfs
+    opts: defaults
+    content: false
+
+extra_mountpoints:
+  - { path: /mnt/storage }
+
+fstab_mergerfs:
+  - source: "/mnt/disk*"
+    mountpoint: /mnt/storage
+    fs: fuse.mergerfs
+    opts: "defaults,category.create=mfs,func.getattr=newest,allow_other,use_ino,noforget,inodecalc=path-hash,minfreespace=50G,fsname=mergerfs"
+
+snapraid_config_excludes:
+  - "*.unrecoverable"
+  - "/tmp/"
+  - "/lost+found/"
+  - "downloads/"
+  - "appdata/"
+  - "snapshots/"
+  - "transcode/"
+  - "*.!sync"
+  - ".AppleDouble"
+  - "._AppleDouble"
+  - ".DS_Store"
+  - "._.DS_Store"
+  - ".Thumbs.db"
+  - ".fseventsd"
+  - ".Spotlight-V100"
+  - ".TemporaryItems"
+  - ".Trashes"
+  - ".AppleDB"
+  - ".fuse_hidden*"
+  - "/backup/"
+  - "/books/Magazines/"
+  - "logs/"
+  - "log/"
+  - ".duplicacy/"
+  - "/node-ripper/"
+  - "/ripper/"
+  - "/organize/pictures/iPhoto/Photos Library.photoslibrary/private/com.apple.photoanalysisd/GraphService/PhotosGraph/photosgraph.graphdb-wal"
+  - "/shinobi_recordings/"
+  - "/deezer/"
+  - "/docker/"
+  - "laravel.log"
+  - "/torrents/recycle_bin/"
+  - "/art/"
+  - "/podcasts"
+  - "/minio/"

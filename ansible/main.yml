@@ -1,0 +1,21 @@
+- hosts:
+    - vms
+    - pis
+  pre_tasks:
+    - name: Create docker cli-plugins directory
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+      become: yes
+
+  roles:
+    # - role: general
+    - role: geerlingguy.security
+      become_method: sudo
+    - role: geerlingguy.docker
+    - role: netclient
+
+- hosts: cloyster
+  roles:
+    - role: runitor
+    - role: rclone

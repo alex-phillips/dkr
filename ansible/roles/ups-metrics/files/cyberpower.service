@@ -1,0 +1,9 @@
+[Unit]
+Description=Cyberpower UPS metrics
+
+[Service]
+Type=simple
+ExecStart=python3 /opt/cyberpower-usb-watcher/server.py
+
+[Install]
+WantedBy=multi-user.target

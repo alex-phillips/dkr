@@ -1,0 +1,151 @@
+---
+- hosts: cloyster
+  become: yes
+  roles:
+    - { role: runitor }
+    # - { role: duplicacy }
+    - { role: general, become: false }
+    # - { role: geerlingguy.docker }
+    # - { role: ironicbadger.snapraid }
+    # - { role: geerlingguy.nfs }
+    - { role: rclone }
+    - { role: datahoarder, become: false }
+    - { role: netclient, become: true }
+    # - { role: server-cron, become: no }
+    # - { role: ups-metrics }
+    # - { role: geerlingguy.security }
+    # - { role: misc-scripts }
+
+  tasks:
+    # - name: Retrieve misc scripts
+    #   git:
+    #     repo: ssh://git@origin.w00t.cloud:10022/alexphillips/misc-scripts.git
+    #     dest: "/home/{{ ansible_user }}/scripts"
+    #     accept_hostkey: yes
+    #   become: no
+
+    - name: Set permissions on .config directory
+      file:
+        path: "/home/{{ ansible_user }}/.config"
+        state: directory
+        recurse: yes
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        append: yes
+        groups:
+          - docker
+
+    - name: Install mergerfs
+      package:
+        name: mergerfs
+        state: present
+
+    - name: create /mnt points
+      file:
+        dest: "{{ item.path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0777
+      with_items:
+        - "{{ snapraid_parity_disks }}"
+        - "{{ snapraid_data_disks }}"
+        - "{{ extra_mountpoints }}"
+
+    # - name: mount snapraid disks
+    #   mount:
+    #     name: "{{ item.path }}"
+    #     src: "{{ item.diskbyid }}"
+    #     fstype: "{{ item.fs }}"
+    #     opts: "{{ item.opts }}"
+    #     # change to 'mounted' to auto mount
+    #     state: present
+    #   with_items:
+    #     - "{{ parity_disks }}"
+    #     - "{{ data_disks }}"
+
+    # - name: mount mergerfs array
+    #   mount:
+    #     name: "{{ item.mountpoint }}"
+    #     src: "{{ item.source }}"
+    #     opts: "{{ item.opts }}"
+    #     fstype: "{{ item.fs }}"
+    #     # change to 'mounted' to auto mount
+    #     state: present
+    #   with_items:
+    #     - "{{ fstab_mergerfs }}"
+
+    - name: Install packages
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ packages }}"
+        - linux-image-extra-virtual
+        - exiftool
+        - webhook
+        - wireguard
+
+    # - name: Install services
+    #   copy:
+    #     src: "{{ item.src }}"
+    #     dest: "{{ item.dest }}"
+    #   with_items:
+    #     - { src: "../files/rclone-media.service", dest: /etc/systemd/system/rclone-media.service }
+
+    - name: Ensure fuse setup properly for rclone
+      lineinfile:
+        path: /etc/fuse.conf
+        regex: '^#user_allow_other'
+        line: user_allow_other
+
+    - name: Just force systemd to reread configs
+      systemd:
+        daemon_reload: yes
+
+    # - name: Mount rclone media directories
+    #   systemd:
+    #     name: "{{ item }}"
+    #     state: started
+    #     enabled: yes
+    #   with_items:
+    #     - rclone-media.service
+
+    # - name: Create docker repo directory
+    #   file:
+    #     path: "/home/{{ ansible_user }}/code/docker"
+    #     state: directory
+    #     owner: "{{ ansible_user }}"
+    #     group: "{{ ansible_user }}"
+    #   become: no
+
+    # - name: Checkout dockerfiles repo
+    #   git:
+    #     repo: ssh://git@origin.w00t.cloud:10022/alexphillips/htpc-dockerfiles.git
+    #     dest: "/home/{{ ansible_user }}/code/docker/htpc"
+    #     accept_hostkey: yes
+    #   become: no
+
+    - name: Copy webhook service file
+      become: yes
+      template:
+        src: ../files/webhook.service.j2
+        dest: /etc/systemd/system/webhook.service
+
+    - name: Copy webhook config
+      become: no
+      copy:
+        content: "{{webhooks_conf}}"
+        dest: /home/{{ ansible_user }}/.config/webhooks.yaml
+      register: webhooks_config
+
+    - name: Start webhook service
+      systemd:
+        name: webhook.service
+        state: restarted
+        enabled: yes
+        daemon_reload: yes

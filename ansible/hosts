@@ -1,0 +1,10 @@
+[proxmox]
+192.168.1.151
+
+[vms]
+cloyster vmid=10
+
+[pis]
+100.104.157.122 ansible_user=pi
+ivysaur ansible_user=pi
+venusaur ansible_user=ghost

@@ -1,0 +1,19 @@
+---
+- name: Add GPG key
+  become: yes
+  get_url:
+    url: https://apt.netmaker.org/gpg.key
+    dest: /etc/apt/trusted.gpg.d/netclient.asc
+
+- name: Add APT repo
+  become: yes
+  get_url:
+    url: https://apt.netmaker.org/debian.deb.txt
+    dest: /etc/apt/sources.list.d/netclient.list
+
+- name: Install netclient
+  become: yes
+  apt:
+    name: netclient
+    state: present
+    update_cache: yes

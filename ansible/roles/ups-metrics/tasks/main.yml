@@ -1,0 +1,42 @@
+---
+- name: Install necessary package
+  package:
+    name: libhidapi-libusb0
+    state: present
+
+- name: Clone UPS metrics repo
+  git:
+    repo: https://github.com/bjonnh/cyberpower-usb-watcher.git
+    dest: /opt/cyberpower-usb-watcher
+    accept_hostkey: yes
+    force: yes
+  register: cyberpower_checkout
+
+- name: Swap out vendor ID with correct model
+  lineinfile:
+    path: /opt/cyberpower-usb-watcher/server.py
+    line: "    PRODUCT_ID = 0x0501"
+    regexp: "    PRODUCT_ID = 0x0601"
+
+- name: Fix server bound IP
+  lineinfile:
+    path: /opt/cyberpower-usb-watcher/server.py
+    line: "    server_address = ('0.0.0.0', 9500)"
+    regexp: "127.0.0.1"
+
+- name: Install specified python requirements
+  pip:
+    requirements: /opt/cyberpower-usb-watcher/requirements.txt
+  when: cyberpower_checkout.changed
+
+- name: Install cyberpower service
+  copy:
+    src: ../files/cyberpower.service
+    dest: /etc/systemd/system/cyberpower.service
+
+- name: Enable and start service
+  service:
+    name: cyberpower
+    state: started
+    enabled: yes
+    daemon_reload: yes

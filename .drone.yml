@@ -34,39 +34,46 @@ steps:
         - dkr up
         - dkr clean
 
-# ---
-# kind: pipeline
-# type: docker
-# name: compose
+---
+kind: pipeline
+type: docker
+name: ansible
 
-# depends_on:
-#   - compose-gate
+concurrency:
+  limit: 1
 
-# trigger:
-#   status:
-#     - failure # if git diff fails, then there are changes
+depends_on:
+  - docker compose
 
-# steps:
+trigger:
+  status:
+    - success
+    - failure
 
+steps:
+  - name: check for changes
+    image: alpine/git
+    when:
+      branch:
+        - main
+      event:
+        - push
+    commands:
+      - if (git diff --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
 
-# ---
-# kind: pipeline
-# type: docker
-# name: ansible
-
-# concurrency:
-#   limit: 1
-
-# steps:
-#   - name: ansible deploy
-#     image: plugins/ansible:3
-#     when:
-#       branch:
-#         - main
-#       event:
-#         - push
-#     settings:
-#       playbook: ansible/playbook.yml
-#       galaxy: ansible/requirements.yml
-#       inventory: ansible/inventory
-#       syntax_check: true
+  - name: ansible
+    image: plugins/ansible:3
+    when:
+      branch:
+        - main
+      event:
+        - push
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ansible_vault_password
+      ANSIBLE_CONFIG: ansible/ansible.cfg
+    settings:
+      playbook: ansible/main.yml
+      galaxy: ansible/galaxy-requirements.yml
+      inventory: ansible/hosts
+      syntax_check: true
