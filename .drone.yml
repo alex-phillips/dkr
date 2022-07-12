@@ -8,30 +8,15 @@ concurrency:
 
 steps:
   - name: gate
-    image: bitnami/git
+    image: alpine/git
     when:
       branch:
         - main
       event:
         - push
     commands:
-      - git fetch origin $DRONE_BRANCH
-      - git diff HEAD HEAD^ stack
-      - git diff --quiet HEAD HEAD^ stack || exit 78
+      - if (git diff --exit-code HEAD^ HEAD -- stack); then exit 78; fi
 
----
-kind: pipeline
-type: docker
-name: compose
-
-depends_on:
-  - compose-gate
-
-trigger:
-  status:
-    - failure # if git diff fails, then there are changes
-
-steps:
   - name: dkr up
     image: appleboy/drone-ssh
     settings:
@@ -48,6 +33,20 @@ steps:
         - git pull --rebase --autostash
         - dkr up
         - dkr clean
+# ---
+# kind: pipeline
+# type: docker
+# name: compose
+
+# depends_on:
+#   - compose-gate
+
+# trigger:
+#   status:
+#     - failure # if git diff fails, then there are changes
+
+# steps:
+
 
 # ---
 # kind: pipeline

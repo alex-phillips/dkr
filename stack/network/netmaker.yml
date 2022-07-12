@@ -1,0 +1,123 @@
+version: "3.4"
+services:
+  netmaker:
+    container_name: netmaker
+    image: gravitl/netmaker:v0.14.4
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.all.forwarding=1
+    restart: always
+    links:
+      - "netmaker-coredns:coredns"
+    volumes:
+      - ${NAS}/docker/netmaker/dnsconfig:/root/config/dnsconfig
+      - ${NAS}/docker/netmaker/sqldata:/root/data
+      - ${NAS}/docker/netmaker/shared_certs:/etc/netmaker
+    environment:
+      SERVER_NAME: "nm-broker.${SERVER_DOMAIN}"
+      SERVER_HOST: origin.w00t.cloud
+      SERVER_API_CONN_STRING: "nm-api.${SERVER_DOMAIN}:443"
+      COREDNS_ADDR: origin.w00t.cloud
+      DNS_MODE: "on"
+      SERVER_HTTP_HOST: "nm-api.${SERVER_DOMAIN}"
+      API_PORT: "8081"
+      CLIENT_MODE: "on"
+      MASTER_KEY: ${NETMAKER_MASTER_KEY}
+      CORS_ALLOWED_ORIGIN: "*"
+      DISPLAY_KEYS: "on"
+      DATABASE: "sqlite"
+      NODE_ID: "netmaker-server-1"
+      MQ_HOST: "netmaker-mq"
+      # uncomment once netmaker supports changing MQ port
+      MQ_PORT: "8883"
+      HOST_NETWORK: "off"
+      VERBOSITY: "1"
+      MANAGE_IPTABLES: "on"
+      PORT_FORWARD_SERVICES: "dns"
+    ports:
+      - "51821-51830:51821-51830/udp"
+    expose:
+      - "8081"
+    labels:
+      app: netmaker
+      ingress:
+        - port: 8081
+          host: nm-api.${SERVER_DOMAIN}
+
+  netmaker-ui:
+    container_name: netmaker-ui
+    image: gravitl/netmaker-ui:v0.14.4
+    depends_on:
+      - netmaker
+    links:
+      - "netmaker:api"
+    restart: always
+    environment:
+      BACKEND_URL: "https://nm-api.${SERVER_DOMAIN}"
+    expose:
+      - "80"
+    labels:
+      app: netmaker
+      ingress:
+        - port: 80
+          host: net.${SERVER_DOMAIN}
+      traefik.http.routers.netmaker-ui-80.middlewares: nmui-security@docker
+      traefik.http.middlewares.nmui-security.headers.accessControlAllowOriginList: "*.${SERVER_DOMAIN}"
+      traefik.http.middlewares.nmui-security.headers.stsSeconds: 31536000
+      traefik.http.middlewares.nmui-security.headers.browserXssFilter: true
+      traefik.http.middlewares.nmui-security.headers.customFrameOptionsValue: SAMEORIGIN
+      traefik.http.middlewares.nmui-security.headers.customResponseHeaders.X-Robots-Tag: none
+      traefik.http.middlewares.nmui-security.headers.customResponseHeaders.Server: '' # Remove the server name
+
+  netmaker-coredns:
+    container_name: netmaker-coredns
+    image: coredns/coredns
+    command: -conf /root/dnsconfig/Corefile
+    # depends_on:
+    #   - netmaker
+    volumes:
+      - ${NAS}/docker/netmaker/dnsconfig:/root/dnsconfig
+    labels:
+      app: netmaker
+
+  netmaker-mq:
+    container_name: netmaker-mq
+    image: eclipse-mosquitto:2.0.14-openssl
+    depends_on:
+      - netmaker
+    restart: unless-stopped
+    volumes:
+      - ${NAS}/docker/netmaker/mq/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ${NAS}/docker/netmaker/mq/data:/mosquitto/data
+      - ${NAS}/docker/netmaker/mq/logs:/mosquitto/log
+      - ${NAS}/docker/netmaker/shared_certs:/mosquitto/certs
+    ports:
+    #   - "127.0.0.1:1883:1883"
+    # comment once netmaker supports changing MQ port
+      - "8883:8883"
+    # uncomment once netmaker supports changing MQ port
+    expose:
+      - "8883"
+    labels:
+      app: netmaker
+      ingress:
+        - port: 8883
+          host: nm-broker.${SERVER_DOMAIN}
+
+  netclient:
+    container_name: netclient
+    image: gravitl/netclient:v0.14.4
+    network_mode: host
+    privileged: true
+    environment:
+      TOKEN: eyJhcGljb25uc3RyaW5nIjoibm0tYXBpLncwMHQuY2xvdWQ6NDQzIiwibmV0d29yayI6Im5ldG1ha2VyLXZwbiIsImtleSI6IjdiZWMxZTAzNTVlZWM3YTgiLCJsb2NhbHJhbmdlIjoiIn0=
+    volumes:
+      - ${NAS}/docker/netmaker/netclient:/etc/netclient
+    labels:
+      app: netmaker
