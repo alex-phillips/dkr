@@ -51,7 +51,17 @@ trigger:
     - failure
 
 steps:
-  - name: test
+  - name: check for changes
+    image: alpine/git
+    when:
+      branch:
+        - main
+      event:
+        - push
+    commands:
+      - if (git diff --quiet --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
+
+  - name: ansible
     image: plugins/ansible
     when:
       branch:
@@ -63,32 +73,8 @@ steps:
         from_secret: ansible_vault_password
       ANSIBLE_CONFIG: ansible/ansible.cfg
     commands:
-      - ping -c 1 192.168.1.91
-
-  - name: check for changes
-    image: alpine/git
-    when:
-      branch:
-        - main
-      event:
-        - push
-    commands:
-      - if (git diff --quiet --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
-
-  # - name: ansible
-  #   image: plugins/ansible
-  #   when:
-  #     branch:
-  #       - main
-  #     event:
-  #       - push
-  #   environment:
-  #     ANSIBLE_VAULT_PASSWORD:
-  #       from_secret: ansible_vault_password
-  #     ANSIBLE_CONFIG: ansible/ansible.cfg
-  #   commands:
-  #     - apk install python3 py3-pip && pip3 install ansible
-  #     - cd ansible
-  #     - ansible-galaxy install -r galaxy-requirements.yml
-  #     - pwd
-  #     - ansible-playbook main.yml
+      - apk install python3 py3-pip && pip3 install ansible
+      - cd ansible
+      - ansible-galaxy install -r galaxy-requirements.yml
+      - pwd
+      - ansible-playbook main.yml
