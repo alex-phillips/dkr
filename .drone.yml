@@ -72,8 +72,15 @@ steps:
       ANSIBLE_VAULT_PASSWORD:
         from_secret: ansible_vault_password
       ANSIBLE_CONFIG: ansible/ansible.cfg
-    commands:
-      - cd ansible
-      - ansible-galaxy install -r galaxy-requirements.yml
-      - pwd
-      - ansible-playbook main.yml
+    settings:
+      playbook: ansible/main.yml
+      inventory: ansible/hosts
+      galaxy: ansible/galaxy-requirements.yml
+      private_key:
+        from_secret: ssh_key
+    # commands:
+    #   - whoami
+    #   - cd ansible
+    #   - ansible-galaxy install -r galaxy-requirements.yml
+    #   - pwd
+    #   - ansible-playbook main.yml
