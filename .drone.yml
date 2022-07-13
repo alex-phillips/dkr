@@ -51,6 +51,20 @@ trigger:
     - failure
 
 steps:
+  - name: test
+    image: plugins/ansible
+    when:
+      branch:
+        - main
+      event:
+        - push
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ansible_vault_password
+      ANSIBLE_CONFIG: ansible/ansible.cfg
+    commands:
+      - ping -c 1 192.168.1.91
+
   - name: check for changes
     image: alpine/git
     when:
@@ -61,22 +75,20 @@ steps:
     commands:
       - if (git diff --quiet --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
 
-  - name: ansible
-    image: appleboy/drone-ssh
-    settings:
-      port: 22
-      host:
-        from_secret: ssh_host
-      username:
-        from_secret: ssh_user
-      key:
-        from_secret: ssh_key
-      script_stop: true
-      envs:
-        - ansible_vault_password
-      script:
-        - export ANSIBLE_VAULT_PASSWORD=$ansible_vault_password
-        - cd code/docker/htpc/ansible
-        - source ./venv/bin/activate
-        - ansible-galaxy install -r galaxy-requirements.yml
-        - ansible-playbook main.yml
+  # - name: ansible
+  #   image: plugins/ansible
+  #   when:
+  #     branch:
+  #       - main
+  #     event:
+  #       - push
+  #   environment:
+  #     ANSIBLE_VAULT_PASSWORD:
+  #       from_secret: ansible_vault_password
+  #     ANSIBLE_CONFIG: ansible/ansible.cfg
+  #   commands:
+  #     - apk install python3 py3-pip && pip3 install ansible
+  #     - cd ansible
+  #     - ansible-galaxy install -r galaxy-requirements.yml
+  #     - pwd
+  #     - ansible-playbook main.yml
