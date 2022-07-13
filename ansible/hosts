@@ -2,9 +2,9 @@
 192.168.1.151
 
 [vms]
-cloyster vmid=10
+cloyster ansible_host=192.168.1.91 vmid=10
 
 [pis]
-100.104.157.122
-ivysaur
-venusaur
+10.100.0.1
+ivysaur ansible_host=192.168.1.2
+venusaur ansible_host=192.168.1.3

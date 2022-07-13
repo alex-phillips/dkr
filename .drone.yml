@@ -73,7 +73,6 @@ steps:
         from_secret: ansible_vault_password
       ANSIBLE_CONFIG: ansible/ansible.cfg
     commands:
-      - apk install python3 py3-pip && pip3 install ansible
       - cd ansible
       - ansible-galaxy install -r galaxy-requirements.yml
       - pwd
