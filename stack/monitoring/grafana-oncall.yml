@@ -125,7 +125,7 @@ services:
 
   oncall-rabbitmq:
     container_name: oncall-rabbitmq
-    image: "rabbitmq:3.10.6-management"
+    image: "rabbitmq:3.10.7-management"
     networks:
       - data
       - monitoring
