@@ -19,6 +19,11 @@ steps:
 
   - name: deploy
     image: appleboy/drone-ssh
+    when:
+      branch:
+        - main
+      event:
+        - push
     settings:
       port: 22
       host:
