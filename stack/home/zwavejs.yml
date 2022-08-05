@@ -2,7 +2,7 @@ version: '3'
 services:
   zwavejs:
     container_name: zwavejs
-    image: zwavejs/zwavejs2mqtt:6.15.1
+    image: zwavejs/zwavejs2mqtt:6.15.2
     stop_signal: SIGINT
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
