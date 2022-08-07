@@ -2,7 +2,7 @@ version: '2'
 services:
   sonarr:
     container_name: sonarr
-    image: ghcr.io/linuxserver/sonarr:3.0.8
+    image: ghcr.io/linuxserver/sonarr:3.0.9
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${NAS}/docker/sonarr:/config
