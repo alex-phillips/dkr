@@ -2,7 +2,7 @@ version: '3'
 services:
   paperless-redis:
     container_name: paperless-redis
-    image: docker.io/library/redis:6.0
+    image: docker.io/library/redis:6.2
     restart: unless-stopped
     volumes:
       - ${NAS}/docker/paperless-ngx/redis:/data
