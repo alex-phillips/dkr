@@ -1,20 +1,61 @@
 version: '3'
 services:
+  paperless-redis:
+    container_name: paperless-redis
+    image: docker.io/library/redis:6.0
+    restart: unless-stopped
+    volumes:
+      - ${NAS}/docker/paperless-ngx/redis:/data
+    labels:
+      app: paperless
+
   paperless-ngx:
     container_name: paperless-ngx
-    image: ghcr.io/linuxserver/paperless-ngx:1.7.1
+    image: ghcr.io/paperless-ngx/paperless-ngx:1.8.0
+    depends_on:
+      - paperless-redis
+      - paperless-gotenberg
+      - paperless-tika
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "-S", "--max-time", "2", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     environment:
-      PUID: 1000
-      GUID: 1000
-      TZ: America/New_York
+      USERMAP_UID: ${PUID}
+      USERMAP_GID: ${PGID}
+      PAPERLESS_URL: https://docs.${SERVER_DOMAIN}
       PAPERLESS_CONSUMER_RECURSIVE: 'true'
       PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: 'true'
       PAPERLESS_FILENAME_FORMAT: "{correspondent}/{tag_list}/{created_year}/{title}"
       PAPERLESS_TIME_ZONE: America/New_York
-      #REDIS_URL: redis://localhost:6379
+      PAPERLESS_REDIS: redis://paperless-redis:6379
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless-gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://paperless-tika:9998
     volumes:
-      - ${NAS}/docker/paperless-ngx:/config
-      - ${NAS}/documents:/data
+      - ${NAS}/docker/paperless-ngx/data:/usr/src/paperless/data
+      - ${NAS}/documents/media:/usr/src/paperless/media
+      - ${NAS}/documents/export:/usr/src/paperless/export
+      - ${NAS}/documents/consume:/usr/src/paperless/consume
     labels:
+      app: paperless
       host: docs.${SERVER_DOMAIN}
       port: 8000
+
+  paperless-gotenberg:
+    container_name: paperless-gotenberg
+    image: docker.io/gotenberg/gotenberg:7.4
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-routes=true"
+    labels:
+      app: paperless
+
+  paperless-tika:
+    container_name: paperless-tika
+    image: ghcr.io/paperless-ngx/tika:latest
+    restart: unless-stopped
+    labels:
+      app: paperless
