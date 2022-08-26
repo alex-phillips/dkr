@@ -112,7 +112,7 @@ services:
 
   netclient:
     container_name: netclient
-    image: gravitl/netclient:v0.14.6
+    image: gravitl/netclient:v0.15.0
     network_mode: host
     privileged: true
     environment:
