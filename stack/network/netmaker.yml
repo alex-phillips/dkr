@@ -52,7 +52,7 @@ services:
 
   netmaker-ui:
     container_name: netmaker-ui
-    image: gravitl/netmaker-ui:v0.14.6
+    image: gravitl/netmaker-ui:v0.15.0
     depends_on:
       - netmaker
     links:
