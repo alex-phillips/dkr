@@ -6,12 +6,13 @@ services:
     networks:
       - web
       - monitoring
+      - external
     environment:
       GID: ${PGID}
       COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
       TZ: ${TIMEZONE}
-    depends_on:  #uncomment if running traefik in the same compose file
-      - traefik
+    # depends_on:  #uncomment if running traefik in the same compose file
+    #   - traefik
     volumes:
       - ${NAS}/docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - ${NAS}/docker/crowdsec/data:/var/lib/crowdsec/data

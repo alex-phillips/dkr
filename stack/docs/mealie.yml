@@ -3,6 +3,8 @@ services:
   mealie:
     container_name: mealie
     image: hkotel/mealie:v0.5.6
+    networks:
+      - external
     environment:
       TZ: America/New_York
     volumes:
@@ -10,3 +12,14 @@ services:
     labels:
       port: 80
       host: recipes.${SERVER_DOMAIN}
+
+  mealie-hellofresh:
+    container_name: mealie-hellofresh
+    image: hkotel/mealie:v0.4.0
+    environment:
+      TZ: America/New_York
+    volumes:
+      - ${NAS}/docker/mealie-hellofresh:/app/data
+    labels:
+      port: 80
+      host: hellofresh.${SERVER_DOMAIN}

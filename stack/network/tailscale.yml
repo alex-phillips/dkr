@@ -1,0 +1,13 @@
+version: '3'
+services:
+  tailscale:
+    container_name: tailscale
+    image: tailscale/tailscale
+    hostname: tailscale-docker-cloyster
+    network_mode: host
+    privileged: true
+    environment:
+      TS_AUTH_KEY: ${TAILSCALE_AUTH_KEY}
+    volumes:
+      - /dev/net/tun:/dev/net/tun
+    restart: unless-stopped

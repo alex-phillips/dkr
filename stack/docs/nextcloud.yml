@@ -6,6 +6,7 @@ services:
     networks:
       - default
       - data
+      - external
     depends_on:
       - mariadb
       - redis-nextcloud

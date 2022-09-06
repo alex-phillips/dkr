@@ -3,6 +3,8 @@ services:
   mosquitto:
     container_name: mosquitto
     image: eclipse-mosquitto
+    networks:
+      - external
     ports:
       - 1883:1883
     volumes:

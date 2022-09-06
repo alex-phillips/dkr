@@ -1,0 +1,15 @@
+version: 3
+services:
+  heimdall:
+    container_name: heimdall
+    image: lscr.io/linuxserver/heimdall:2.4.13
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/heimdall:/config
+    labels:
+      ingress:
+        - port: 80
+          host: dash.w00t.cloud

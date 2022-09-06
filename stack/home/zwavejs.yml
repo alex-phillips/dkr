@@ -3,6 +3,8 @@ services:
   zwavejs:
     container_name: zwavejs
     image: zwavejs/zwavejs2mqtt:7.1.0
+    networks:
+      - external
     stop_signal: SIGINT
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0

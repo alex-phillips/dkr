@@ -3,6 +3,8 @@ services:
   squid:
     container_name: squid
     image: sameersbn/squid
+    networks:
+      - external
     volumes:
       - ${HOME}/docker/squid:/var/spool/squid
     ports:

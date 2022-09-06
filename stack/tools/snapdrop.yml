@@ -3,6 +3,8 @@ services:
   snapdrop:
     container_name: snapdrop
     image: linuxserver/snapdrop
+    networks:
+      - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

@@ -3,6 +3,8 @@ services:
   node-red:
     container_name: node-red
     image: nodered/node-red:3.0.2
+    networks:
+      - external
     environment:
       TZ: ${TIMEZONE}
     volumes:

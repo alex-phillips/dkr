@@ -1,0 +1,20 @@
+version: "2.1"
+services:
+  your_spotify:
+    image: lscr.io/linuxserver-labs/your_spotify
+    container_name: your_spotify
+    networks:
+      - data
+      - external
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      APP_URL: https://spotify.${SERVER_DOMAIN}
+      SPOTIFY_PUBLIC: ${SPOTIFY_ID}
+      SPOTIFY_SECRET: ${SPOTIFY_SECRET}
+      CORS: http://localhost:3000,http://localhost:3001
+      MONGO_ENDPOINT: mongodb://mongo:27017/your_spotify
+    labels:
+      port: 80
+      host: spotify.${SERVER_DOMAIN}

@@ -3,12 +3,14 @@ services:
   traefik:
     image: traefik:v2.8.4
     container_name: traefik
-    depends_on:
-      - dockerproxy
-      - authelia
     networks:
       - web
       - dockerproxy
+      - external
+    depends_on:
+      - dockerproxy
+      - authelia
+      - traefik-bouncer
     environment:
       - CF_API_EMAIL=ahp118@gmail.com
       - CF_API_KEY=${CLOUDFLARE_API_KEY}
@@ -19,6 +21,7 @@ services:
       - ${NAS}/docker/traefik:/etc/traefik
       - /var/log/traefik:/var/log/traefik
     labels:
+      namespace: network
       port: 8080
       host: tr.${SERVER_DOMAIN}
       traefik.http.routers.traefik.tls.certresolver: cloudflare

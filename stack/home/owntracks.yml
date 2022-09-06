@@ -3,6 +3,8 @@ services:
   owntracks:
     container_name: owntracks
     image: owntracks/recorder
+    networks:
+      - external
     environment:
       OTR_HOST: mosquitto
       OTR_USER: owntracks
@@ -24,6 +26,8 @@ services:
   owntracks-ui:
     container_name: owntracks-ui
     image: owntracks/frontend
+    networks:
+      - external
     volumes:
       - ${NAS}/docker/owntracks/ui-config.js:/usr/share/nginx/html/config/config.js
     environment:

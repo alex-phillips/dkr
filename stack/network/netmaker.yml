@@ -3,6 +3,9 @@ services:
   netmaker:
     container_name: netmaker
     image: gravitl/netmaker:v0.15.1
+    networks:
+      - default
+      - external
     cap_add:
       - NET_ADMIN
       - NET_RAW
@@ -53,6 +56,8 @@ services:
   netmaker-ui:
     container_name: netmaker-ui
     image: gravitl/netmaker-ui:v0.15.1
+    networks:
+      - default
     depends_on:
       - netmaker
     links:
@@ -78,6 +83,8 @@ services:
   netmaker-coredns:
     container_name: netmaker-coredns
     image: coredns/coredns
+    networks:
+      - default
     command: -conf /root/dnsconfig/Corefile
     # depends_on:
     #   - netmaker
@@ -89,6 +96,8 @@ services:
   netmaker-mq:
     container_name: netmaker-mq
     image: eclipse-mosquitto:2.0.15-openssl
+    networks:
+      - default
     depends_on:
       - netmaker
     restart: unless-stopped
@@ -116,7 +125,7 @@ services:
     network_mode: host
     privileged: true
     environment:
-      TOKEN: eyJhcGljb25uc3RyaW5nIjoibm0tYXBpLncwMHQuY2xvdWQ6NDQzIiwibmV0d29yayI6Im5ldG1ha2VyLXZwbiIsImtleSI6IjdiZWMxZTAzNTVlZWM3YTgiLCJsb2NhbHJhbmdlIjoiIn0=
+      TOKEN: eyJhcGljb25uc3RyaW5nIjoibm0tYXBpLncwMHQuY2xvdWQ6NDQzIiwibmV0d29yayI6Im5ldG1ha2VyLXZwbiIsImtleSI6ImE3YjdhY2Q0YWEzOTZlNzciLCJsb2NhbHJhbmdlIjoiIn0=
     volumes:
       - ${NAS}/docker/netmaker/netclient:/etc/netclient
     labels:

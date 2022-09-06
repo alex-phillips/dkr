@@ -1,19 +1,41 @@
 networks:
   default:
-    driver: bridge
+    internal: true
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 172.19.0.0/24
+
+  external:
+    name: external
 
   web:
     name: web
-    driver: bridge
+    internal: true
 
   data:
     name: data
-    driver: bridge
+    internal: true
 
   dockerproxy:
     name: dockerproxy
-    driver: bridge
+    internal: true
 
   monitoring:
     name: monitoring
-    driver: bridge
+    internal: true
+
+  home:
+    name: home
+    internal: true
+
+  vlan10:
+    name: vlan10
+    driver: macvlan
+    driver_opts:
+      parent: eth0.10
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24
+          # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
+          gateway: 192.168.10.1
