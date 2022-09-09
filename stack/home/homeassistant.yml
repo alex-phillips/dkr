@@ -2,7 +2,7 @@ version: '2'
 services:
   homeassistant:
     container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:2022.9.0
+    image: ghcr.io/home-assistant/home-assistant:2022.9.1
     networks:
       - data
       - external
