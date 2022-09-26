@@ -11,7 +11,7 @@ services:
 
   paperless-ngx:
     container_name: paperless-ngx
-    image: ghcr.io/paperless-ngx/paperless-ngx:1.8.0
+    image: ghcr.io/paperless-ngx/paperless-ngx:1.9.1
     depends_on:
       - paperless-redis
       - paperless-gotenberg
