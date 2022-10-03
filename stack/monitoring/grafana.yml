@@ -6,6 +6,8 @@ services:
     user: "1000:1000"
     networks:
       - monitoring
+      - external
+    mem_limit: 500m
     environment:
       GF_SERVER_ROOT_URL: https://graf.${SERVER_DOMAIN}
       GF_RENDERING_SERVER_URL: http://grafana-renderer:8081/render
@@ -14,6 +16,8 @@ services:
       GF_SECURITY_ALLOW_EMBEDDING: 'true'
       GF_FEATURE_TOGGLES_ENABLE: ngalert
       GF_PLUGINS_PLUGIN_ADMIN_ENABLED: 'true'
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-oncall-app
+      GF_INSTALL_PLUGINS: grafana-oncall-app
     volumes:
       - ${NAS}/docker/grafana/data:/var/lib/grafana
     labels:

@@ -3,6 +3,10 @@ services:
   uptime-kuma:
     container_name: uptime-kuma
     image: louislam/uptime-kuma:1.18.0
+    networks:
+      - monitoring
+      - external
+      - dockerproxy
     dns:
       - 1.1.1.1
       - 8.8.8.8
