@@ -5,6 +5,7 @@ services:
     image: prom/prometheus:v2.38.0
     networks:
       - monitoring
+      - external
     volumes:
       - ${NAS}/docker/prometheus/config:/etc/prometheus
       - ${NAS}/docker/prometheus/data:/prometheus
@@ -56,7 +57,7 @@ services:
       namespace: monitoring
 
   cadvisor:
-    image: gcr.io/google-containers/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     networks:
       - monitoring

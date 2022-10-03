@@ -3,6 +3,8 @@ services:
   healthchecks:
     container_name: healthchecks
     image: ghcr.io/linuxserver/healthchecks:2.3.20220923
+    networks:
+      - external # for telegram notifications
     volumes:
       - ${NAS}/docker/healthchecks:/config
     depends_on:

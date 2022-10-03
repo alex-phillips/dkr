@@ -3,6 +3,8 @@ services:
   smokeping:
     container_name: smokeping
     image: ghcr.io/linuxserver/smokeping:2.7.3
+    networks:
+      - external
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
