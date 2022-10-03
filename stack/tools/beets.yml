@@ -3,6 +3,8 @@ services:
   beets:
     container_name: beets
     image: ghcr.io/linuxserver/beets:nightly
+    networks:
+      - external
     volumes:
       - ${NAS}/docker/beets:/config
       - ${NAS}:${NAS}

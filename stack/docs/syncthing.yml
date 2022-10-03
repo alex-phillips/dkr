@@ -3,6 +3,8 @@ services:
   syncthing:
     image: ghcr.io/linuxserver/syncthing:1.21.0
     container_name: syncthing
+    networks:
+      - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

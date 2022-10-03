@@ -3,6 +3,8 @@ services:
   archivebox:
     container_name: archivebox
     image: archivebox/archivebox:master
+    networks:
+      - external
     command: server --quick-init 0.0.0.0:8000
     environment:
       - ALLOWED_HOSTS=*
