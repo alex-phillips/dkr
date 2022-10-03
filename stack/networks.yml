@@ -9,6 +9,9 @@ networks:
   external:
     name: external
 
+  mullvad:
+    name: mullvad
+
   web:
     name: web
     internal: true
@@ -39,3 +42,14 @@ networks:
         - subnet: 192.168.10.0/24
           # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
           gateway: 192.168.10.1
+
+  vlan20:
+    name: vlan20
+    driver: macvlan
+    driver_opts:
+      parent: eth0.20
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+          # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
+          gateway: 192.168.20.1

@@ -97,7 +97,7 @@ services:
     container_name: netmaker-mq
     image: eclipse-mosquitto:2.0.15-openssl
     networks:
-      - default
+      - external
     depends_on:
       - netmaker
     restart: unless-stopped
@@ -119,14 +119,14 @@ services:
         - port: 8883
           host: nm-broker.${SERVER_DOMAIN}
 
-  netclient:
-    container_name: netclient
-    image: gravitl/netclient:v0.16.0
-    network_mode: host
-    privileged: true
-    environment:
-      TOKEN: eyJhcGljb25uc3RyaW5nIjoibm0tYXBpLncwMHQuY2xvdWQ6NDQzIiwibmV0d29yayI6Im5ldG1ha2VyLXZwbiIsImtleSI6ImE3YjdhY2Q0YWEzOTZlNzciLCJsb2NhbHJhbmdlIjoiIn0=
-    volumes:
-      - ${NAS}/docker/netmaker/netclient:/etc/netclient
-    labels:
-      app: netmaker
+  # netclient:
+  #   container_name: netclient
+  #   image: gravitl/netclient:v0.16.0
+  #   network_mode: host
+  #   privileged: true
+  #   environment:
+  #     TOKEN: eyJhcGljb25uc3RyaW5nIjoibm0tYXBpLncwMHQuY2xvdWQ6NDQzIiwibmV0d29yayI6Im5ldG1ha2VyLXZwbiIsImtleSI6ImE3YjdhY2Q0YWEzOTZlNzciLCJsb2NhbHJhbmdlIjoiIn0=
+  #   volumes:
+  #     - ${NAS}/docker/netmaker/netclient:/etc/netclient
+  #   labels:
+  #     app: netmaker
