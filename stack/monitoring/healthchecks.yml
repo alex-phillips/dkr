@@ -2,7 +2,7 @@ version: '2'
 services:
   healthchecks:
     container_name: healthchecks
-    image: ghcr.io/linuxserver/healthchecks:2.3.20220923
+    image: ghcr.io/linuxserver/healthchecks:2.3.20221004
     networks:
       - external # for telegram notifications
     volumes:
