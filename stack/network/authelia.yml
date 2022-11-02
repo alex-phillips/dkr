@@ -3,7 +3,7 @@ services:
   authelia:
     container_name: authelia
     restart: unless-stopped
-    image: authelia/authelia:4.37.1
+    image: authelia/authelia:4.37.2
     environment:
       TZ: ${TIMEZONE}
     volumes:
