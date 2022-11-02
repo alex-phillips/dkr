@@ -32,7 +32,7 @@ services:
   photoprism:
     container_name: photoprism
     # Use photoprism/photoprism:preview instead for testing preview builds:
-    image: photoprism/photoprism:220901-bullseye
+    image: photoprism/photoprism:221102-bullseye
     # Only enable automatic restarts once your installation is properly
     # configured as it otherwise may get stuck in a restart loop:
     # https://docs.photoprism.org/getting-started/faq/#why-is-photoprism-getting-stuck-in-a-restart-loop
