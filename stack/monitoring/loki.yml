@@ -2,7 +2,7 @@ version: '3'
 services:
   loki:
     container_name: loki
-    image: grafana/loki:2.6.1
+    image: grafana/loki:2.7.0
     networks:
       - monitoring
     environment:
