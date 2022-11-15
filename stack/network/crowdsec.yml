@@ -2,7 +2,7 @@ version: '3'
 services:
   crowdsec:
     container_name: crowdsec
-    image: crowdsecurity/crowdsec:v1.4.1
+    image: crowdsecurity/crowdsec:v1.4.2
     networks:
       - web
       - monitoring
