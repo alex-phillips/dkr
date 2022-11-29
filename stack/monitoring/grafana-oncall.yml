@@ -1,7 +1,7 @@
 services:
   oncall:
     container_name: oncall
-    image: grafana/oncall:v1.1.2
+    image: grafana/oncall:v1.1.5
     command: >
       sh -c "uwsgi --ini uwsgi.ini"
     networks:
@@ -42,7 +42,7 @@ services:
 
   oncall-celery:
     container_name: oncall-celery
-    image: grafana/oncall:v1.1.2
+    image: grafana/oncall:v1.1.5
     command: sh -c "./celery_with_exporter.sh"
     networks:
       - data
@@ -83,7 +83,7 @@ services:
 
   oncall_db_migration:
     container_name: oncall-migrations
-    image: grafana/oncall:v1.1.2
+    image: grafana/oncall:v1.1.5
     command: python manage.py migrate --noinput
     networks:
       - data
