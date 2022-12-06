@@ -1,7 +1,7 @@
 version: "3"
 services:
   syncthing:
-    image: ghcr.io/linuxserver/syncthing:1.22.1
+    image: ghcr.io/linuxserver/syncthing:1.22.2
     container_name: syncthing
     networks:
       - external
