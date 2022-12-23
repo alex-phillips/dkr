@@ -2,7 +2,7 @@ version: '3'
 services:
   tautulli:
     container_name: tautulli
-    image: ghcr.io/linuxserver/tautulli:2.10.5
+    image: ghcr.io/linuxserver/tautulli:2.11.1
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
