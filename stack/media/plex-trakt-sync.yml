@@ -1,0 +1,13 @@
+version: "2.1"
+services:
+  plextraktsync:
+    image: lscr.io/linuxserver-labs/plextraktsync:latest
+    container_name: plextraktsync
+    networks:
+      - external
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/plex/traktsync:/config

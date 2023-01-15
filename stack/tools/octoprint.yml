@@ -17,4 +17,4 @@ services:
     #  - ENABLE_MJPG_STREAMER=true
     labels:
       port: 80
-      host: 3d.${SERVER_DOMAIN}
+      host: 3dp.${SERVER_DOMAIN}

@@ -1,0 +1,19 @@
+version: "3"
+services:
+  gameyfin:
+    image: grimsi/gameyfin:latest
+    container_name: gameyfin
+    networks:
+      - external
+    environment:
+      - GAMEYFIN_USER=admin
+      - GAMEYFIN_PASSWORD=applepie
+      - GAMEYFIN_IGDB_API_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - GAMEYFIN_IGDB_API_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+    volumes:
+      - ${NAS}:${NAS}:ro
+      - ${NAS}/docker/gameyfin:/opt/gameyfin-library
+    labels:
+      ingress:
+        - port: 8080
+          host: games.${SERVER_DOMAIN}

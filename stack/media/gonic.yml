@@ -1,0 +1,15 @@
+version: '3'
+services:
+  gonic:
+    container_name: gonic
+    image: sentriz/gonic:latest
+    environment:
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/gonic/data:/data
+      - ${NAS}/docker/gonic/cache:/cache
+      - ${NAS}/music/beets/Music:/music:ro
+      # - ${NAS}/podcasts:/podcasts
+    labels:
+      port: 80
+      host: gonic.${SERVER_DOMAIN}

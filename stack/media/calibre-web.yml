@@ -2,13 +2,16 @@ version: '3'
 services:
   calibre-web:
     container_name: calibre-web
-    image: ghcr.io/linuxserver/calibre-web:2021.12.16
+    image: ghcr.io/linuxserver/calibre-web:0.6.19
+    networks:
+      - external
     environment:
-      PGID: ${PGID}
       PUID: ${PUID}
-      DOCKER_MODS: linuxserver/calibre-web:calibre
+      PGID: ${PGID}
+      DOCKER_MODS: ghcr.io/linuxserver/mods:universal-calibre
     volumes:
       - ${NAS}/docker/calibre-web/config:/config
+      #- ${NAS}/docker/calibre-web/custom-init:/custom-cont-init.d
       - ${NAS}/media/books:/books
       - ${NAS}/docker/calibre-web/config/kindlegen:/app/calibre-web/vendor/kindlegen
     labels:

@@ -24,9 +24,12 @@ services:
       namespace: network
       port: 8080
       host: tr.${SERVER_DOMAIN}
-      traefik.http.routers.traefik.tls.certresolver: cloudflare
+      homepage.widget: true
+      traefik.http.routers.traefik.tls.certresolver: letsencrypt
       traefik.http.routers.traefik.tls.domains[0].main: "${SERVER_DOMAIN}"
       traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
+      traefik.http.routers.traefik.tls.domains[1].main: "wootables.com"
+      traefik.http.routers.traefik.tls.domains[1].sans: "*.wootables.com"
 
   dockerproxy:
     container_name: dockerproxy
@@ -36,5 +39,6 @@ services:
       - dockerproxy
     environment:
       CONTAINERS: 1
+      POST: 0
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

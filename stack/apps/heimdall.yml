@@ -12,4 +12,4 @@ services:
     labels:
       ingress:
         - port: 80
-          host: dash.w00t.cloud
+          host: dash.${SERVER_DOMAIN}

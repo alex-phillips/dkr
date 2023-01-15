@@ -1,7 +1,7 @@
 version: "2"
 services:
-#   jonpowelllaw:
-#     container_name: jonpowelllaw
+#   jplaw:
+#     container_name: jplaw
 #     image: wordpress:latest
 #     depends_on:
 #       - mariadb
@@ -26,9 +26,9 @@ services:
     volumes:
       - ${NAS}/docker/wootables:/config
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
     labels:
       port: 443
       protocol: https
@@ -41,9 +41,9 @@ services:
     volumes:
       - ${NAS}/docker/wptest:/config
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
     labels:
       port: 443
       protocol: https

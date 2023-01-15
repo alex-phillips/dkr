@@ -3,6 +3,8 @@ services:
   sonarr:
     container_name: sonarr
     image: ghcr.io/linuxserver/sonarr:3.0.9
+    networks:
+      - external
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${NAS}/docker/sonarr:/config
@@ -11,8 +13,8 @@ services:
       PGID: ${PGID}
       PUID: ${PUID}
       TZ: ${TIMEZONE}
-      DOCKER_MODS: ghcr.io/linuxserver/mods:universal-stdout-logs
-      LOGS_TO_STDOUT: /config/logs/sonarr.txt|/config/logs/sonarr.debug.txt|/config/logs/sonarr.trace.txt
+      # DOCKER_MODS: ghcr.io/linuxserver/mods:universal-stdout-logs
+      # LOGS_TO_STDOUT: /config/logs/sonarr.txt|/config/logs/sonarr.debug.txt|/config/logs/sonarr.trace.txt
     restart: unless-stopped
     labels:
       namespace: media

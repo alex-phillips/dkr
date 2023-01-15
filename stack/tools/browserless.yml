@@ -1,0 +1,8 @@
+version: '3'
+services:
+  browserless:
+    container_name: browserless
+    image: browserless/chrome
+    labels:
+      port: 3000
+      host: browserless.${SERVER_DOMAIN}

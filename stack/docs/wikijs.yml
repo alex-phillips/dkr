@@ -5,6 +5,8 @@ services:
     image: ghcr.io/linuxserver/wikijs:2.5.295
     networks:
       - data
+    depends_on:
+      - postgres
     environment:
       PGID: ${PGID}
       PUID: ${PUID}

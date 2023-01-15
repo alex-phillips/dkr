@@ -1,0 +1,13 @@
+version: '3'
+services:
+  makemkv:
+    container_name: makemkv
+    image: jlesage/makemkv
+    networks:
+      - external
+    volumes:
+      - ${NAS}/docker/makemkv:/output
+      - ${NAS}:${NAS}:ro
+    labels:
+      port: 5800
+      host: mkv.${SERVER_DOMAIN}

@@ -1,0 +1,20 @@
+version: "2.1"
+services:
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    networks:
+      - external
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ${NAS}/docker/readarr:/config
+      - ${NAS}/media/books:/books
+      # - /path/to/books:/books #optional
+      # - /path/to/downloadclient-downloads:/downloads #optional
+    labels:
+      ingress:
+        - port: 8787
+          host: redr.${SERVER_DOMAIN}

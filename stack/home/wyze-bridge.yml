@@ -5,14 +5,26 @@ services:
     image: mrlt8/wyze-bridge:latest
     networks:
       - external
+    ports:
+      - 8554:8554
     environment:
       WYZE_EMAIL: ${GOOGLE_EMAIL}
       WYZE_PASSWORD: ${WYZE_PASSWORD}
       # NET_MODE: LAN
       # FRESH_DATA: "true"
       SNAPSHOT: RTSP30
+      WB_RTSP_URL: rtsp://wyze-rtsp.${SERVER_DOMAIN}/
+      WB_RTMP_URL: rtmp://wyze-rtmp.${SERVER_DOMAIN}/
+      WB_HLS_URL: http://wyze-hls.${SERVER_DOMAIN}/
     volumes:
       - ${NAS}/docker/nginx/www/wyze:/img
     labels:
-      port: 8888
-      host: wyze.${SERVER_DOMAIN}
+      ingress:
+        - port: 5000
+          host: wyze.${SERVER_DOMAIN}
+        - port: 8888
+          host: wyze-hls.${SERVER_DOMAIN}
+        # - port: 1935
+        #   host: wyze-rtmp.${SERVER_DOMAIN}
+        # - port: 8554
+        #   host: wyze-rtsp.${SERVER_DOMAIN}

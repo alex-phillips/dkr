@@ -4,8 +4,8 @@ services:
     container_name: wallpapers
     image: ghcr.io/linuxserver/lychee
     networks:
-      - default
       - data
+      - external
     depends_on:
       - mariadb
     environment:

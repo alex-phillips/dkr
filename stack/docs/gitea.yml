@@ -8,7 +8,8 @@ services:
       - data
       - external
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     environment:
       USER_UID: ${PUID}
       USER_GID: ${PGID}

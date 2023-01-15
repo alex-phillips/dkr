@@ -1,0 +1,84 @@
+# DO NOT EDIT
+# The .env file has everything you need to edit.
+# Run options:
+# 1. Use prebuilt images (preferred method):
+#   run cmd: docker-compose up -d
+# 2. Build images on your own machine:
+#   build cmd: COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build
+#   run cmd: docker-compose up -d
+
+version: "3.8"
+services:
+  librephotos-proxy:
+    image: reallibrephotos/librephotos-proxy:2022w13
+    container_name: librephotos-proxy
+    volumes:
+      - ${NAS}/pictures/Organized:/data:ro
+      - ${NAS}/docker/librephotos/protected_media:/protected_media
+    links:
+      - librephotos-frontend:frontend
+      - librephotos-backend:backend
+    depends_on:
+      - librephotos-backend
+      - librephotos-frontend
+    labels:
+      app: librephotos
+      port: 80
+      host: lp.${SERVER_DOMAIN}
+
+  librephotos-frontend:
+    image: reallibrephotos/librephotos-frontend:2022w13
+    container_name: librephotos-frontend
+    depends_on:
+      - librephotos-backend
+    labels:
+      app: librephotos
+
+  librephotos-backend:
+    image: reallibrephotos/librephotos:2022w13
+    container_name: librephotos-backend
+    networks:
+      - default
+      - data
+    volumes:
+      - ${NAS}/pictures/Organized:/data:ro
+      - ${NAS}/docker/librephotos/protected_media:/protected_media
+      - ${NAS}/docker/librephotos/logs:/logs
+      - ${NAS}/docker/librephotos/cache:/root/.cache
+
+    environment:
+      - SECRET_KEY=${LIBREPHOTOS_SECRET_KEY}
+      - BACKEND_HOST=backend
+      - ADMIN_EMAIL=${GOOGLE_EMAIL}
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - DB_BACKEND=postgresql
+      - DB_NAME=librephotos
+      - DB_USER=librephotos
+      - DB_PASS=${DB_PASS_LIBREPHOTOS}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_HOST=librephotos-redis
+      - REDIS_PORT=6379
+      - MAPBOX_API_KEY=${MAPBOX_API_KEY}
+      - WEB_CONCURRENCY=2
+      # - SKIP_PATTERNS=${skipPatterns}
+      - ALLOW_UPLOAD=0
+      - DEBUG=1
+      # - HEAVYWEIGHT_PROCESS=${HEAVYWEIGHT_PROCESS}
+      # Default minimum rating to interpret as favorited. This default value is used when creating a new user.
+      # Users can change this in their settings (Dashboards > Library).
+      - DEFAULT_FAVORITE_MIN_RATING=4
+
+    # Wait for Postgres
+    depends_on:
+      - postgres
+
+    labels:
+      app: librephotos
+
+  librephotos-redis:
+    image: redis:6
+    container_name: librephotos-redis
+    labels:
+      app: librephotos

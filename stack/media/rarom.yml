@@ -1,8 +1,10 @@
 version: "2.1"
 services:
   rarom:
-    image: randomninjaatk/raromprocessor
     container_name: rarom
+    image: randomninjaatk/raromprocessor
+    networks:
+      - external
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -12,8 +14,10 @@ services:
       - DeDupe=true
       - AquireRomSets=false
       - ConcurrentDownloadThreads=5
-      - ScreenscraperUsername=z6ByYELyi24tRY893KmmZaq
-      - ScreenscraperPassword=CrCmfrNAntaCGBa8E9rPP93
+      - ScrapeMetadata=true
+      - keepBackupsOfImportedRoms=false
+      - ScreenscraperUsername=${SCREENSCRAPER_USERNAME}
+      - ScreenscraperPassword=${SCREENSCRAPER_PASSWORD}
     volumes:
       - ${NAS}/docker/rarom/config:/config
       - ${NAS}/docker/rarom/skyscraper_cache:/cache

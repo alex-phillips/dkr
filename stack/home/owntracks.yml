@@ -8,14 +8,14 @@ services:
     environment:
       OTR_HOST: mosquitto
       OTR_USER: owntracks
-      OTR_PASS: GtgJ57nUjjNgQft7Kd8FowKHxHXpFQG
+      OTR_PASS: ${OTR_PASSWORD}
       OTR_HTTPHOST: gps.${SERVER_DOMAIN}
     volumes:
       - ${NAS}/docker/owntracks/config:/config
       - ${NAS}/docker/owntracks/store:/store
     labels:
       namespace: home
-      traefik.http.middlewares.owntracks-auth.basicauth.users: alex:$$apr1$$Z9az.K3c$$PFwbpjz0q5vjX91LXmm1G.
+      traefik.http.middlewares.owntracks-auth.basicauth.users: ${OTR_BASIC_AUTH}
       traefik.http.middlewares.owntracks-header.headers.accesscontrolalloworiginlist: https://ot.${SERVER_DOMAIN}
       traefik.http.middlewares.owntracks-header.headers.accessControlAllowCredentials: true
       traefik.http.routers.owntracks-8083.middlewares: owntracks-header@docker

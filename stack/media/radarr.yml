@@ -2,7 +2,9 @@ version: '2'
 services:
   radarr:
     container_name: radarr
-    image: ghcr.io/linuxserver/radarr:4.3.2
+    image: ghcr.io/linuxserver/radarr:4.2.4
+    networks:
+      - external
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${NAS}/docker/radarr:/config
@@ -18,3 +20,5 @@ services:
       namespace: media
       port: 7878
       host: rdr.${SERVER_DOMAIN}
+      homepage.widget: true
+      homepage.widget.key: ${RADARR_API_KEY}

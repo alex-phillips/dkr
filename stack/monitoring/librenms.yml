@@ -1,0 +1,19 @@
+version: '3'
+services:
+  librenms:
+    container_name: librenms
+    image: librenms/librenms:22.3.0
+    networks:
+      - data
+    environment:
+      TZ: ${TIMEZONE}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DB_HOST: mariadb
+      DB_PASSWORD: ${DB_PASS_LIBRENMS}
+    volumes:
+      - ${NAS}/docker/librenms:/data
+    labels:
+      ingress:
+        - port: 8000
+          host: nms.${SERVER_DOMAIN}

@@ -1,0 +1,20 @@
+version: '3'
+services:
+  cura:
+    container_name: cura
+    image: mindcrime30/docker-cura
+    networks:
+      - vlan10
+    # security_opt:
+    #   - seccomp:unconfined
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/cura/config:/config
+      - ${NAS}/docker/cura/storage:/storage
+      - ${NAS}/docker/cura/output:/output
+    labels:
+      host: cura.${SERVER_DOMAIN}
+      port: 5800

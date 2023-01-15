@@ -5,6 +5,7 @@ services:
     image: telegraf
     networks:
       - monitoring
+      - external
     volumes:
       - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     labels:

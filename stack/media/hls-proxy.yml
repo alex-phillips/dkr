@@ -1,0 +1,53 @@
+version: '3'
+services:
+  hls-proxy:
+    container_name: hls-proxy
+    image: hls-proxy
+    networks:
+      - vlan10
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      TLD: ${SERVER_DOMAIN}
+      PROXY_URL: hls-proxy.${SERVER_DOMAIN}
+      HLS_STREAM_SUBDOMAIN_PREFIX: hls-stream-
+      NUM_STREAMS: 10
+    volumes:
+      - ${NAS}/docker/hls-proxy:/config
+    labels:
+      ingress:
+        - port: 80
+          host: tv-proxy.${SERVER_DOMAIN}
+        - port: 3000
+          host: hls-proxy.${SERVER_DOMAIN}
+        - port: 3030
+          protocol: https
+          host: hls-stream-0.${SERVER_DOMAIN}
+        - port: 3031
+          protocol: https
+          host: hls-stream-1.${SERVER_DOMAIN}
+        - port: 3032
+          protocol: https
+          host: hls-stream-2.${SERVER_DOMAIN}
+        - port: 3033
+          protocol: https
+          host: hls-stream-3.${SERVER_DOMAIN}`
+        - port: 3034
+          protocol: https
+          host: hls-stream-4.${SERVER_DOMAIN}
+        - port: 3035
+          protocol: https
+          host: hls-stream-5.${SERVER_DOMAIN}
+        - port: 3036
+          protocol: https
+          host: hls-stream-6.${SERVER_DOMAIN}
+        - port: 3037
+          protocol: https
+          host: hls-stream-7.${SERVER_DOMAIN}
+        - port: 3038
+          protocol: https
+          host: hls-stream-8.${SERVER_DOMAIN}
+        - port: 3039
+          protocol: https
+          host: hls-stream-9.${SERVER_DOMAIN}

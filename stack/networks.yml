@@ -1,36 +1,73 @@
 networks:
   default:
     internal: true
-    # ipam:
-    #   driver: default
-    #   config:
-    #     - subnet: 172.19.0.0/24
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.17.0.0/16
 
   external:
     name: external
-
-  mullvad:
-    name: mullvad
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.1.0/24
 
   web:
     name: web
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.2.0/24
 
   data:
     name: data
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.3.0/24
 
   dockerproxy:
     name: dockerproxy
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.4.0/24
 
   monitoring:
     name: monitoring
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.5.0/24
 
   home:
     name: home
     internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.6.0/24
+
+  paperless:
+    name: paperless
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.7.0/24
+
+  socks:
+    name: socks
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.8.0/24
 
   vlan10:
     name: vlan10

@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  sshwifty:
+    image: niruix/sshwifty:latest
+    container_name: sshwifty
+    user: "1000:1000"
+    restart: always
+    environment:
+      - SSHWIFTY_CONFIG=/config/sshwifty.conf
+    volumes:
+      - ${NAS}/docker/sshwifty:/config
+      - ${HOME}/.ssh/git.${SERVER_DOMAIN}:/config/id_rsa
+    stdin_open: true
+    tty: true
+    labels:
+      ingress:
+        - port: 8182
+          host: ssh.${SERVER_DOMAIN}

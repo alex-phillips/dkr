@@ -1,0 +1,56 @@
+version: "3.4"
+services:
+  tdarr:
+    container_name: tdarr
+    image: ghcr.io/haveagitgat/tdarr:latest
+    runtime: nvidia
+    ports:
+    #   - 8265:8265 # webUI port
+      - 8266:8266 # server port
+    #   - 8267:8267 # Internal node port
+    #   - 8268:8268 # Example extra node port
+    environment:
+      - TZ=${TIMEZONE}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK_SET=002
+      - serverIP=0.0.0.0
+      - serverPort=8266
+      - webUIPort=8265
+      - internalNode=true
+      - nodeID=MyInternalNode
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ${NAS}/docker/tdarr/server:/app/server
+      - ${NAS}/docker/tdarr/configs:/app/configs
+      - ${NAS}/docker/tdarr/logs:/app/logs
+      - ${NAS}/media:/media
+      - ${NAS}/docker/tdarr/transcode_cache:/temp
+    labels:
+      app: tdarr
+      ingress:
+        - port: 8265
+          host: tdr.${SERVER_DOMAIN}
+
+
+# # node example
+#   tdarr-node:
+#     container_name: tdarr-node
+#     image: ghcr.io/haveagitgat/tdarr_node:latest
+#     network_mode: service:tdarr
+#     environment:
+#       - TZ=${TIMEZONE}
+#       - PUID=${PUID}
+#       - PGID=${PGID}
+#       - UMASK_SET=002
+#       - nodeID=MainNode
+#       - serverIP=0.0.0.0
+#       - serverPort=8266
+#     volumes:
+#       - ${NAS}/tdarr/configs:/app/configs
+#       - /docker/tdarr/logs:/app/logs
+#       - ${NAS}/media:/media
+#       # - /transcode_cache:/tmp
+#     labels:
+#       app: tdarr

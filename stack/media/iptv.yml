@@ -1,0 +1,39 @@
+version: '3'
+services:
+  plutotv:
+    container_name: plutotv
+    image: alexphillips/plutotv
+    network_mode: service:nginx
+    depends_on:
+      - nginx
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/plutotv:/data
+    labels:
+      namespace: iptv
+
+  stirr:
+    container_name: stirr
+    image: robbiet480/stirr-for-channels
+    networks:
+      - vlan10
+    labels:
+      namespace: iptv
+      ingress:
+        - port: 80
+          host: stirr.${SERVER_DOMAIN}
+
+  ustvgo:
+    container_name: ustvgo
+    image: ghcr.io/interlark/ustvgo-iptv
+    network_mode: service:protonvpn
+    depends_on:
+      - protonvpn
+    labels:
+      namespace: iptv
+      ingress:
+        - port: 6363
+          host: ustvgo.${SERVER_DOMAIN}

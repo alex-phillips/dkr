@@ -6,6 +6,8 @@ services:
     networks:
       - data
       - external
+    depends_on:
+      - mongo
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

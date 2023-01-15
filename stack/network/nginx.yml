@@ -9,8 +9,11 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
+      DOCKER_MODS: linuxserver/mods:universal-cron
     volumes:
       - ${NAS}/docker/nginx:/config
+      - ${NAS}/docker/nginx/custom-init:/custom-cont-init.d
+      - ${NAS}/docker/plutotv:/config/www/plutotv
     labels:
       host: static.${SERVER_DOMAIN}
       port: 80

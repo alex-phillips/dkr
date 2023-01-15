@@ -1,0 +1,12 @@
+version: '3'
+services:
+  qooxtunes:
+    container_name: qooxtunes
+    image: alexphillips/qooxtunes
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+    labels:
+      port: 443
+      protocol: https
+      host: music.${SERVER_DOMAIN}

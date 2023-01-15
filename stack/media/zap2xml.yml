@@ -1,0 +1,16 @@
+version: '2'
+services:
+  zap2xml:
+    container_name: zap2xml
+    image: alexphillips/zap2xml
+    networks:
+      - external
+    volumes:
+      - ${NAS}/docker/zap2xml:/config
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+      EMAIL: ${ZAP2XML_USER}
+      PASSWORD: ${ZAP2XML_PASS}
+      EXTRAPARAM: -I -D

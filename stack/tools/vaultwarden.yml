@@ -3,9 +3,18 @@ services:
   vaultwarden:
     container_name: vaultwarden
     image: vaultwarden/server:1.27.0
+    networks:
+      - external
     environment:
-      - TZ=America/New_York
-      - SIGNUPS_ALLOWED=false
+      TZ: ${TIMEZONE}
+      SIGNUPS_ALLOWED: true
+      DOMAIN: https://bw.${SERVER_DOMAIN}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_FROM: ${SMTP_USER}
+      SMTP_PORT: 587
+      SMTP_SECURITY: starttls
+      SMTP_USERNAME: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
     volumes:
       - ${NAS}/docker/vaultwarden:/data
       - /etc/timezone:/etc/timezone:ro

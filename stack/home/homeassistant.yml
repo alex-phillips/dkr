@@ -6,10 +6,10 @@ services:
     networks:
       - data
       - external
-    ports:
-      - 8123:8123
+        #    ports:
+        #      - 8123:8123
     volumes:
-      - ${NAS}/docker/home-assistant:/config
+      - ${NAS}/docker/ha-sageleaf:/config
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - mariadb
@@ -17,6 +17,25 @@ services:
       namespace: home
       port: 8123
       host: ha.${SERVER_DOMAIN}
+#       nginx_directives: proxy_hide_header X-Frame-Options;
+
+  ha-chevalier:
+    container_name: ha-chevalier
+    image: ghcr.io/home-assistant/home-assistant:2023.1.2
+    network_mode: host
+    volumes:
+      - ${NAS}/docker/ha-chevalier:/config
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - mariadb
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+    labels:
+      namespace: home
+      port: 8123
+      host: homie.${SERVER_DOMAIN}
+      service: http://192.168.1.91:8123
 #       nginx_directives: proxy_hide_header X-Frame-Options;
 
   # ha-code-server:

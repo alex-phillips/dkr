@@ -9,6 +9,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ${NAS}/docker/emulatorjs:/data
+      - ${NAS}/docker/rarom:${NAS}/docker/rarom
     labels:
       ingress:
         - port: 80

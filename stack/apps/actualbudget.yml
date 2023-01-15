@@ -1,0 +1,11 @@
+version: '3'
+services:
+  actualbudget:
+    container_name: actualbudget
+    image: actualbudget
+    volumes:
+      - ${NAS}/docker/actualbudget:/data
+    labels:
+      ingress:
+        - port: 5006
+          host: actual.${SERVER_DOMAIN}

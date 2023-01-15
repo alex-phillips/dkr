@@ -1,0 +1,21 @@
+version: "3"
+services:
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
+    networks:
+      - external
+    user: ${PUID}:${PGID}
+    environment:
+      # All options with their default values:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info
+      ND_ENABLETRANSCODINGCONFIG: true
+    volumes:
+      - ${NAS}/docker/navidrome:/data
+      - ${NAS}/music/beets/Music:/music:ro
+    labels:
+      host: nd.${SERVER_DOMAIN}
+      port: 4533

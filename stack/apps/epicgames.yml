@@ -1,0 +1,14 @@
+version: '3'
+services:
+  epicgames:
+    container_name: epicgames
+    networks:
+      - external
+    environment:
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${HOME}/docker/epicgames:/usr/app/config
+    image: charlocharlie/epicgames-freegames:latest
+    labels:
+      port: 3000
+      host: epic.${SERVER_DOMAIN}

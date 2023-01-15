@@ -1,0 +1,17 @@
+version: '3'
+services:
+  socks:
+    image: ghcr.io/linuxserver/nginx
+    container_name: socks
+    networks:
+      - vlan10
+      - socks
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/proxy:/config
+    restart: unless-stopped
+    ports:
+      - 1080:1080 # SOCKS proxy

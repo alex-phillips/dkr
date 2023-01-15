@@ -2,7 +2,8 @@ version: "2"
 services:
   budge:
     container_name: budge
-    image: ghcr.io/linuxserver/budge
+    #image: ghcr.io/linuxserver/budge
+    image: lspipepr/budge:0.0.9-pkg-2bd66919-pr-15
     volumes:
       - ${NAS}/docker/budg-e:/config
     environment:
@@ -11,5 +12,5 @@ services:
       - TZ=${TIMEZONE}
     labels:
       port: 80
-      host: budg-e.${SERVER_DOMAIN}
-      auth: False
+      host: budge.${SERVER_DOMAIN}
+      auth: false

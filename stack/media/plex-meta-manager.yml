@@ -3,9 +3,12 @@ services:
   plex-meta-manager:
     container_name: plex-meta-manager
     image: ghcr.io/linuxserver/plex-meta-manager:1.18.2
+    networks:
+      - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
+      PMM_CONFIG: /config/config.yml
     volumes:
       - ${NAS}/docker/plex/meta-manager:/config

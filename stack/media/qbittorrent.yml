@@ -2,7 +2,7 @@ version: '3'
 services:
   qbittorrent:
     container_name: qbittorrent
-    image: ghcr.io/linuxserver/qbittorrent:4.5.0
+    image: ghcr.io/linuxserver/qbittorrent:4.4.5
     # network_mode: service:mullvad
     # depends_on:
       # - mullvad
@@ -14,17 +14,35 @@ services:
       - ${NAS}/torrents:${NAS}/torrents
       - ${NAS}/media:${NAS}/media
       - ${NAS}/other:${NAS}/other
+      - ${NAS}/docker/qbittorrent/custom-init:/custom-cont-init.d
     environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-      - TZ=${TIMEZONE}
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
         #      - WEBUI_PORT=8080
       # - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
-      - DOCKER_MODS=ghcr.io/linuxserver/mods:universal-stdout-logs
-      - LOGS_TO_STDOUT=/config/qBittorrent/logs/qbittorrent.log
+      # - DOCKER_MODS=ghcr.io/linuxserver/mods:universal-stdout-logs
+      # - LOGS_TO_STDOUT=/config/qBittorrent/logs/qbittorrent.log
         #      - TP_THEME=plex
     labels:
+      namespace: media
       ingress:
         - port: 8080
           host: qb.${SERVER_DOMAIN}
-      namespace: media
+      homepage.widget: true
+      homepage.widget.username: ${QBT_USERNAME}
+      homepage.widget.password: ${QBT_PASSWORD}
+
+  qbitmanage:
+    container_name: qbitmanage
+    image: cr.hotio.dev/hotio/qbitmanage
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      UMASK: 002
+      TZ: ${TIMEZONE}
+      QBT_TRACE: "true"
+      ARGS: -tnhl --trace --log-level DEBUG -r --dry-run
+    volumes:
+      - ${NAS}/docker/qbitmanage:/config
+      - ${NAS}:${NAS}

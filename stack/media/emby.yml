@@ -1,0 +1,43 @@
+version: '2'
+services:
+  emby:
+    container_name: emby
+    image: ghcr.io/linuxserver/emby
+    networks:
+      - external
+    ports:
+      - 8096:8096
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/emby:/config
+      - ${NAS}/media:${NAS}/media
+      - ${NAS}/music/beets/Music:/media/music:ro
+      - ${NAS}/pictures/Organized:/media/photos:ro
+      - ${NAS}:${NAS}:ro
+      - ${NAS}/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - ${NAS}/transcode:/transcode
+      - ${NAS}/docker/dtv:/dtv
+    labels:
+      namespace: media
+      ingress:
+        - port: 8096
+          host: mb.${SERVER_DOMAIN}
+      homepage.widget: true
+      homepage.widget.key: ${EMBY_API_KEY}
+#
+#   embystat:
+#     container_name: embystat
+#     image: ghcr.io/linuxserver/embystat
+#     environment:
+#       - PGID=${PGID}
+#       - PUID=${PUID}
+#       - TZ=${TIMEZONE}
+#     volumes:
+#       - ${HOME}/docker/embystat:/config
+#     labels:
+#       port: 6555
+#       host: mbs.${SERVER_DOMAIN}
+#       auth: true

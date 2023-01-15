@@ -1,0 +1,17 @@
+version: '3'
+services:
+  sqlitebrowser:
+    container_name: sqlitebrowser
+    image: lscr.io/linuxserver/sqlitebrowser:latest
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/sqlitebrowser:/config
+    labels:
+      ingress:
+        - port: 3000
+          host: sqlite.${SERVER_DOMAIN}

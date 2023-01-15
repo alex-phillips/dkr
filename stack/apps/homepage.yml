@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  homepage:
+    container_name: homepage
+    image: ghcr.io/benphelps/homepage:latest
+    networks:
+      - dockerproxy
+      - external
+    volumes:
+      - ${NAS}/docker/homepage:/app/config # Make sure your local config directory exists
+      # - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
+    labels:
+      ingress:
+        - port: 3000
+          host: home.${SERVER_DOMAIN}

@@ -3,6 +3,8 @@ services:
   paperless-redis:
     container_name: paperless-redis
     image: docker.io/library/redis:6.2
+    networks:
+      - paperless
     restart: unless-stopped
     volumes:
       - ${NAS}/docker/paperless-ngx/redis:/data
@@ -12,6 +14,9 @@ services:
   paperless-ngx:
     container_name: paperless-ngx
     image: ghcr.io/paperless-ngx/paperless-ngx:1.11.3
+    networks:
+      - external
+      - paperless
     depends_on:
       - paperless-redis
       - paperless-gotenberg
@@ -46,6 +51,8 @@ services:
   paperless-gotenberg:
     container_name: paperless-gotenberg
     image: docker.io/gotenberg/gotenberg:7.7
+    networks:
+      - paperless
     restart: unless-stopped
     command:
       - "gotenberg"
@@ -56,6 +63,8 @@ services:
   paperless-tika:
     container_name: paperless-tika
     image: ghcr.io/paperless-ngx/tika:latest
+    networks:
+      - paperless
     restart: unless-stopped
     labels:
       app: paperless

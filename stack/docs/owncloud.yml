@@ -1,0 +1,17 @@
+version: '3'
+services:
+  owncloud:
+    container_name: owncloud
+    image: owncloud/ocis
+    environment:
+      OCIS_INSECURE: true
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      OCIS_URL: https://oc.${SERVER_DOMAIN}
+    volumes:
+      - ${NAS}/docker/owncloud/config:/etc/ocis
+      - ${NAS}/docker/owncloud/data:/var/lib/ocis
+    labels:
+      ingress:
+        - port: 9200
+          host: oc.${SERVER_DOMAIN}
+          protocol: https

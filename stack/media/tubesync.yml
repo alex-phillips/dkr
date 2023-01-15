@@ -1,0 +1,20 @@
+version: '3'
+services:
+  tubesync:
+    container_name: tubesync
+    image: ghcr.io/meeb/tubesync:latest
+    networks:
+      - data
+      - external
+    volumes:
+      - ${NAS}/docker/tubesync:/config
+      - ${NAS}/media/tubesync:/downloads
+    environment:
+      TZ: ${TIMEZONE}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DATABASE_CONNECTION: postgresql://tubesync:${DB_PASS_TUBESYNC}@postgres:5432/tubesync
+    labels:
+      ingress:
+      - port: 4848
+        host: yt.${SERVER_DOMAIN}

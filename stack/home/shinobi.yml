@@ -1,0 +1,28 @@
+version: '3'
+services:
+  shinobi:
+    container_name: shinobi
+    image: shinobisystems/shinobi:dev
+    networks:
+      - data
+    environment:
+      - APP_BRANCH=dev
+      - TZ=${TIMEZONE}
+      - DB_DISABLE_INCLUDED=true
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_HOST=mariadb
+      - MYSQL_DATABASE=shinobi
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_USER=root
+    volumes:
+      - ${NAS}/docker/shinobi-systems/config:/config
+      - ${NAS}/docker/shinobi-systems/plugins:/home/Shinobi/plugins
+      - /dev/shm/Shinobi/streams:/dev/shm/streams
+      - /etc/localtime:/etc/localtime:ro
+      - ${NAS}/docker/shinobi-systems/videos:/home/Shinobi/videos
+      - ${NAS}/docker/shinobi-systems/customAutoLoad:/home/Shinobi/libs/customAutoLoad
+      - ${NAS}/shinobi_recordings:/recordings
+    labels:
+      host: sc.${SERVER_DOMAIN}
+      port: 8080

@@ -1,0 +1,14 @@
+version: '3'
+services:
+  jdownloader:
+    container_name: jdownloader
+    image: jlesage/jdownloader-2
+    networks:
+      - vlan10
+    volumes:
+      - ${NAS}/docker/jdownloader2/config:/config
+      - ${NAS}/docker/jdownloader2/output:/output
+    labels:
+      ingress:
+        - port: 5800
+          host: jd.${SERVER_DOMAIN}

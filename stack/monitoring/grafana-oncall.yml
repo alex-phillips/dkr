@@ -9,21 +9,21 @@ services:
       - monitoring
     environment:
       BASE_URL: oncall.${SERVER_DOMAIN}
-      SECRET_KEY: $ONCALL_SECRET_KEY
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
-      RABBITMQ_HOST: oncall-rabbitmq
-      RABBITMQ_PORT: "5672"
-      RABBITMQ_DEFAULT_VHOST: "/"
-      MYSQL_PASSWORD: $DB_PASS_ONCALL
-      MYSQL_DB_NAME: oncall
-      MYSQL_USER: oncall
-      MYSQL_HOST: 192.168.1.91
-      MYSQL_PORT: 3306
-      REDIS_URI: redis://oncall-redis:6379/0
+      CELERY_WORKER_QUEUE: default,critical,long,slack,telegram,webhook,retry,celery
       DJANGO_SETTINGS_MODULE: settings.hobby
-      OSS: "True"
-      CELERY_WORKER_QUEUE: "default,critical,long,slack,telegram,webhook,retry,celery"
+      MYSQL_DB_NAME: oncall
+      MYSQL_HOST: mariadb
+      MYSQL_PASSWORD: ${DB_PASS_ONCALL}
+      MYSQL_PORT: 3306
+      MYSQL_USER: oncall
+      OSS: 'True'
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_HOST: oncall-rabbitmq
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_PORT: '5672'
+      RABBITMQ_USERNAME: guest
+      REDIS_URI: redis://oncall-redis:6379/0
+      SECRET_KEY: ${ONCALL_SECRET_KEY}
       TELEGRAM_TOKEN: ${ONCALL_TELEGRAM_TOKEN}
     depends_on:
       mariadb:
@@ -47,18 +47,19 @@ services:
     networks:
       - data
       - monitoring
+      - external
     environment:
       BASE_URL: oncall.${SERVER_DOMAIN}
-      SECRET_KEY: $ONCALL_SECRET_KEY
+      SECRET_KEY: ${ONCALL_SECRET_KEY}
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
       RABBITMQ_HOST: oncall-rabbitmq
       RABBITMQ_PORT: "5672"
       RABBITMQ_DEFAULT_VHOST: "/"
-      MYSQL_PASSWORD: $DB_PASS_ONCALL
+      MYSQL_PASSWORD: ${DB_PASS_ONCALL}
       MYSQL_DB_NAME: oncall
       MYSQL_USER: oncall
-      MYSQL_HOST: 192.168.1.91
+      MYSQL_HOST: mariadb
       MYSQL_PORT: 3306
       REDIS_URI: redis://oncall-redis:6379/0
       DJANGO_SETTINGS_MODULE: settings.hobby
@@ -87,18 +88,19 @@ services:
     command: python manage.py migrate --noinput
     networks:
       - data
+      - external
     environment:
       BASE_URL: oncall.${SERVER_DOMAIN}
-      SECRET_KEY: $ONCALL_SECRET_KEY
+      SECRET_KEY: ${ONCALL_SECRET_KEY}
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
       RABBITMQ_HOST: "oncall-rabbitmq"
       RABBITMQ_PORT: "5672"
       RABBITMQ_DEFAULT_VHOST: "/"
-      MYSQL_PASSWORD: $DB_PASS_ONCALL
+      MYSQL_PASSWORD: ${DB_PASS_ONCALL}
       MYSQL_DB_NAME: oncall
       MYSQL_USER: oncall
-      MYSQL_HOST: 192.168.1.91
+      MYSQL_HOST: mariadb
       MYSQL_PORT: 3306
       REDIS_URI: redis://oncall-redis:6379/0
       DJANGO_SETTINGS_MODULE: settings.hobby
@@ -114,10 +116,10 @@ services:
 
   oncall-redis:
     container_name: oncall-redis
+    image: redis:alpine
     networks:
       - data
       - monitoring
-    image: redis
     mem_limit: 100m
     cpus: 0.1
     labels:

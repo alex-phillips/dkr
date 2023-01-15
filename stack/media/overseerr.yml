@@ -3,6 +3,8 @@ services:
   overseerr:
     image: lscr.io/linuxserver/overseerr:1.31.0
     container_name: overseerr
+    networks:
+      - external
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -11,5 +13,8 @@ services:
       - ${NAS}/docker/overseerr:/config
     labels:
       namespace: media
-      port: 5055
-      host: request.${SERVER_DOMAIN}
+      ingress:
+        - port: 5055
+          host: request.${SERVER_DOMAIN}
+      homepage.widget: true
+      homepage.widget.key: ${OVERSEERR_API_KEY}

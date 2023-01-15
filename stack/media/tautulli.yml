@@ -3,10 +3,12 @@ services:
   tautulli:
     container_name: tautulli
     image: ghcr.io/linuxserver/tautulli:2.11.1
+    networks:
+      - external
     environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-      - TZ=${TIMEZONE}
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
     volumes:
       - ${NAS}/docker/tautulli:/config
       - ${NAS}/docker/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
@@ -14,3 +16,5 @@ services:
       namespace: media
       port: 8181
       host: ttl.${SERVER_DOMAIN}
+      homepage.widget: true
+      homepage.widget.key: ${TAUTULLI_API_KEY}

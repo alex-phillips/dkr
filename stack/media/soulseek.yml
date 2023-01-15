@@ -1,0 +1,22 @@
+version: '3'
+services:
+  soulseek:
+    container_name: soulseek
+    image: realies/soulseek
+    networks:
+      vlan10:
+        ipv4_address: 192.168.10.52
+    environment:
+      PGID: ${PGID}
+      PUID: ${PUID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/soulseek/data:/data/.SoulseekQt
+      - ${NAS}/docker/soulseek/downloads:/data/Soulseek Downloads
+      - ${NAS}/docker/soulseek/logs:/data/Soulseek Chat Logs
+      - ${NAS}/docker/soulseek/shared:/data/Soulseek Shared Folder
+      - ${NAS}:${NAS}:ro
+    labels:
+      ingress:
+        - port: 6080
+          host: ss.${SERVER_DOMAIN}

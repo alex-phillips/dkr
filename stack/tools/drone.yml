@@ -6,6 +6,8 @@ services:
     networks:
       - data
       - external
+    depends_on:
+      - postgres
     environment:
       DRONE_GIT_ALWAYS_AUTH: true
       DRONE_SERVER_HOST: ci.${SERVER_DOMAIN}

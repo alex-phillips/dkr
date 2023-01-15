@@ -4,7 +4,7 @@ services:
     container_name: mullvad
     image: ghcr.io/linuxserver/wireguard:1.0.20210914
     networks:
-      - mullvad
+      - external
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -34,6 +34,8 @@ services:
   mullvad-misc:
     container_name: mullvad-misc
     image: ghcr.io/linuxserver/wireguard:1.0.20210914
+    networks:
+      - external
     cap_add:
       - NET_ADMIN
       - SYS_MODULE

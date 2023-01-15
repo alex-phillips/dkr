@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  wrapperr:
+    container_name: wrapperr
+    image: aunefyren/wrapperr:latest
+    networks:
+      - external
+    labels:
+      port: 8282
+      host: wpr.${SERVER_DOMAIN}

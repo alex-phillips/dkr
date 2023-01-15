@@ -46,13 +46,15 @@ services:
 #      resources:
 #        limits:
 #          cpus: '1'
+    cpus: 1
     networks:
-      - default
       - data
+      - external
     depends_on:
       - mariadb
+    # runtime: nvidia
     environment:
-      TZ: America/New_York
+      TZ: ${TIMEZONE}
       PHOTOPRISM_SPONSOR: "true"
       PHOTOPRISM_HTTP_PORT: 2342
       PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # PLEASE CHANGE: Your initial admin password (min 4 characters)
@@ -66,7 +68,7 @@ services:
       PHOTOPRISM_DETECT_NSFW: "false"                # Flag photos as private that MAY be offensive (requires TensorFlow)
       PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
       PHOTOPRISM_DATABASE_DRIVER: "mysql"            # Use MariaDB (or MySQL) instead of SQLite for improved performance
-      PHOTOPRISM_DATABASE_SERVER: "192.168.1.91:3306"     # MariaDB database server (hostname:port)
+      PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB database server (hostname:port)
       PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB database schema name
       PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB database user name
       PHOTOPRISM_DATABASE_PASSWORD: ${DB_PASS_PHOTOPRISM}       # MariaDB database user password
@@ -79,10 +81,19 @@ services:
       PHOTOPRISM_ORIGINALS_LIMIT: 99999
       PHOTOPRISM_DISABLE_CHOWN: 1
       # PHOTOPRISM_DISABLE_FFMPEG: "true"
-      PHOTOPRISM_UID: 1000
-      PHOTOPRISM_GID: 1000
+      #PHOTOPRISM_FFMPEG_ENCODER: "nvidia"
+      PHOTOPRISM_UID: ${PUID}
+      PHOTOPRISM_GID: ${PGID}
       # Uncomment and edit the following line to set a specific user / group id (native):
       # user: "1000:1000"
+      # NVIDIA_VISIBLE_DEVICES: all
+      # NVIDIA_DRIVER_CAPABILITIES: all
+    # devices:
+    #   - /dev/nvidia-modeset:/dev/nvidia-modeset
+    #   - /dev/nvidia-uvm:/dev/nvidia-uvm
+    #   - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+    #   - /dev/nvidia0:/dev/nvidia0
+    #   - /dev/nvidiactl:/dev/nvidiactl
     volumes:
       # Your photo and video files ([local path]:[container path]):
       - ${NAS}/pictures/Organized:/photoprism/originals:ro

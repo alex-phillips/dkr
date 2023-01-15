@@ -9,7 +9,8 @@ services:
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
-#    labels:
+    labels:
+      homepage.widget: true
 #      host: unifi.${SERVER_DOMAIN}
 #      port: 8443
 #      protocol: https

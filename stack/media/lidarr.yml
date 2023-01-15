@@ -4,6 +4,8 @@ services:
   lidarr:
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
+    networks:
+      - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -12,12 +14,11 @@ services:
       - ${NAS}/docker/lidarr:/config
       - ${NAS}/music/beets/Music:/music
       - ${NAS}:${NAS}
-      # - /path/to/downloads:/downloads #optional
     labels:
       app: lidarr
       ingress:
         - port: 8686
-          host: ldr.w00t.cloud
+          host: ldr.${SERVER_DOMAIN}
 
   lidarr-amd:
     image: randomninjaatk/amd

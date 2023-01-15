@@ -1,0 +1,18 @@
+version: '3'
+services:
+  protonvpn:
+    container_name: protonvpn
+    image: ghcr.io/tprasadtp/protonvpn
+    networks:
+      - vlan10
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      # Credentials
+      PROTONVPN_USERNAME: Dlx4xcyEYVeNJT4g
+      PROTONVPN_PASSWORD: 5nT3eyXS18QC85KYrQ1KoziXT82Vb1pz
+      # Override these where applicable
+      PROTONVPN_SERVER: ${PROTONVPN_SERVER:-US}
+      PROTONVPN_TIER: ${PROTONVPN_TIER:-0}

@@ -1,0 +1,16 @@
+version: '3'
+services:
+  tasmoadmin:
+    container_name: tasmoadmin
+    image: raymondmm/tasmoadmin
+    networks:
+      - external
+    ports:
+      - 9345:9345
+    volumes:
+      - ${NAS}/docker/tasmoadmin:/data
+    labels:
+      namespace: home
+      ingress:
+        - port: 80
+          host: tasmo.${SERVER_DOMAIN}

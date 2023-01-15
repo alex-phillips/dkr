@@ -47,7 +47,6 @@ services:
 #        limits:
 #          cpus: '1'
     networks:
-      - default
       - data
     depends_on:
       - mariadb
@@ -66,7 +65,7 @@ services:
       PHOTOPRISM_DETECT_NSFW: "false"                # Flag photos as private that MAY be offensive (requires TensorFlow)
       PHOTOPRISM_UPLOAD_NSFW: "true"                 # Allow uploads that MAY be offensive
       PHOTOPRISM_DATABASE_DRIVER: "mysql"            # Use MariaDB (or MySQL) instead of SQLite for improved performance
-      PHOTOPRISM_DATABASE_SERVER: "192.168.1.91:3306"     # MariaDB database server (hostname:port)
+      PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB database server (hostname:port)
       PHOTOPRISM_DATABASE_NAME: "photoprism-family"         # MariaDB database schema name
       PHOTOPRISM_DATABASE_USER: "photoprism-family"         # MariaDB database user name
       PHOTOPRISM_DATABASE_PASSWORD: ${DB_PASS_PHOTOPRISM_FAMILY}       # MariaDB database user password
@@ -95,6 +94,7 @@ services:
       - ${NAS}/pictures/Organized/2020:/photoprism/originals/2020:ro
       - ${NAS}/pictures/Organized/2021:/photoprism/originals/2021:ro
       - ${NAS}/pictures/Organized/2022:/photoprism/originals/2022:ro
+      - ${NAS}/pictures/Organized/2023:/photoprism/originals/2022:ro
 
       # Multiple folders can be indexed by mounting them as sub-folders of /photoprism/originals:
       # - "/mnt/Family:/photoprism/originals/Family"    # [folder_1]:/photoprism/originals/[folder_1]

@@ -5,14 +5,17 @@ services:
     image: diskover-v2
     #image: alexphillips/diskover
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: America/New_York
-      ES_HOST: elasticsearch
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      ES_HOST: localhost
       ES_PORT: 9200
     volumes:
       - ${NAS}/docker/diskover-v2:/config
-      - /mnt/local-storage:${NAS}:ro
+      - /mnt/storage:${NAS}:ro
+      - /:/host-root
+      - ${NAS}/docker/diskover-v2/license:/app/www/src/diskover/diskover-web.lic
+      - ${NAS}/docker/diskover-v2/license:/app/diskover/diskover.lic
     labels:
       app: diskover
       port: 80
@@ -32,10 +35,10 @@ services:
         hard: -1
     volumes:
       # local ES data directory
-      - ${HOME}/docker/diskover-v2/esdata:/usr/share/elasticsearch/data
-#    ports:
-#      - 9200:9200
-#      - 9300:9300
+      - ${NAS}/docker/diskover-v2/esdata:/usr/share/elasticsearch/data
+        #    ports:
+        #      - 9200:9200
+        #      - 9300:9300
     # depends_on:
     #   - elasticsearch-helper
     restart: unless-stopped

@@ -1,0 +1,67 @@
+# version: "3"
+# services:
+#   #UI dashboard
+#   dashboard:
+#     image: wiretrustee/dashboard:main
+#     restart: unless-stopped
+#     ports:
+#       - 80:80
+#       - 443:443
+#     environment:
+#       - AUTH_AUDIENCE=$NETBIRD_AUTH_AUDIENCE
+#       - AUTH_CLIENT_ID=$NETBIRD_AUTH_CLIENT_ID
+#       - AUTH_AUTHORITY=$NETBIRD_AUTH_AUTHORITY
+#       - USE_AUTH0=$NETBIRD_USE_AUTH0
+#       - AUTH_SUPPORTED_SCOPES=$NETBIRD_AUTH_SUPPORTED_SCOPES
+#       - NETBIRD_MGMT_API_ENDPOINT=$NETBIRD_MGMT_API_ENDPOINT
+#       - NETBIRD_MGMT_GRPC_API_ENDPOINT=$NETBIRD_MGMT_API_ENDPOINT
+#       - NGINX_SSL_PORT=443
+#       - LETSENCRYPT_DOMAIN=$NETBIRD_DOMAIN
+#       - LETSENCRYPT_EMAIL=$NETBIRD_LETSENCRYPT_EMAIL
+#     volumes:
+#       - ${NAS}/docker/netbird/letsencrypt:/etc/letsencrypt/
+#     labels:
+#       app: netbird
+#       ingress:
+#         - port: 443
+#           host: nb.${SERVER_DOMAIN}
+
+#   # Signal
+#   signal:
+#     image: netbirdio/signal:latest
+#     restart: unless-stopped
+#     volumes:
+#       - ${NAS}/docker/netbird/signal:/var/lib/netbird
+#     ports:
+#       - 10000:80
+#   #     # port and command for Let's Encrypt validation
+#   #      - 443:443
+#   #    command: ["--letsencrypt-domain", "$NETBIRD_DOMAIN", "--log-file", "console"]
+
+#   # Management
+#   management:
+#     image: netbirdio/management:latest
+#     restart: unless-stopped
+#     depends_on:
+#       - dashboard
+#     volumes:
+#       - ${NAS}/docker/netbird/management:/var/lib/netbird
+#       - ${NAS}/docker/netbird/letsencrypt:/etc/letsencrypt:ro
+#       - ./management.json:/etc/netbird/management.json
+#     ports:
+#       - $NETBIRD_MGMT_API_PORT:443 #API port
+#   #     # port and command for Let's Encrypt validation without dashboard container
+#   #   - 443:443
+#   #    command: ["--letsencrypt-domain", "$NETBIRD_DOMAIN", "--log-file", "console"]
+#     command: ["--port", "443", "--log-file", "console"]
+
+#   # Coturn
+#   coturn:
+#     image: coturn/coturn
+#     restart: unless-stopped
+#     domainname: $NETBIRD_DOMAIN
+#     volumes:
+#       - ./turnserver.conf:/etc/turnserver.conf:ro
+#     #      - ./privkey.pem:/etc/coturn/private/privkey.pem:ro
+#     #      - ./cert.pem:/etc/coturn/certs/cert.pem:ro
+#     network_mode: host

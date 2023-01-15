@@ -1,0 +1,17 @@
+version: '3'
+services:
+  podgrab:
+    container_name: podgrab
+    image: akhilrex/podgrab
+    networks:
+      - external
+    environment:
+      CHECK_FREQUENCY: 240
+    volumes:
+      - ${NAS}/docker/podgrab/assets:/assets
+      - ${NAS}/docker/podgrab/config:/config
+    labels:
+      namespace: media
+      ingress:
+        - port: 8080
+          host: podcasts.${SERVER_DOMAIN}
