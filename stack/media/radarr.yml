@@ -2,7 +2,7 @@ version: '2'
 services:
   radarr:
     container_name: radarr
-    image: ghcr.io/linuxserver/radarr:4.2.4
+    image: ghcr.io/linuxserver/radarr:4.3.2
     networks:
       - external
     volumes:
