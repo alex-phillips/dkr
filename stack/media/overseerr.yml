@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   overseerr:
-    image: lscr.io/linuxserver/overseerr:1.31.0
+    image: lscr.io/linuxserver/overseerr:2021.12.12
     container_name: overseerr
     networks:
       - external
