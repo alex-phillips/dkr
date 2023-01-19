@@ -10,7 +10,7 @@
 version: "3.8"
 services:
   librephotos-proxy:
-    image: reallibrephotos/librephotos-proxy:2022w13
+    image: reallibrephotos/librephotos-proxy:2022w50
     container_name: librephotos-proxy
     volumes:
       - ${NAS}/pictures/Organized:/data:ro
@@ -27,7 +27,7 @@ services:
       host: lp.${SERVER_DOMAIN}
 
   librephotos-frontend:
-    image: reallibrephotos/librephotos-frontend:2022w13
+    image: reallibrephotos/librephotos-frontend:2022w50
     container_name: librephotos-frontend
     depends_on:
       - librephotos-backend
@@ -35,7 +35,7 @@ services:
       app: librephotos
 
   librephotos-backend:
-    image: reallibrephotos/librephotos:2022w13
+    image: reallibrephotos/librephotos:2022w50
     container_name: librephotos-backend
     networks:
       - default
