@@ -1,0 +1,16 @@
+version: '3'
+services:
+  ###
+  #
+  # DB Indicies:
+  #   0: nextcloud
+  #   1: van_dam
+  #
+  ###
+  redis:
+    container_name: redis
+    image: redis:alpine
+    networks:
+      - data
+    volumes:
+      - ${NAS}/docker/redis:/data
