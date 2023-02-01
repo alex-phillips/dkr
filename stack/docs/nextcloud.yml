@@ -9,7 +9,7 @@ services:
       - external
     depends_on:
       - mariadb
-      - redis-nextcloud
+      - redis
     environment:
       PGID: ${PGID}
       PUID: ${PUID}
@@ -29,17 +29,11 @@ services:
       traefik.http.middlewares.nextcloud-headers.headers.stsSeconds: 15552000
       traefik.http.routers.nextcloud-443.middlewares: nextcloud-headers@docker
 
-  redis-nextcloud:
-    container_name: redis-nextcloud
-    image: redis:alpine
-    ports:
-      - 6379:6379
-    labels:
-      app: nextcloud
-
   onlyoffice:
     container_name: onlyoffice
     image: onlyoffice/documentserver
+    networks:
+      - external
     volumes:
       - ${HOME}/docker/onlyoffice:/var/log/onlyoffice
     environment:
