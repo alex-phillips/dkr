@@ -15,3 +15,13 @@ services:
       namespace: home
       port: 9001
       host: mqtt.${SERVER_DOMAIN}
+
+  mqtt-explorer:
+    container_name: mqtt-explorer
+    image: smeagolworms4/mqtt-explorer
+    networks:
+      - external
+    labels:
+      ingress:
+        - port: 4000
+          host: mqttui.${SERVER_DOMAIN}
