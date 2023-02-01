@@ -2,38 +2,19 @@ services:
   oncall:
     container_name: oncall
     image: grafana/oncall:v1.1.19
+    networks:
+      - monitoring
     command: >
       sh -c "uwsgi --ini uwsgi.ini"
-    networks:
-      - data
-      - monitoring
-    environment:
-      BASE_URL: oncall.${SERVER_DOMAIN}
-      CELERY_WORKER_QUEUE: default,critical,long,slack,telegram,webhook,retry,celery
-      DJANGO_SETTINGS_MODULE: settings.hobby
-      MYSQL_DB_NAME: oncall
-      MYSQL_HOST: mariadb
-      MYSQL_PASSWORD: ${DB_PASS_ONCALL}
-      MYSQL_PORT: 3306
-      MYSQL_USER: oncall
-      OSS: 'True'
-      RABBITMQ_DEFAULT_VHOST: /
-      RABBITMQ_HOST: oncall-rabbitmq
-      RABBITMQ_PASSWORD: guest
-      RABBITMQ_PORT: '5672'
-      RABBITMQ_USERNAME: guest
-      REDIS_URI: redis://oncall-redis:6379/0
-      SECRET_KEY: ${ONCALL_SECRET_KEY}
-      TELEGRAM_TOKEN: ${ONCALL_TELEGRAM_TOKEN}
+    env_file:
+      - oncall.env
+    volumes:
+      - ${NAS}/docker/oncall/data:/var/lib/oncall
     depends_on:
-      mariadb:
-        condition: service_healthy
-      oncall_db_migration:
+      oncall-migrations:
         condition: service_completed_successfully
-      oncall-rabbitmq:
-        condition: service_started
       oncall-redis:
-        condition: service_started
+        condition: service_healthy
     labels:
       app: oncall
       ingress:
@@ -43,102 +24,55 @@ services:
   oncall-celery:
     container_name: oncall-celery
     image: grafana/oncall:v1.1.19
-    command: sh -c "./celery_with_exporter.sh"
     networks:
-      - data
       - monitoring
       - external
-    environment:
-      BASE_URL: oncall.${SERVER_DOMAIN}
-      SECRET_KEY: ${ONCALL_SECRET_KEY}
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
-      RABBITMQ_HOST: oncall-rabbitmq
-      RABBITMQ_PORT: "5672"
-      RABBITMQ_DEFAULT_VHOST: "/"
-      MYSQL_PASSWORD: ${DB_PASS_ONCALL}
-      MYSQL_DB_NAME: oncall
-      MYSQL_USER: oncall
-      MYSQL_HOST: mariadb
-      MYSQL_PORT: 3306
-      REDIS_URI: redis://oncall-redis:6379/0
-      DJANGO_SETTINGS_MODULE: settings.hobby
-      OSS: "True"
-      CELERY_WORKER_QUEUE: "default,critical,long,slack,telegram,webhook,retry,celery"
-      CELERY_WORKER_CONCURRENCY: "1"
-      CELERY_WORKER_MAX_TASKS_PER_CHILD: "100"
-      # CELERY_WORKER_SHUTDOWN_INTERVAL: "65m"
-      CELERY_WORKER_BEAT_ENABLED: "True"
-      GRAFANA_CLOUD_ONCALL_HEARTBEAT_ENABLED: false
+    command: sh -c "./celery_with_exporter.sh"
+    restart: unless-stopped
+    env_file:
+      - oncall.env
+    volumes:
+      - ${NAS}/docker/oncall/data:/var/lib/oncall
     depends_on:
-      mariadb:
-        condition: service_healthy
-      oncall_db_migration:
+      oncall-migrations:
         condition: service_completed_successfully
-      oncall-rabbitmq:
-        condition: service_started
       oncall-redis:
-        condition: service_started
+        condition: service_healthy
     labels:
       app: oncall
 
-  oncall_db_migration:
+  oncall-migrations:
     container_name: oncall-migrations
     image: grafana/oncall:v1.1.19
-    command: python manage.py migrate --noinput
     networks:
-      - data
-      - external
-    environment:
-      BASE_URL: oncall.${SERVER_DOMAIN}
-      SECRET_KEY: ${ONCALL_SECRET_KEY}
-      RABBITMQ_USERNAME: guest
-      RABBITMQ_PASSWORD: guest
-      RABBITMQ_HOST: "oncall-rabbitmq"
-      RABBITMQ_PORT: "5672"
-      RABBITMQ_DEFAULT_VHOST: "/"
-      MYSQL_PASSWORD: ${DB_PASS_ONCALL}
-      MYSQL_DB_NAME: oncall
-      MYSQL_USER: oncall
-      MYSQL_HOST: mariadb
-      MYSQL_PORT: 3306
-      REDIS_URI: redis://oncall-redis:6379/0
-      DJANGO_SETTINGS_MODULE: settings.hobby
-      OSS: "True"
-      CELERY_WORKER_QUEUE: "default,critical,long,slack,telegram,webhook,retry,celery"
+      - monitoring
+    command: python manage.py migrate --noinput
+    env_file:
+      - oncall.env
+    volumes:
+      - ${NAS}/docker/oncall/data:/var/lib/oncall
     depends_on:
-      mariadb:
+      oncall-redis:
         condition: service_healthy
-      oncall-rabbitmq:
-        condition: service_started
     labels:
       app: oncall
 
   oncall-redis:
     container_name: oncall-redis
-    image: redis:alpine
+    image: redis:7.0.5
     networks:
-      - data
       - monitoring
-    mem_limit: 100m
-    cpus: 0.1
-    labels:
-      app: oncall
-
-  oncall-rabbitmq:
-    container_name: oncall-rabbitmq
-    image: "rabbitmq:3.11.7-management"
-    networks:
-      - data
-      - monitoring
-    hostname: rabbitmq
-    mem_limit: 1000m
-    cpus: 0.5
     volumes:
-      - ${NAS}/grafana/oncall/rabbitmq:/var/lib/rabbitmq
-    environment:
-      # RABBITMQ_DEFAULT_USER: guet
-      # RABBITMQ_DEFAULT_PASS: $RABBITMQ_PASSWORD
-      RABBITMQ_DEFAULT_VHOST: "/"
+      - ${NAS}/docker/oncall/redis:/data
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+          cpus: "0.5"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
     labels:
       app: oncall

@@ -1,33 +1,60 @@
 version: '3'
 services:
   scrutiny-web:
-    container_name: scrutiny
-    image: ghcr.io/linuxserver/scrutiny
-    privileged: true
-    cap_add:
-      - SYS_ADMIN
-      - SYS_RAWIO
-#    devices:
-#      - /dev/sdi:/dev/sdi
-#      - /dev/sdh:/dev/sdh
-#      - /dev/sdg:/dev/sdg
-#      - /dev/sdd:/dev/sdd
-#      - /dev/sde:/dev/sde
-#      - /dev/sdf:/dev/sdf
-#      - /dev/sdc:/dev/sdc
+    container_name: scrutiny-web
+    image: ghcr.io/analogj/scrutiny:master-web
+    networks:
+      - monitoring
+    depends_on:
+      - scrutiny-db
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
-      - SCRUTINY_WEB=true
-      - SCRUTINY_COLLECTOR=false
+      SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-db
     volumes:
-      - ${NAS}/docker/scrutiny:/config
-      - /run/udev:/run/udev:ro
-    ports:
-      - 8081:8080
+      - ${NAS}/docker/scrutiny/config:/opt/scrutiny/config
     labels:
-      namespace: monitoring
-      port: 8080
-      host: smart.${SERVER_DOMAIN}
-      auth: true
+      app: scrutiny
+      ingress:
+        - port: 8080
+          host: smart.${SERVER_DOMAIN}
+
+  scrutiny-db:
+    container_name: scrutiny-db
+    image: influxdb:2.2
+    networks:
+      - monitoring
+    volumes:
+      - ${NAS}/docker/scrutiny/db:/var/lib/influxdb2
+    labels:
+      app: scrutiny
+
+#   scrutiny-web:
+#     container_name: scrutiny
+#     image: ghcr.io/linuxserver/scrutiny
+#     privileged: true
+#     cap_add:
+#       - SYS_ADMIN
+#       - SYS_RAWIO
+# #    devices:
+# #      - /dev/sdi:/dev/sdi
+# #      - /dev/sdh:/dev/sdh
+# #      - /dev/sdg:/dev/sdg
+# #      - /dev/sdd:/dev/sdd
+# #      - /dev/sde:/dev/sde
+# #      - /dev/sdf:/dev/sdf
+# #      - /dev/sdc:/dev/sdc
+#     environment:
+#       - PUID=${PUID}
+#       - PGID=${PGID}
+#       - TZ=${TIMEZONE}
+#       - SCRUTINY_WEB=true
+#       - SCRUTINY_COLLECTOR=false
+#     volumes:
+#       - ${NAS}/docker/scrutiny:/config
+#       - /run/udev:/run/udev:ro
+#     ports:
+#       - 8081:8080
+#     labels:
+#       namespace: monitoring
+#       port: 8080
+#       host: smart.${SERVER_DOMAIN}
+#       auth: true
