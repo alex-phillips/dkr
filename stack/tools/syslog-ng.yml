@@ -1,0 +1,19 @@
+version: "2.1"
+services:
+  syslog-ng:
+    container_name: syslog-ng
+    image: lscr.io/linuxserver/syslog-ng:latest
+    networks:
+      - monitoring
+      - external
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/syslog-ng:/config
+      # - /path/to/log:/var/log #optional
+    ports:
+      - 5514:5514/udp
+      - 6601:6601/tcp
+    #   - 6514:6514/tcp
