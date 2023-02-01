@@ -11,9 +11,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ${NAS}/docker/jellyfin:/config
-      - ${MEDIA_PATH}/movies:/data/movies:ro
-      - ${MEDIA_PATH}/tv:/data/tv:ro
-      - ${NAS}:${NAS}:ro
+      - ${NAS}/media:/media:ro
       - ${NAS}/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
     labels:
       namespace: media
