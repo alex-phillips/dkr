@@ -18,7 +18,7 @@ services:
 #    runtime: nvidia
     environment:
       PGID: ${PGID}
-      PUID: ${PUID}@
+      PUID: ${PUID}
       TZ: ${TIMEZONE}
       VERSION: latest
       ADVERTISE_IP: http://${PLEX_LOCAL_IP}:32400,https://plx.${SERVER_DOMAIN}:443
@@ -39,6 +39,7 @@ services:
       - ${NAS}/docker/traefik:/traefik:ro
       - ${NAS}/docker/plex/custom-init:/custom-cont-init.d
     labels:
+      auth: false
       namespace: media
       port: 32400
       protocol: https
