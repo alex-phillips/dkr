@@ -1,0 +1,16 @@
+version: "2"
+services:
+  vscode:
+    image: linuxserver/code-server
+    container_name: vscode
+    environment:
+      TZ: ${TIMEZONE} # Specify a timezone to use EG Europe/London
+      PUID: ${PUID} # for UserID
+      PGID: ${PGID} # for GroupID
+    volumes:
+      - ${NAS}/docker/vscode:/config # Contains all relevant configuration files.
+      - ${NAS}:${NAS}
+    labels:
+      ingress:
+        - port: 8443
+          host: code.${SERVER_DOMAIN}
