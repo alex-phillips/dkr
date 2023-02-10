@@ -35,7 +35,8 @@ services:
     networks:
       - external
     volumes:
-      - ${HOME}/docker/onlyoffice:/var/log/onlyoffice
+      - ${NAS}/docker/onlyoffice/data:/var/www/onlyoffice/Data
+      - ${NAS}/docker/onlyoffice/logs:/var/log/onlyoffice
     environment:
       JWT_ENABLED: 'true'
       JWT_SECRET: errWbW6vttFFSczLo329X2omeKrvX5qLdahCGB8yVU
@@ -43,5 +44,5 @@ services:
       app: nextcloud
       port: 80
       host: office.${SERVER_DOMAIN}
-      custom_request_headers:
-        X-Forwarded-Proto: https
+      # traefik.http.middlewares.onlyoffice-headers.headers.customRequestHeaders.X-Forwarded-Proto: https
+      # traefik.http.routers.onlyoffice-443.middlewares: onlyoffice-headers@docker
