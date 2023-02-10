@@ -1,0 +1,26 @@
+locals {
+  state = {
+    s3_endpoint   = ""
+    s3_access_key = ""
+    s3_secret_key = ""
+  }
+
+  #####
+  # Proxmox
+  #####
+  proxmox = {
+    user     = ""
+    password = ""
+    api_url  = ""
+  }
+
+  #####
+  # Oracle Cloud
+  #####
+  oracle = {
+    tenancy_ocid = ""
+    user_ocid    = ""
+    fingerprint  = ""
+    region       = ""
+  }
+}
