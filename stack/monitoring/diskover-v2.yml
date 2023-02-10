@@ -19,7 +19,7 @@ services:
     labels:
       app: diskover
       port: 80
-      host: dskvr2.${SERVER_DOMAIN}
+      host: dskvr.${SERVER_DOMAIN}
 
   elasticsearch:
     container_name: elasticsearch
