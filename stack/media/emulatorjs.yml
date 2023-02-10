@@ -3,10 +3,12 @@ services:
   emulatorjs:
     container_name: emulatorjs
     image: lscr.io/linuxserver/emulatorjs:1.7.2
+    networks:
+      - external
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TIMEZONE}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
     volumes:
       - ${NAS}/docker/emulatorjs:/data
       - ${NAS}/docker/rarom:${NAS}/docker/rarom
