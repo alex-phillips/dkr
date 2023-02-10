@@ -48,4 +48,4 @@ services:
       app: snypy
       ingress:
         - port: 80
-          host: snypy.${SERVER_DOMAIN}oud
+          host: snypy.${SERVER_DOMAIN}
