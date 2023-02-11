@@ -2,7 +2,7 @@ version: "3.4"
 services:
   netmaker:
     container_name: netmaker
-    image: gravitl/netmaker:v0.17.1
+    image: gravitl/netmaker:v0.16.0
     networks:
       - default
       - external
@@ -24,9 +24,9 @@ services:
       - ${NAS}/docker/netmaker/shared_certs:/etc/netmaker
     environment:
       SERVER_NAME: "nm-broker.${SERVER_DOMAIN}"
-      SERVER_HOST: origin.${SERVER_DOMAIN}
+      SERVER_HOST: origin.w00t.cloud
       SERVER_API_CONN_STRING: "nm-api.${SERVER_DOMAIN}:443"
-      COREDNS_ADDR: origin.${SERVER_DOMAIN}
+      COREDNS_ADDR: origin.w00t.cloud
       DNS_MODE: "on"
       SERVER_HTTP_HOST: "nm-api.${SERVER_DOMAIN}"
       API_PORT: "8081"
@@ -43,7 +43,6 @@ services:
       VERBOSITY: "1"
       MANAGE_IPTABLES: "on"
       PORT_FORWARD_SERVICES: "dns"
-      MQ_ADMIN_PASSWORD: ${NETMAKER_MQ_ADMIN_PASSWORD}
     ports:
       - "51821-51830:51821-51830/udp"
     expose:
@@ -56,7 +55,7 @@ services:
 
   netmaker-ui:
     container_name: netmaker-ui
-    image: gravitl/netmaker-ui:v0.17.1
+    image: gravitl/netmaker-ui:v0.16.0
     networks:
       - default
     depends_on:
@@ -114,8 +113,6 @@ services:
     # uncomment once netmaker supports changing MQ port
     expose:
       - "8883"
-    environment:
-      NETMAKER_SERVER_HOST: https://nm-api.${SERVER_DOMAIN}
     labels:
       app: netmaker
       ingress:
