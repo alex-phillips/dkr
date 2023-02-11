@@ -37,12 +37,13 @@ def build_docker_compose(args):
 
         if "ingress" in labels:
             for ingress in labels["ingress"]:
+                rule = ingress["rule"] if "rule" in ingress else f"Host(`{ingress['host']}`)"
                 service["labels"].update(
                     {
                         "host": ingress["host"],
                         "traefik.enable": True,
-                        f"traefik.http.routers.{service_name}-{ingress['port']}.rule": f"Host(`{ingress['host']}`)",
-                        f"traefik.http.routers.{service_name}-{ingress['port']}.entrypoints": "websecure",
+                        f"traefik.http.routers.{service_name}-{ingress['port']}.rule": rule,
+                        # f"traefik.http.routers.{service_name}-{ingress['port']}.entrypoints": "websecure",
                         f"traefik.http.routers.{service_name}-{ingress['port']}.tls": "true",
                         f"traefik.http.routers.{service_name}-{ingress['port']}.service": f"{service_name}-{ingress['port']}",
                         f"traefik.http.services.{service_name}-{ingress['port']}.loadbalancer.server.port": ingress[
@@ -63,22 +64,26 @@ def build_docker_compose(args):
                         auth_middleware,
                     )
 
-            # cleanup - can't leave this here because docker compose doesn't support data structures
-            # in labels...
-            del service["labels"]["ingress"]
+                if "crowdsec" not in labels or labels["crowdsec"] == True:
+                    service["labels"] = append_label(
+                        service["labels"],
+                        f"traefik.http.routers.{service_name}-{ingress['port']}.middlewares",
+                        "traefik-bouncer@file",
+                    )
 
             # if we're exposing port / host, ensure it's in the 'web' network but if no networks
             # already defined, include the default
-            if "networks" not in service:
-                service["networks"] = ["default"]
+            if "network_mode" not in service:
+                if "networks" not in service:
+                    service["networks"] = ["default"]
 
-            if "web" not in service["networks"]:
-                if isinstance(service["networks"], list):
-                    service["networks"].append("web")
-                else:
-                    service["networks"]["web"] = {}
+                if "web" not in service["networks"]:
+                    if isinstance(service["networks"], list):
+                        service["networks"].append("web")
+                    else:
+                        service["networks"]["web"] = {}
 
-            service["labels"].update({"traefik.docker.network": "web"})
+                service["labels"].update({"traefik.docker.network": "web"})
 
         if "custom_response_headers" in labels:
             #     # custom_headers = dict(header.split('=') for header in service['labels']['custom_headers'])
@@ -108,12 +113,37 @@ def build_docker_compose(args):
             #     )
             del service["labels"]["custom_request_headers"]
 
+    def add_homepage_labels(labels, service_name, service):
+        if "namespace" not in labels or "homepage.disabled" == True:
+            return
+
+        if "ingress" in labels:
+            service["labels"]["homepage.href"] = f"https://{labels['ingress'][0]['host']}"
+        elif "host" in labels:
+            service["labels"]["homepage.href"] = f"https://{labels['host']}"
+        else:
+            return
+
+        service["labels"].update({
+            "homepage.group": labels["homepage.group"] if "homepage.group" in labels else labels["namespace"],
+            "homepage.name": service_name,
+            "homepage.icon": labels["homepage.icon"] if "homepage.icon" in labels else service_name
+        })
+
+        if "homepage.widget" in labels and labels["homepage.widget"] == True:
+            del labels["homepage.widget"]
+            service["labels"].update({
+                "homepage.widget.type": service_name,
+                "homepage.widget.url": service["labels"]["homepage.href"],
+            })
+
+
     # Remove existing docker compose file if it exists
     if os.path.exists("docker-compose.yml"):
         os.remove("docker-compose.yml")
 
     retval = {
-        "version": "2.4",
+        "version": "2",
         "services": {},
     }
 
@@ -173,6 +203,14 @@ def build_docker_compose(args):
 
                 if "labels" in service:
                     add_traefik_labels(service["labels"], service_name, service)
+                    add_homepage_labels(service["labels"], service_name, service)
+
+                    # cleanup - can't leave this here because docker compose doesn't support data structures
+                    # in labels...
+                    try:
+                        del service["labels"]["ingress"]
+                    except:
+                        pass
 
                 retval["services"][service_name] = service
 
@@ -186,15 +224,15 @@ def build_docker_compose(args):
     return retval
 
 
-def build_nginx(nginx_dir):
+def build_nginx(nginx_dir, args):
     if nginx_dir is None:
         logging.debug("No SWAG directory specified, skipping.")
         return
 
     if os.path.exists("./reverse-proxy-confs") == False:
-        os.system("git clone https://github.com/linuxserver/reverse-proxy-confs")
+        exec_command("git clone https://github.com/linuxserver/reverse-proxy-confs", args)
     else:
-        os.system("cd reverse-proxy-confs && git pull")
+        exec_command("cd reverse-proxy-confs && git pull", args)
 
     with open("docker-compose.yml", "r") as fh:
         contents = yaml.load(fh, Loader=yaml.FullLoader)
@@ -356,7 +394,7 @@ def get_containers_by_args(args):
     return containers
 
 
-def post_up(containers):
+def post_up(containers, args):
     with open("./docker-compose.yml", "r") as fh:
         contents = yaml.load(fh, Loader=yaml.FullLoader)
 
@@ -387,16 +425,16 @@ def build_stack(args):
 
 
 def nginx_actions(args):
-    build_nginx(args.conf_dir)
+    build_nginx(args.conf_dir, args)
     if args.conf_dir is not None:
-        os.system("docker restart swag")
+        exec_command("docker restart swag", args)
 
 
 def up_actions(state, args):
     nginx_actions(args)
 
     # check if mergerfs is mounted
-    exit_code = os.system("mountpoint -q /mnt/storage")
+    exit_code = exec_command("mountpoint -q /mnt/storage", args)
     if exit_code != 0:
         logging.error("Mountpoint is not present. Exiting.")
         quit(256)
@@ -409,23 +447,20 @@ def up_actions(state, args):
         else:
             disabled_containers.append(service)
 
-    print(f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}")
-    os.system(
-        f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}"
-    )
+    exec_command(f"docker compose up -d --quiet-pull --remove-orphans {' '.join(running_containers)}", args)
 
-    post_up(running_containers)
+    post_up(running_containers, args)
 
     if args.no_prune == False:
         logging.info("Pruning disabled containers...")
-        os.system(f"docker compose stop {' '.join(disabled_containers)}")
+        exec_command(f"docker compose stop {' '.join(disabled_containers)}", args)
 
 
 def run_actions(args):
     if args.rm == True:
-        os.system(f"docker compose run --rm {args.container} {args.cmd}")
+        exec_command(f"docker compose run --rm {args.container} {args.cmd}", args)
     else:
-        os.system(f"docker compose run {args.container} {args.cmd}")
+        exec_command(f"docker compose run {args.container} {args.cmd}", args)
 
 
 def save_state(state, args):
@@ -469,6 +504,12 @@ def get_running_containers(state):
 
     return running_containers
 
+def exec_command(cmd, args):
+    print(cmd)
+    if args.dry_run == False:
+        return os.system(cmd)
+
+    return 0
 
 def add_global_args(parser):
     parser.add_argument(
@@ -499,7 +540,7 @@ def add_global_args(parser):
         "-d",
         "--project-dir",
         help="Directory of the compose YAML files (overrides DKR_PROJECT_DIR)",
-        default=os.getenv("DKR_PROJECT_DIR", default="./stack"),
+        default=os.getenv("DKR_PROJECT_DIR", default="./docker"),
     )
     parser.add_argument(
         "-w",
@@ -508,6 +549,9 @@ def add_global_args(parser):
         default=os.getenv(
             "DKR_WORK_DIR", default=os.path.dirname(os.path.realpath(__file__))
         ),
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Dry run - don't execute docker commands"
     )
 
 
@@ -548,6 +592,9 @@ disable_parser = subparsers.add_parser(
 pull_parser = subparsers.add_parser("pull", help="Pull latest container images")
 
 logs_parser = subparsers.add_parser("logs", help="View and tail container logs")
+
+depends_on_parser = subparsers.add_parser("depends-on", help="Get all containers that depend on a specified container")
+depends_on_parser.add_argument("container", help="Dependency container")
 
 run_parser = subparsers.add_parser(
     "run", help="Run a container with the specified args"
@@ -599,6 +646,20 @@ if args.action is None:
 services = build_stack(args)
 state = load_state(services["services"])
 
+if args.action == "depends-on":
+    services = build_stack(args)["services"]
+    dependents = []
+    for service in services:
+        if 'depends_on' not in services[service]:
+            continue
+
+        # oncall / phpmyadmin
+        if args.container in services[service]['depends_on']:
+            dependents.append(services[service]['container_name'])
+
+    print(' '.join(dependents))
+    quit()
+
 if args.action == "build":
     quit()
 
@@ -612,10 +673,12 @@ if args.action in ["start", "stop", "enable", "disable"]:
     containers = get_containers_by_args(args)
 
     if args.action in ["start", "enable"]:
-        os.system(f"docker compose up -d {' '.join(containers)}")
-        post_up(containers)
+        exec_command(f"docker compose up -d {' '.join(containers)}", args)
+        post_up(containers, args)
     elif args.action in ["stop", "disable"]:
-        os.system(f"docker compose stop {' '.join(containers)}")
+        exec_command(f"docker compose stop {' '.join(containers)}", args)
+        if args.action == "disable":
+            exec_command(f"docker rm {' '.join(containers)}", args)
 
     if args.action in ["enable", "disable"]:
         for service in containers:
@@ -634,13 +697,17 @@ if args.action == "pull":
             logging.error("No containers match the specified criteria")
             quit(1)
 
-
     # filter out containers that aren't enabled, unless it was specifically stated
-    for service in state:
-        if service in containers and state[service]["enabled"] == False:
+    for service in containers.copy(): # there a better way than copy here? can't iterate AND modify, index iteration gets off
+        logging.debug(f"Checking if {service} is in state...")
+        if service not in state or state[service]["enabled"] == False:
+            logging.debug(f"  Service {service} is not in state, removing from pull")
             containers.remove(service)
 
-    os.system(f"docker compose pull --ignore-pull-failures {' '.join(containers)}")
+    if args.dry_run:
+        print(", ".join(containers))
+    else:
+        exec_command(f"docker compose pull --ignore-pull-failures {' '.join(containers)}", args)
 
 if args.action == "logs":
     # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
@@ -657,10 +724,10 @@ if args.action == "logs":
         if service in containers and state[service]["enabled"] == False:
             containers.remove(service)
 
-    os.system(f"docker compose logs -f --tail 100 {' '.join(containers)}")
+    exec_command(f"docker compose logs -f --tail 100 {' '.join(containers)}", args)
 
 if args.action == "clean":
-    os.system("docker system prune -af --volumes")
+    exec_command("docker system prune -af --volumes", args)
 
 if args.action == "run":
     build_stack(args)
