@@ -7,7 +7,7 @@ concurrency:
   limit: 1
 
 steps:
-  - name: check for stack changes
+  - name: check for docker changes
     image: alpine/git
     when:
       branch:
@@ -15,7 +15,7 @@ steps:
       event:
         - push
     commands:
-      - if (git diff --quiet --exit-code HEAD^ HEAD -- stack); then exit 78; fi
+      - if (git diff --quiet --exit-code HEAD^ HEAD -- docker); then exit 78; fi
 
   - name: deploy
     image: appleboy/drone-ssh
