@@ -13,7 +13,7 @@ services:
 
   paperless-ngx:
     container_name: paperless-ngx
-    image: ghcr.io/paperless-ngx/paperless-ngx:1.12.2
+    image: ghcr.io/paperless-ngx/paperless-ngx:1.13.0
     networks:
       - external
       - paperless
