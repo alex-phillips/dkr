@@ -2,7 +2,7 @@ version: '3'
 services:
   qbittorrent:
     container_name: qbittorrent
-    image: ghcr.io/linuxserver/qbittorrent:4.5.1
+    image: ghcr.io/linuxserver/qbittorrent:4.5.2
     # network_mode: service:mullvad
     # depends_on:
       # - mullvad
@@ -32,6 +32,28 @@ services:
       homepage.widget: true
       homepage.widget.username: ${QBT_USERNAME}
       homepage.widget.password: ${QBT_PASSWORD}
+
+  flood:
+    container_name: flood
+    image: jesec/flood:master
+    depends_on:
+      - qbittorrent
+    user: ${PUID}:${PGID}
+    volumes:
+      - ${NAS}/docker/flood:/config
+      - ${NAS}/torrents:${NAS}/torrents:ro
+      - ${NAS}/media:${NAS}/media:ro
+      - ${NAS}/other:${NAS}/other:ro
+      - /etc/localtime:/etc/localtime:ro
+    command:
+      - --qburl=http://qbittorrent:8080
+      - --qbuser=$QB_USER
+      - --qbpass=$QB_PASS
+      - --rundir=/config
+    labels:
+      ingress:
+        - port: 3000
+          host: flood.${SERVER_DOMAIN}
 
   qbitmanage:
     container_name: qbitmanage
