@@ -55,7 +55,7 @@ services:
 
   netmaker-ui:
     container_name: netmaker-ui
-    image: gravitl/netmaker-ui:v0.18.1
+    image: gravitl/netmaker-ui:v0.18.2
     networks:
       - default
     depends_on:
