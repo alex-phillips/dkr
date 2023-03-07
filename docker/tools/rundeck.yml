@@ -2,7 +2,7 @@ version: '3'
 services:
   rundeck:
     container_name: rundeck
-    image: rundeck/rundeck:4.10.1
+    image: rundeck/rundeck:4.10.2
     environment:
       RUNDECK_SERVER_FORWARDED: "true"
       RUNDECK_SECURITY_HTTPHEADERS_ENABLED: "false"
