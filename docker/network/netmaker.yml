@@ -2,7 +2,7 @@ version: "3.4"
 services:
   netmaker:
     container_name: netmaker
-    image: gravitl/netmaker:v0.18.2
+    image: gravitl/netmaker:v0.18.3
     networks:
       - default
       - external
