@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
+      - name: Debug
+        run: |
+          pwd
+          ls -althr
+
       - name: Check for Changes
         run: |
           if (git diff --quiet --exit-code HEAD^ HEAD -- docker); then exit 78; fi
