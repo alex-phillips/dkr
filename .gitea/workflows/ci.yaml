@@ -41,7 +41,7 @@ jobs:
         run: ssh ssh_host 'cd code/docker/htpc && git pull --rebase --autostash'
 
       - name: Deploy
-        run: dkr up
+        run: ssh ssh_host 'dkr up'
 
       - name: Clean up
-        run: dkr clean
+        run: ssh ssh_host 'dkr clean'
