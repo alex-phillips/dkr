@@ -5,8 +5,36 @@ on:
     branches: [ main ]
 
 jobs:
-  my-job:
+  docker:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
-      - name: my-step
-        run: echo "Hello World!"
+      - name: Check for Changes
+        run: |
+          if (git diff --quiet --exit-code HEAD^ HEAD -- docker); then exit 78; fi
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          cat >>~/.ssh/config <<END
+          Host ssh_host
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Update
+        run: ssh ssh_host 'cd code/docker/htpc && git pull --rebase --autostash'
+
+      - name: Deploy
+        run: dkr up
+
+      - name: Clean up
+        run: dkr clean
