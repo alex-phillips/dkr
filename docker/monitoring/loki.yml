@@ -2,7 +2,7 @@ version: '3'
 services:
   loki:
     container_name: loki
-    image: grafana/loki:2.7.4
+    image: grafana/loki:2.7.5
     networks:
       - monitoring
       - external
