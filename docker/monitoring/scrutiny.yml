@@ -19,7 +19,7 @@ services:
 
   scrutiny-db:
     container_name: scrutiny-db
-    image: influxdb:2.6
+    image: influxdb:2.7
     networks:
       - monitoring
     volumes:
