@@ -2,7 +2,7 @@ version: '3'
 services:
   plex-meta-manager:
     container_name: plex-meta-manager
-    image: ghcr.io/linuxserver/plex-meta-manager:1.18.3
+    image: ghcr.io/linuxserver/plex-meta-manager:1.19.0
     networks:
       - external
     environment:
