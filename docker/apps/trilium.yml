@@ -2,7 +2,7 @@ version: '3'
 services:
   trilium:
     container_name: trilium
-    image: ghcr.io/zadam/trilium:0.59.3
+    image: ghcr.io/zadam/trilium:0.59.4
     volumes:
       - ${NAS}/docker/trilim:/home/node/trilium-data
     labels:
