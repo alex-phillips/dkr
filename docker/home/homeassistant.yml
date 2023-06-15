@@ -2,7 +2,7 @@ version: '2'
 services:
   homeassistant:
     container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:2023.5.4
+    image: ghcr.io/home-assistant/home-assistant:2023.6.2
     networks:
       - data
       - external
@@ -21,7 +21,7 @@ services:
 
   ha-chevalier:
     container_name: ha-chevalier
-    image: ghcr.io/home-assistant/home-assistant:2023.5.4
+    image: ghcr.io/home-assistant/home-assistant:2023.6.2
     network_mode: host
     volumes:
       - ${NAS}/docker/ha-chevalier:/config
