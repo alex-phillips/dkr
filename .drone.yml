@@ -34,7 +34,7 @@ steps:
         from_secret: ssh_key
       script_stop: true
       script:
-        - cd code/docker/htpc
+        - cd /dkr
         - git pull --rebase --autostash
         - dkr up
         - dkr clean
