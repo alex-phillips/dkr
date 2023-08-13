@@ -5,6 +5,7 @@ services:
     image: ghcr.io/linuxserver/wikijs:2.5.300
     networks:
       - data
+      - external
     depends_on:
       - postgres
     environment:
@@ -12,8 +13,8 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/wikijs/config:/config
-      - ${NAS}/docker/wikijs/data:/data
+      - ${APPDATA}/wikijs/config:/config
+      - ${APPDATA}/wikijs/data:/data
     labels:
       port: 3000
       host: wikijs.${SERVER_DOMAIN}

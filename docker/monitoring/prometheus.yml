@@ -7,8 +7,8 @@ services:
       - monitoring
       - external
     volumes:
-      - ${NAS}/docker/prometheus/config:/etc/prometheus
-      - ${NAS}/docker/prometheus/data:/prometheus
+      - ${APPDATA}/prometheus/config:/etc/prometheus
+      - ${APPDATA}/prometheus/data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'

@@ -11,4 +11,4 @@ services:
       TZ: ${TIMEZONE}
     volumes:
       - /var/log/traefik:/var/log/traefik:ro
-      - ${NAS}/docker/fail2ban:/data
+      - ${APPDATA}/fail2ban:/data

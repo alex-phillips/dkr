@@ -19,7 +19,7 @@ services:
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-oncall-app
       GF_INSTALL_PLUGINS: grafana-oncall-app
     volumes:
-      - ${NAS}/docker/grafana/data:/var/lib/grafana
+      - ${APPDATA}/grafana/data:/var/lib/grafana
     labels:
       namespace: monitoring
       port: 3000

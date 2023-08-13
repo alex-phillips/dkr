@@ -11,8 +11,8 @@ services:
       TZ: ${TIMEZONE}
       DOCKER_MODS: alexphillips/swag-dashboard:latest
     volumes:
-      - ${NAS}/docker/goaccess:/config
-      - ${NAS}/docker/fail2ban/db:/config/fail2ban:ro
+      - ${APPDATA}/goaccess:/config
+      - ${APPDATA}/fail2ban/db:/config/fail2ban:ro
       - /var/log/traefik:/dashboard/logs:ro
     labels:
       host: goaccess.${SERVER_DOMAIN}

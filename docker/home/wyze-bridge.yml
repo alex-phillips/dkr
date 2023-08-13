@@ -10,14 +10,19 @@ services:
     environment:
       WYZE_EMAIL: ${GOOGLE_EMAIL}
       WYZE_PASSWORD: ${WYZE_PASSWORD}
+      TZ: ${TIMEZONE}
       # NET_MODE: LAN
       # FRESH_DATA: "true"
       SNAPSHOT: RTSP30
       WB_RTSP_URL: rtsp://wyze-rtsp.${SERVER_DOMAIN}/
       WB_RTMP_URL: rtmp://wyze-rtmp.${SERVER_DOMAIN}/
       WB_HLS_URL: http://wyze-hls.${SERVER_DOMAIN}/
+      FILTER_NAMES: front,back,left side,right side
+      RECORD_ALL: "True"
+      RECORD_LENGTH: 300
     volumes:
-      - ${NAS}/docker/nginx/www/wyze:/img
+      - ${NAS}/docker/wyze/images:/img
+      - ${NAS}/docker/wyze/recordings:/record
     labels:
       ingress:
         - port: 5000

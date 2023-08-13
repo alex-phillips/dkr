@@ -1,0 +1,27 @@
+version: '3'
+services:
+  romm:
+    container_name: romm
+    image: zurdi15/romm:latest
+    networks:
+      - data
+      - external
+    environment:
+      - ROMM_DB_DRIVER=mariadb # This variable can be set as: mariadb | sqlite. If it is not defined, sqlite will be the database by default
+      - DB_HOST=mariadb # Only needed if ROMM_DB_DRIVER=mariadb
+      - DB_PORT=3306 # Only needed if ROMM_DB_DRIVER=mariadb
+      - DB_USER=romm # Only needed if ROMM_DB_DRIVER=mariadb
+      - DB_NAME=romm # Only needed if ROMM_DB_DRIVER=mariadb. Can be optionally changed, and should match the MYSQL_DATABASE value in the mariadb container.
+      - DB_PASSWD=${DB_PASS_ROMM} # Only needed if ROMM_DB_DRIVER=mariadb
+      - CLIENT_ID=${TWITCH_CLIENT_ID}
+      - CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - STEAMGRIDDB_API_KEY=<SteamGridDB api key>
+    volumes:
+      - ${NAS}/docker/rarom/output:/romm/library/roms:ro
+      - ${APPDATA}/romm:/romm/resources
+      - ${APPDATA}/romm/config.yml:/romm/config.yml
+      - ${NAS}:${NAS}:ro
+    labels:
+      ingress:
+        - port: 80
+          host: romm.${SERVER_DOMAIN}

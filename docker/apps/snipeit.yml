@@ -4,7 +4,7 @@ services:
     container_name: snipeit
     image: ghcr.io/linuxserver/snipe-it:6.1.2
     volumes:
-      - ${NAS}/docker/snipeit:/config
+      - ${APPDATA}/snipeit:/config
     depends_on:
       - mariadb
     networks:

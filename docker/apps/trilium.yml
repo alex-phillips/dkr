@@ -4,7 +4,7 @@ services:
     container_name: trilium
     image: ghcr.io/zadam/trilium:0.60.4
     volumes:
-      - ${NAS}/docker/trilim:/home/node/trilium-data
+      - ${APPDATA}/trilium:/home/node/trilium-data
     labels:
       ingress:
         - port: 8080

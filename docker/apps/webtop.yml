@@ -5,23 +5,49 @@ services:
     image: ghcr.io/linuxserver/webtop:ubuntu-xfce
     #    network_mode: service:mullvad
     networks:
+      # - vlan10
       - external
       - socks
     depends_on:
       - socks
-    # privileged: true
+    privileged: true
     shm_size: "2gb"
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+#      - /dev/dri:/dev/dri
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
+      #GOMP_CPU_AFFINITY: "1-$(($(nproc) - 1))"
     volumes:
-      - ${HOME}/docker/webtop:/config
-      - ${HOME}/docker/webtop/custom-init:/custom-cont-init.d
+      - ${APPDATA}/webtop:/config
+      - ${APPDATA}/webtop/custom-init:/custom-cont-init.d
       - ${NAS}/docker/webtop/Downloads:/config/Downloads
       - ${NAS}:${NAS}
     labels:
       port: 3000
       host: wt.${SERVER_DOMAIN}
       auth: true
-      post_up: 'docker cp /usr/local/bin/megatools webtop:/usr/local/bin/'
+      post_up: 'docker cp /usr/local/bin/megatools webtop:/usr/local/bin/ --quiet'
+
+  webtop-mitm:
+    container_name: webtop-mitm
+    image: ghcr.io/linuxserver/webtop:ubuntu-xfce
+    network_mode: service:mitmproxy
+    depends_on:
+      - mitmproxy
+    privileged: true
+    shm_size: "2gb"
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${APPDATA}/webtop-test:/config
+      - ${NAS}:${NAS}
+      - ${APPDATA}/mitm/certs:/cert:ro # Mounts certificates from the MITM container
+      - ${APPDATA}/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
+    labels:
+      port: 3000
+      host: wtt.${SERVER_DOMAIN}

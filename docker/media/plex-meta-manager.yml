@@ -11,4 +11,4 @@ services:
       TZ: ${TIMEZONE}
       PMM_CONFIG: /config/config.yml
     volumes:
-      - ${NAS}/docker/plex/meta-manager:/config
+      - ${APPDATA}/plex-meta-manager:/config

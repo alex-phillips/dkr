@@ -1,0 +1,25 @@
+version: '3'
+services:
+  zipline:
+    container_name: zipline
+    image: ghcr.io/diced/zipline
+    networks:
+       - external
+       - data
+    restart: unless-stopped
+    environment:
+      - CORE_RETURN_HTTPS=false
+      - CORE_SECRET=WzSbwYdeL4JNwGdpvUbaWpxnWFha9wqk
+      - CORE_HOST=0.0.0.0
+      - CORE_PORT=3000
+      - CORE_DATABASE_URL=postgres://zipline:fwiqvgGcRP6EHHtLjID9CcA8vWWNl9Xl@postgres/zipline
+      - CORE_LOGGER=true
+    volumes:
+      - ${NAS}/docker/zipline/uploads:/zipline/uploads
+      - ${NAS}/docker/zipline/public:/zipline/public
+    depends_on:
+      - postgres
+    labels:
+      ingress:
+        - port: 3000
+          host: share.${SERVER_DOMAIN}

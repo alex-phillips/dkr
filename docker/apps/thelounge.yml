@@ -10,7 +10,7 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/thelounge:/config
+      - ${APPDATA}/thelounge:/config
     labels:
       port: 9000
       host: irc.${SERVER_DOMAIN}

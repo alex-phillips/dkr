@@ -7,7 +7,7 @@ services:
       - external
     environment:
       TZ: ${TIMEZONE}
-      SIGNUPS_ALLOWED: true
+      SIGNUPS_ALLOWED: "true"
       DOMAIN: https://bw.${SERVER_DOMAIN}
       SMTP_HOST: ${SMTP_HOST}
       SMTP_FROM: ${SMTP_USER}
@@ -16,7 +16,7 @@ services:
       SMTP_USERNAME: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
     volumes:
-      - ${NAS}/docker/vaultwarden:/data
+      - ${APPDATA}/vaultwarden:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:

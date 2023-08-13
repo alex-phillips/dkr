@@ -11,10 +11,10 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/soulseek/data:/data/.SoulseekQt
+      - ${APPDATA}/soulseek/data:/data/.SoulseekQt
+      - ${APPDATA}/soulseek/logs:/data/Soulseek Chat Logs
+      - ${APPDATA}/soulseek/shared:/data/Soulseek Shared Folder
       - ${NAS}/docker/soulseek/downloads:/data/Soulseek Downloads
-      - ${NAS}/docker/soulseek/logs:/data/Soulseek Chat Logs
-      - ${NAS}/docker/soulseek/shared:/data/Soulseek Shared Folder
       - ${NAS}:${NAS}:ro
     labels:
       ingress:

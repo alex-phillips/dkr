@@ -9,7 +9,7 @@ services:
     environment:
       - SSHWIFTY_CONFIG=/config/sshwifty.conf
     volumes:
-      - ${NAS}/docker/sshwifty:/config
+      - ${APPDATA}/sshwifty:/config
       - ${HOME}/.ssh/git.${SERVER_DOMAIN}:/config/id_rsa
     stdin_open: true
     tty: true

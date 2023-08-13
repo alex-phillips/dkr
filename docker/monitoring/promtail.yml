@@ -6,11 +6,11 @@ services:
     networks:
       - monitoring
     volumes:
-      - ${NAS}/docker/promtail:/config
-      - ${NAS}/docker:/${NAS}/docker:ro
+      - ${APPDATA}/promtail:/config
+      - /appdata:/appdata:ro
       - /var/log/traefik:/var/log/traefik:ro
       - /var/log/cron:/var/log/cron:ro
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /mnt/pve/evo850-500gb-1/dockerlib/containers:/var/lib/docker/containers:ro
     command: "-config.file=/config/config.yaml"
     labels:
       namespace: monitoring

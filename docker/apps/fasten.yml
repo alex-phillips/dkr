@@ -1,0 +1,9 @@
+version: '3'
+services:
+  fasten:
+    container_name: fasten
+    image: ghcr.io/fastenhealth/fasten-onprem
+    labels:
+      ingress:
+        - port: 9090
+          host: health.${SERVER_DOMAIN}

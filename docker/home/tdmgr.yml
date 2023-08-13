@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  tasmota-device-manager:
+    container_name: tasmota-device-manager
+    image: ghcr.io/sirgoodenough/tdmdock:latest
+    volumes:
+      - /dockervolumes/tasmota-device-manager/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - 5810:5800
+      - 5910:5900

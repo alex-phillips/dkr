@@ -5,6 +5,10 @@ services:
   # DB Indicies:
   #   0: nextcloud
   #   1: van_dam
+  #   2: linkace
+  #   3: immich
+  #   4: gitea sessions
+  #   5: gitea queue
   #
   ###
   redis:
@@ -13,4 +17,18 @@ services:
     networks:
       - data
     volumes:
-      - ${NAS}/docker/redis:/data
+      - ${APPDATA}/redis:/data
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-commander
+    networks:
+      - data
+    environment:
+      - REDIS_HOSTS=nextcloud:redis:6379:0,van_dam:redis:6379:1,linkace:redis:6379:2,immich:redis:6379:3
+      - TRUST_PROXY=true
+      - ADDRESS=0.0.0.0
+    labels:
+      ingress:
+        - port: 8081
+          host: redis.${SERVER_DOMAIN}

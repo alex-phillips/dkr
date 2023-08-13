@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  ittools:
+    container_name: ittools
+    image: ghcr.io/corentinth/it-tools:latest
+    restart: unless-stopped
+    labels:
+      ingress:
+        - port: 80
+          host: itt.${SERVER_DOMAIN}

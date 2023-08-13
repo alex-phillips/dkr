@@ -9,7 +9,7 @@ services:
       CHECK_FREQUENCY: 240
     volumes:
       - ${NAS}/docker/podgrab/assets:/assets
-      - ${NAS}/docker/podgrab/config:/config
+      - ${APPDATA}/podgrab:/config
     labels:
       namespace: media
       ingress:

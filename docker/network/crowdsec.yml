@@ -14,9 +14,9 @@ services:
     # depends_on:  #uncomment if running traefik in the same compose file
     #   - traefik
     volumes:
-      - ${NAS}/docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
-      - ${NAS}/docker/crowdsec/data:/var/lib/crowdsec/data
-      - ${NAS}/docker/crowdsec/config:/etc/crowdsec
+      - ${APPDATA}/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+      - ${APPDATA}/crowdsec/data:/var/lib/crowdsec/data
+      - ${APPDATA}/crowdsec/config:/etc/crowdsec
       - /var/log/traefik:/var/log/traefik/:ro
     labels:
       app: crowdsec

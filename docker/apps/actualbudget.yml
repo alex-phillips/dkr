@@ -7,7 +7,9 @@ services:
       userFilesPath: /data/user-files
       serverFilesPath: /data/server-files
     volumes:
-      - ${NAS}/docker/actualbudget:/data
+      - ${APPDATA}/actualbudget:/data
+    ports:
+      - 5006:5006
     labels:
       ingress:
         - port: 5006

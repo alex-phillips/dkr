@@ -6,8 +6,8 @@ services:
     environment:
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/gonic/data:/data
-      - ${NAS}/docker/gonic/cache:/cache
+      - ${APPDATA}/gonic/data:/data
+      - ${APPDATA}/gonic/cache:/cache
       - ${NAS}/music/beets/Music:/music:ro
       # - ${NAS}/podcasts:/podcasts
     labels:

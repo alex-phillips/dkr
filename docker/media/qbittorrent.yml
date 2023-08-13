@@ -9,12 +9,13 @@ services:
     networks:
       vlan10:
         ipv4_address: 192.168.10.50
+      media:
     volumes:
-      - ${NAS}/docker/qbittorrent:/config
+      - ${APPDATA}/qbittorrent:/config
       - ${NAS}/torrents:${NAS}/torrents
       - ${NAS}/media:${NAS}/media
       - ${NAS}/other:${NAS}/other
-      - ${NAS}/docker/qbittorrent/custom-init:/custom-cont-init.d
+      - ${APPDATA}/qbittorrent/custom-init:/custom-cont-init.d
     environment:
       PGID: ${PGID}
       PUID: ${PUID}
@@ -40,7 +41,7 @@ services:
       - qbittorrent
     user: ${PUID}:${PGID}
     volumes:
-      - ${NAS}/docker/flood:/config
+      - ${APPDATA}/flood:/config
       - ${NAS}/torrents:${NAS}/torrents:ro
       - ${NAS}/media:${NAS}/media:ro
       - ${NAS}/other:${NAS}/other:ro
@@ -66,5 +67,5 @@ services:
       QBT_TRACE: "true"
       ARGS: -tnhl --trace --log-level DEBUG -r --dry-run
     volumes:
-      - ${NAS}/docker/qbitmanage:/config
+      - ${APPDATA}/qbitmanage:/config
       - ${NAS}:${NAS}

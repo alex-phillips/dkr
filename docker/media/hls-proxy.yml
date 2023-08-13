@@ -14,7 +14,7 @@ services:
       HLS_STREAM_SUBDOMAIN_PREFIX: hls-stream-
       NUM_STREAMS: 10
     volumes:
-      - ${NAS}/docker/hls-proxy:/config
+      - ${APPDATA}/hls-proxy:/config
     labels:
       ingress:
         - port: 80

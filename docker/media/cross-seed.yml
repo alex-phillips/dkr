@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+  cross-seed:
+    container_name: cross-seed
+    image: crossseed/cross-seed
+    user: ${PUID}:${PGID}
+    networks:
+      - external
+      - media
+    volumes:
+      - ${APPDATA}/cross-seed:/config
+      - ${APPDATA}/qbittorrent/qBittorrent/BT_backup:/torrents:ro # note that this volume can and should be mounted read-only
+      - ${NAS}/torrents/cross-seeds:/cross-seeds
+    command: daemon

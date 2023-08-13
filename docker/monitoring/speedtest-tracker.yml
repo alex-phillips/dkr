@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  speedtest-tracker:
+    container_name: speedtest-tracker
+    image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
+    networks:
+      - data
+      - external
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=speedtest_tracker
+      - DB_USERNAME=speedtest_tracker
+      - DB_PASSWORD=${DB_PASS_SPEEDTEST_TRACKER}
+    volumes:
+      - ${APPDATA}/speedtest-tracker:/config
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - mariadb
+    labels:
+      ingress:
+        - port: 80
+          host: speedtest.${SERVER_DOMAIN}

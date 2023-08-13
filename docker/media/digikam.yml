@@ -2,7 +2,7 @@ version: '3'
 services:
   digikam:
     container_name: digikam
-    image: ghcr.io/linuxserver/digikam:latest
+    image: ghcr.io/linuxserver/digikam
     security_opt:
       - seccomp:unconfined
     networks:
@@ -12,7 +12,7 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/digikam:/config
+      - ${APPDATA}/digikam:/config
       - ${NAS}/pictures:/pictures
       - ${NAS}:${NAS}:ro
     labels:

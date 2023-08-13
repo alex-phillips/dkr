@@ -1,0 +1,37 @@
+version: "3"
+services:
+  webtop-test:
+    container_name: webtop-test
+    image: ghcr.io/linuxserver/webtop:arch-xfce
+    networks:
+      - vlan10
+    shm_size: "2gb"
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    labels:
+      port: 3000
+      host: wtt.${SERVER_DOMAIN}
+      auth: true
+
+  photoprism-test:
+    container_name: photoprism-test
+    image: photoprism/photoprism:230502
+      #  network_mode: service:mitmproxy
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    cpus: 1
+    environment:
+      TZ: ${TIMEZONE}
+      PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # PLEASE CHANGE: Your initial admin password (min 4 characters)
+        #  volumes:
+        #    - ${NAS}/docker/mitm/certs:/cert:ro # Mounts certificates from the MITM container
+        #    - ${NAS}/docker/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
+    labels:
+      port: 2342
+      host: ppt.${SERVER_DOMAIN}
+
+volumes:
+  certs:

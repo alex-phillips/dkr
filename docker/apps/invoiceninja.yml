@@ -15,7 +15,7 @@ services:
       #SNAPPDF_EXECUTABLE_PATH: /usr/bin/chromium-browser
       PDF_GENERATOR: snappdf
     volumes:
-      - ${NAS}/docker/invoiceninja:/config
+      - ${APPDATA}/invoiceninja:/config
     labels:
       port: 443
       host: invoice.${SERVER_DOMAIN}

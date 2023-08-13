@@ -5,13 +5,15 @@ services:
     container_name: prowlarr
     networks:
       - external
+      - socks
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TIMEZONE}
     volumes:
-      - ${NAS}/docker/prowlarr:/config
+      - ${APPDATA}/prowlarr:/config
     labels:
+      namespace: media
       ingress:
         - port: 9696
           host: plr.${SERVER_DOMAIN}

@@ -10,10 +10,10 @@ services:
       PGID: ${PGID}
       DOCKER_MODS: ghcr.io/linuxserver/mods:universal-calibre
     volumes:
-      - ${NAS}/docker/calibre-web/config:/config
+      - ${APPDATA}/calibre-web/config:/config
       #- ${NAS}/docker/calibre-web/custom-init:/custom-cont-init.d
       - ${NAS}/media/books:/books
-      - ${NAS}/docker/calibre-web/config/kindlegen:/app/calibre-web/vendor/kindlegen
+      - ${APPDATA}/calibre-web/config/kindlegen:/app/calibre-web/vendor/kindlegen
     labels:
       namespace: media
       port: 8083

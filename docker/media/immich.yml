@@ -1,94 +1,114 @@
 version: "3.8"
+
 services:
   immich-server:
-    image: altran1502/immich-server:release
     container_name: immich-server
-    entrypoint: ["/bin/sh", "./start-server.sh"]
+    image: ghcr.io/immich-app/immich-server:v1.72.2
     networks:
       - data
+      - external
+    entrypoint: ["/bin/sh", "./start-server.sh"]
     volumes:
-      - ${NAS}/docker/immich:/usr/src/app/upload
+      - ${NAS}/docker/immich/data:/usr/src/app/upload
+      - ${NAS}:${NAS}:ro
     env_file:
       - .env.immich
-    environment:
-      - NODE_ENV=production
     depends_on:
-      - immich-redis
+      - redis
       - postgres
-    restart: unless-stopped
+      - typesense
     labels:
       app: immich
+      auth: false
+      ingress:
+        - port: 3001
+          host: immich.${SERVER_DOMAIN}
+          rule: Host(`immich.${SERVER_DOMAIN}`) && PathPrefix(`/api`)
+      traefik.http.middlewares.immich-server-0.stripprefix.prefixes: /api
+      traefik.http.routers.immich-server-0.middlewares: immich-server-0
 
   immich-microservices:
-    image: altran1502/immich-server:release
     container_name: immich-microservices
-    entrypoint: ["/bin/sh", "./start-microservices.sh"]
+    image: ghcr.io/immich-app/immich-server:v1.72.2
     networks:
       - data
+      - external
+    entrypoint: ["/bin/sh", "./start-microservices.sh"]
     volumes:
-      - ${NAS}/docker/immich:/usr/src/app/upload
+      - ${NAS}/docker/immich/data:/usr/src/app/upload
+      - ${NAS}:${NAS}:ro
     env_file:
       - .env.immich
     environment:
-      - NODE_ENV=production
+      LOG_LEVEL: verbose
     depends_on:
-      - immich-redis
+      - redis
       - postgres
-    restart: unless-stopped
+      - typesense
     labels:
       app: immich
 
   immich-machine-learning:
-    image: altran1502/immich-machine-learning:release
     container_name: immich-machine-learning
-    entrypoint: ["/bin/sh", "./entrypoint.sh"]
+    image: ghcr.io/immich-app/immich-machine-learning:v1.72.2
     networks:
       - data
+      - external
     volumes:
-      - ${NAS}/docker/immich:/usr/src/app/upload
+      - ${NAS}/docker/immich/data:/usr/src/app/upload
+      - ${NAS}/docker/immich/model-cache:/cache
+      - ${NAS}:${NAS}:ro
     env_file:
       - .env.immich
-    environment:
-      - NODE_ENV=production
-    depends_on:
-      - postgres
-    restart: unless-stopped
     labels:
       app: immich
 
   immich-web:
-    image: altran1502/immich-web:release
     container_name: immich-web
-    entrypoint: ["/bin/sh", "./entrypoint.sh"]
+    image: ghcr.io/immich-app/immich-web:v1.72.2
     networks:
       - data
+      - external
+    entrypoint: ["/bin/sh", "./entrypoint.sh"]
     env_file:
       - .env.immich
-    restart: unless-stopped
     labels:
       app: immich
-
-  immich-redis:
-    image: redis:6.2
-    container_name: immich-redis
-    networks:
-      - data
-    restart: unless-stopped
-    labels:
-      app: immich
-
-  immich-proxy:
-    image: altran1502/immich-proxy:release
-    container_name: immich-proxy
-    networks:
-      - data
-    logging:
-      driver: none
-    depends_on:
-      - immich-server
-    restart: unless-stopped
-    labels:
-      app: immich
+      auth: false
       ingress:
-        - port: 80
+        - port: 3000
           host: immich.${SERVER_DOMAIN}
+
+  typesense:
+    container_name: immich-typesense
+    image: typesense/typesense:0.24.0
+    networks:
+      - data
+      - external
+    env_file:
+      - .env.immich
+    environment:
+      - TYPESENSE_DATA_DIR=/data
+    volumes:
+      - ${NAS}/docker/immich/tsdata:/data
+    labels:
+      app: immich
+
+  # immich-proxy:
+  #   container_name: immich-proxy
+  #   image: ghcr.io/immich-app/immich-proxy:v1.72.2
+  #   networks:
+  #     - data
+  #   # environment:
+  #   #   # Make sure these values get passed through from the env file
+  #   #   - IMMICH_SERVER_URL
+  #   #   - IMMICH_WEB_URL
+  #   env_file:
+  #     - .env.immich
+  #   depends_on:
+  #     - immich-server
+  #   labels:
+  #     app: immich
+  #     ingress:
+  #       - port: 8080
+  #         host: immich.${SERVER_DOMAIN}

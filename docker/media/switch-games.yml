@@ -1,0 +1,16 @@
+version: "3"
+services:
+  switch-games:
+    container_name: switch-games
+    image: ghcr.io/linuxserver/nginx
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/switch-games:/config
+      - ${NAS}/docker/switch-games/www:/config/www
+      - ${NAS}:${NAS}:ro
+    labels:
+      host: switch.${SERVER_DOMAIN}
+      port: 80

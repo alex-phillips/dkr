@@ -15,19 +15,20 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/nextcloud/data:/data
-      - ${NAS}/docker/nextcloud/config:/config
-      - ${NAS}/docker/nextcloud/tmp:/tmp
-      - ${HOME}/docker/nextcloud/updater-ocbwyci0d295:/data/updater-ocbwyci0d295
+      - ${ZFS}/docker/nextcloud/data:/data
+      - ${APPDATA}/nextcloud/config:/config
       - ${NAS}:${NAS}:ro
+      # - ${HOME}/docker/nextcloud/updater-ocbwyci0d295:/data/updater-ocbwyci0d295
     labels:
       namespace: docs
       app: nextcloud
-      port: 443
-      protocol: https
-      host: nc.${SERVER_DOMAIN}
+      ingress:
+        - port: 443
+          protocol: https
+          host: nc.${SERVER_DOMAIN}
       traefik.http.middlewares.nextcloud-headers.headers.stsSeconds: 15552000
-      traefik.http.routers.nextcloud-443.middlewares: nextcloud-headers@docker
+      traefik.http.middlewares.nextcloud-headers.headers.customResponseHeaders.X-Robots-Tag: noindex, nofollow
+      traefik.http.routers.nextcloud-0.middlewares: nextcloud-headers@docker
 
   onlyoffice:
     container_name: onlyoffice
@@ -35,13 +36,14 @@ services:
     networks:
       - external
     volumes:
-      - ${NAS}/docker/onlyoffice/data:/var/www/onlyoffice/Data
-      - ${NAS}/docker/onlyoffice/logs:/var/log/onlyoffice
+      - ${APPDATA}/onlyoffice/data:/var/www/onlyoffice/Data
+      - ${APPDATA}/onlyoffice/logs:/var/log/onlyoffice
     environment:
       JWT_ENABLED: 'true'
       JWT_SECRET: errWbW6vttFFSczLo329X2omeKrvX5qLdahCGB8yVU
     labels:
       app: nextcloud
+      auth: false
       port: 80
       host: office.${SERVER_DOMAIN}
       # traefik.http.middlewares.onlyoffice-headers.headers.customRequestHeaders.X-Forwarded-Proto: https

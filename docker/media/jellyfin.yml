@@ -12,7 +12,8 @@ services:
     volumes:
       - ${NAS}/docker/jellyfin:/config
       - ${NAS}/media:/media:ro
-      - ${NAS}/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - ${NAS}/music/beets/Music:/music:ro
+      - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
     labels:
       namespace: media
       port: 8096

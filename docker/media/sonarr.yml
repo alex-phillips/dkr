@@ -7,7 +7,7 @@ services:
       - external
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${NAS}/docker/sonarr:/config
+      - ${APPDATA}/sonarr:/config
       - ${NAS}:${NAS}
     environment:
       PGID: ${PGID}

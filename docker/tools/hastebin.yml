@@ -8,8 +8,8 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/hastebin/config:/config
-      - ${NAS}/docker/hastebin/data:/data
+      - ${APPDATA}/hastebin/config:/config
+      - ${APPDATA}/hastebin/data:/data
     labels:
       port: 7777
       host: haste.${SERVER_DOMAIN}

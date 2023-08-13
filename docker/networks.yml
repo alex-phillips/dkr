@@ -4,7 +4,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.17.0.0/16
+        - subnet: 172.16.0.0/16
 
   external:
     name: external
@@ -69,24 +69,33 @@ networks:
       config:
         - subnet: 172.18.8.0/24
 
+  media:
+    name: media
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.9.0/24
+
   vlan10:
     name: vlan10
-    driver: macvlan
+    driver: ipvlan
     driver_opts:
-      parent: eth0.10
+      parent: vmbr0.10
     ipam:
       config:
         - subnet: 192.168.10.0/24
           # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
           gateway: 192.168.10.1
 
-  vlan20:
-    name: vlan20
-    driver: macvlan
+  vlan30:
+    name: vlan30
+    driver: ipvlan
     driver_opts:
-      parent: eth0.20
+      parent: vmbr0
+      ipvlan_mode: l3
     ipam:
       config:
-        - subnet: 192.168.20.0/24
+        - subnet: 10.10.10.0/24
           # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
-          gateway: 192.168.20.1
+          # gateway: 192.168.20.1

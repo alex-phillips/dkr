@@ -8,8 +8,8 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/snipt/config:/config
-      - ${NAS}/docker/snipt/data:/data
+      - ${APPDATA}/snipt/config:/config
+      - ${APPDATA}/snipt/data:/data
     labels:
       port: 8000
-      host: gist.${SERVER_DOMAIN}
+      host: gist2.${SERVER_DOMAIN}

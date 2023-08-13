@@ -6,7 +6,7 @@ services:
     networks:
       - data
     volumes:
-      - ${NAS}/docker/mariadb:/config
+      - ${APPDATA}/mariadb:/config
     ports:
       - 3306:3306
     environment:
@@ -23,13 +23,16 @@ services:
 
   phpmyadmin:
     container_name: phpmyadmin
-    image: phpmyadmin/phpmyadmin
+    image: lscr.io/linuxserver/phpmyadmin:latest
     networks:
       - data
     environment:
-      - PMA_ARBITRARY=1
-    depends_on:
-      - mariadb
+      PUID: ${PUID}
+      PGID: ${PGID}
+      PMA_ARBITRARY: 1
+      # PMA_ABSOLUTE_URI=https://phpmyadmin.example.com
+    volumes:
+      - ${APPDATA}/phpmyadmin:/config
     labels:
       port: 80
       host: db.${SERVER_DOMAIN}

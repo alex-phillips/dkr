@@ -11,9 +11,11 @@ services:
       TZ: ${TIMEZONE}
       DOCKER_MODS: linuxserver/mods:universal-cron
     volumes:
-      - ${NAS}/docker/nginx:/config
+      - ${APPDATA}/nginx:/config
+      - ${NAS}/docker/nginx/www:/config/www
       - ${NAS}/docker/nginx/custom-init:/custom-cont-init.d
-      - ${NAS}/docker/plutotv:/config/www/plutotv
+      - ${APPDATA}/plutotv:/config/www/plutotv
+      - ${NAS}:${NAS}
     labels:
       host: static.${SERVER_DOMAIN}
       port: 80

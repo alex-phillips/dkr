@@ -32,7 +32,7 @@ services:
   photoprism:
     container_name: photoprism
     # Use photoprism/photoprism:preview instead for testing preview builds:
-    image: photoprism/photoprism:221118-jammy
+    image: photoprism/photoprism:230625
     # Only enable automatic restarts once your installation is properly
     # configured as it otherwise may get stuck in a restart loop:
     # https://docs.photoprism.org/getting-started/faq/#why-is-photoprism-getting-stuck-in-a-restart-loop
@@ -47,9 +47,11 @@ services:
 #        limits:
 #          cpus: '1'
     cpus: 1
+    depends_on: mitmproxy
+    # network_mode: service:mitmproxy
     networks:
       - data
-      - external
+    #   - external
     depends_on:
       - mariadb
     # runtime: nvidia
@@ -88,6 +90,8 @@ services:
       # user: "1000:1000"
       # NVIDIA_VISIBLE_DEVICES: all
       # NVIDIA_DRIVER_CAPABILITIES: all
+      PHOTOPRISM_CONNECT: 1d30-1syx-9141
+      CONNECT: 1d30-1syx-9141
     # devices:
     #   - /dev/nvidia-modeset:/dev/nvidia-modeset
     #   - /dev/nvidia-uvm:/dev/nvidia-uvm
@@ -104,6 +108,8 @@ services:
       # - "~/Import:/photoprism/import"
       # Permanent storage for settings, index & sidecar files (DON'T REMOVE):
       - ${NAS}/docker/photoprism:/photoprism/storage
+      - ${APPDATA}/mitm/certs:/cert:ro # Mounts certificates from the MITM container
+      - ${APPDATA}/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
     labels:
       namespace: media
       port: 2342

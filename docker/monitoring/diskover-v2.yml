@@ -2,7 +2,7 @@ version: '3'
 services:
   diskover:
     container_name: diskover
-    image: diskover-v2
+    image: alexphillips/dskvr
     #image: alexphillips/diskover
     environment:
       PUID: ${PUID}
@@ -11,11 +11,12 @@ services:
       ES_HOST: localhost
       ES_PORT: 9200
     volumes:
-      - ${NAS}/docker/diskover-v2:/config
+      - ${APPDATA}/diskover-v2:/config
       - /mnt/storage:${NAS}:ro
       - /:/host-root
-      - ${NAS}/docker/diskover-v2/license:/app/www/src/diskover/diskover-web.lic
-      - ${NAS}/docker/diskover-v2/license:/app/diskover/diskover.lic
+      - ${APPDATA}/diskover-v2/license:/app/www/src/diskover/diskover-web.lic
+      - ${APPDATA}/diskover-v2/license:/app/diskover/diskover.lic
+      - /mnt/tmp:/data:ro
     labels:
       app: diskover
       port: 80

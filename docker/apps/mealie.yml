@@ -8,7 +8,7 @@ services:
     environment:
       TZ: America/New_York
     volumes:
-      - ${NAS}/docker/mealie:/app/data
+      - ${APPDATA}/mealie:/app/data
     labels:
       port: 80
       host: recipes.${SERVER_DOMAIN}

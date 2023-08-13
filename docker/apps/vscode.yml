@@ -3,12 +3,15 @@ services:
   vscode:
     image: linuxserver/code-server
     container_name: vscode
+    networks:
+      - external
     environment:
       TZ: ${TIMEZONE} # Specify a timezone to use EG Europe/London
       PUID: ${PUID} # for UserID
       PGID: ${PGID} # for GroupID
     volumes:
-      - ${NAS}/docker/vscode:/config # Contains all relevant configuration files.
+      - ${APPDATA}/vscode:/config # Contains all relevant configuration files.
+      - ${HOME}/code:/code
       - ${NAS}:${NAS}
     labels:
       ingress:

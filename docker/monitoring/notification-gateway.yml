@@ -3,8 +3,10 @@ services:
   notification-gateway:
     container_name: notification-gateway
     image: alexphillips/notification-gateway
+    networks:
+      - external
     volumes:
-      - ./notification-gateway.yml:/app/config.yaml
+      - ${APPDATA}/notification-gateway/config.yaml:/app/config.yaml
     labels:
       port: 3000
       host: notify.${SERVER_DOMAIN}

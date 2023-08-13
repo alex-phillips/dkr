@@ -1,0 +1,11 @@
+version: '3'
+services:
+  tiddlywiki:
+    container_name: tiddlywiki
+    image: m0wer/tiddlywiki
+    volumes:
+      - ${NAS}/docker/tiddlywiki:/var/lib/tiddlywiki
+    labels:
+      ingress:
+        - port: 8080
+          host: tiddly.${SERVER_DOMAIN}

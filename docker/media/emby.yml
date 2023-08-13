@@ -17,10 +17,11 @@ services:
       - ${NAS}/music/beets/Music:/media/music:ro
       - ${NAS}/pictures/Organized:/media/photos:ro
       - ${NAS}:${NAS}:ro
-      - ${NAS}/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
-      - ${NAS}/transcode:/transcode
-      - ${NAS}/docker/dtv:/dtv
+      - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
+      # - ${NAS}/transcode:/transcode
+      - ${APPDATA}/dtv:/dtv
     labels:
+      auth: false
       namespace: media
       ingress:
         - port: 8096

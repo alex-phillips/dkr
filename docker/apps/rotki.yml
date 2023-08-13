@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  rotki:
+    container_name: rotki
+    image: rotki/rotki:latest
+    environment:
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/rotki/data:/data
+      - ${NAS}/docker/rotki/logs:/logs
+    labels:
+      ingress:
+        - port: 80
+          host: rotki.${SERVER_DOMAIN}

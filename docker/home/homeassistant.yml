@@ -12,11 +12,11 @@ services:
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
-    labels:
-      namespace: home
-      port: 8123
-      host: homie.${SERVER_DOMAIN}
-      service: http://192.168.1.151:8123
+    # labels:
+    #   namespace: home
+    #   port: 8123
+    #   host: homie.${SERVER_DOMAIN}
+    #   service: http://192.168.1.151:8123
 #       nginx_directives: proxy_hide_header X-Frame-Options;
 
   # ha-code-server:

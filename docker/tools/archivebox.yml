@@ -10,7 +10,7 @@ services:
       - ALLOWED_HOSTS=*
       - MEDIA_MAX_SIZE=750m
     volumes:
-        - ${NAS}/docker/archivebox:/data
+      - ${APPDATA}/archivebox:/data
     labels:
         port: 8000
         host: ab.${SERVER_DOMAIN}

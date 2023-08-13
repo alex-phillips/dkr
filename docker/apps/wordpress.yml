@@ -6,7 +6,7 @@ services:
 #     depends_on:
 #       - mariadb
 #     volumes:
-#       - ${NAS}/docker/jonpowelllaw:/var/www/html
+#       - ${APPDATA}/jonpowelllaw:/var/www/html
 #     environment:
 #       - WORDPRESS_DB_HOST=mariadb
 #       - WORDPRESS_DB_USER=root
@@ -24,7 +24,7 @@ services:
       - data
       - external
     volumes:
-      - ${NAS}/docker/wootables:/config
+      - ${APPDATA}/wootables:/config
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -39,7 +39,7 @@ services:
     container_name: wptest
     image: alexphillips/wordpress
     volumes:
-      - ${NAS}/docker/wptest:/config
+      - ${APPDATA}/wptest:/config
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

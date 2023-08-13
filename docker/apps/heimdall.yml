@@ -8,7 +8,7 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/heimdall:/config
+      - ${APPDATA}/heimdall:/config
     labels:
       ingress:
         - port: 80

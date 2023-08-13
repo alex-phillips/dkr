@@ -6,13 +6,13 @@ services:
     command: server /mnt/data --console-address "0.0.0.0:9001" --address "0.0.0.0:9000"
     environment:
       MINIO_VOLUMES: /mnt/data
-      # MINIO_SERVER_URL: https://s3.${SERVER_DOMAIN}
-      # MINIO_BROWSER_REDIRECT_URL: https://s3-manage.${SERVER_DOMAIN}
+      # MINIO_SERVER_URL: https://minio.${SERVER_DOMAIN}
+      # MINIO_BROWSER_REDIRECT_URL: https://minio.${SERVER_DOMAIN}
       # MINIO_DOMAIN: s3.${SERVER_DOMAIN}
-      # MINIO_CONFIG_ENV_FILE: /etc/config.env
+      MINIO_CONFIG_ENV_FILE: /etc/config.env
     volumes:
-      - /mnt/storage/docker/minio:/mnt/data
-      - /mnt/storage/docker/minio/env:/etc/config.env
+      - ${APPDATA}/minio:/mnt/data
+      - ${APPDATA}/minio/env:/etc/config.env
     # ports:
     #   - 9010:9010
     #   - 9011:9011

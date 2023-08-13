@@ -6,8 +6,10 @@ services:
     networks:
       - data
       - external
+    depends_on:
+      - postgres
     volumes:
-      - ${NAS}/docker/tubesync:/config
+      - ${APPDATA}/tubesync:/config
       - ${NAS}/media/tubesync:/downloads
     environment:
       TZ: ${TIMEZONE}

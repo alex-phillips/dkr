@@ -10,10 +10,14 @@
 version: "3.8"
 services:
   librephotos-proxy:
-    image: reallibrephotos/librephotos-proxy:2022w50
+    image: reallibrephotos/librephotos-proxy:dev
     container_name: librephotos-proxy
+    restart: unless-stopped
+    networks:
+      - data
     volumes:
-      - ${NAS}/pictures/Organized:/data:ro
+      #      - ${NAS}/ripper/ichive:/data:ro
+      - ${NAS}/pictures/Organized/2007:/data:ro
       - ${NAS}/docker/librephotos/protected_media:/protected_media
     links:
       - librephotos-frontend:frontend
@@ -27,31 +31,29 @@ services:
       host: lp.${SERVER_DOMAIN}
 
   librephotos-frontend:
-    image: reallibrephotos/librephotos-frontend:2022w50
+    image: reallibrephotos/librephotos-frontend:dev
     container_name: librephotos-frontend
-    depends_on:
-      - librephotos-backend
+    networks:
+      - data
     labels:
       app: librephotos
 
   librephotos-backend:
-    image: reallibrephotos/librephotos:2022w50
+    image: reallibrephotos/librephotos:dev
     container_name: librephotos-backend
     networks:
-      - default
       - data
     volumes:
-      - ${NAS}/pictures/Organized:/data:ro
+      - ${NAS}/ripper/ichive:/data:ro
       - ${NAS}/docker/librephotos/protected_media:/protected_media
       - ${NAS}/docker/librephotos/logs:/logs
       - ${NAS}/docker/librephotos/cache:/root/.cache
-
     environment:
       - SECRET_KEY=${LIBREPHOTOS_SECRET_KEY}
-      - BACKEND_HOST=backend
+      - BACKEND_HOST=librephotos-backend
       - ADMIN_EMAIL=${GOOGLE_EMAIL}
       - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=admin
+      - ADMIN_PASSWORD=applepie
       - DB_BACKEND=postgresql
       - DB_NAME=librephotos
       - DB_USER=librephotos
@@ -60,25 +62,29 @@ services:
       - DB_PORT=5432
       - REDIS_HOST=librephotos-redis
       - REDIS_PORT=6379
-      - MAPBOX_API_KEY=${MAPBOX_API_KEY}
-      - WEB_CONCURRENCY=2
-      # - SKIP_PATTERNS=${skipPatterns}
-      - ALLOW_UPLOAD=0
-      - DEBUG=1
-      # - HEAVYWEIGHT_PROCESS=${HEAVYWEIGHT_PROCESS}
-      # Default minimum rating to interpret as favorited. This default value is used when creating a new user.
-      # Users can change this in their settings (Dashboards > Library).
-      - DEFAULT_FAVORITE_MIN_RATING=4
-
-    # Wait for Postgres
+      - MAPBOX_API_KEY=${mapApiKey:-}
+      - WEB_CONCURRENCY=${gunniWorkers:-1}
+      - SKIP_PATTERNS=${skipPatterns:-}
+      - ALLOW_UPLOAD=${allowUpload:-false}
+      - DEBUG=0
+      - HEAVYWEIGHT_PROCESS=${HEAVYWEIGHT_PROCESS:-}
     depends_on:
-      - postgres
-
+      # postgres
+        # condition: service_healthy
+      librephotos-redis:
+        condition: service_healthy
     labels:
       app: librephotos
 
   librephotos-redis:
     image: redis:6
     container_name: librephotos-redis
+    networks:
+      - data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
     labels:
       app: librephotos

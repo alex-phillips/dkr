@@ -7,10 +7,10 @@ services:
       - monitoring
       - external
     environment:
-      - TZ=${TIMEZONE}
+      TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/loki:/config:ro
-      - ${NAS}/docker/loki/rules.yaml:/etc/loki/rules/fake/rules.yml
+      - ${APPDATA}/loki:/config:ro
+      - ${APPDATA}/loki/rules.yaml:/etc/loki/rules/fake/rules.yml
     ports:
       - 3100:3100
     command: "-config.file=/config/config.yaml"

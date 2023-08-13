@@ -7,9 +7,7 @@ services:
       - external # for notifications
       - monitoring
     volumes:
-      - ${NAS}/docker/healthchecks:/config
-    depends_on:
-      - mariadb
+      - ${APPDATA}/healthchecks:/config
     environment:
       - PGID=${PGID}
       - PUID=${PUID}

@@ -11,8 +11,8 @@ services:
       OTR_PASS: ${OTR_PASSWORD}
       OTR_HTTPHOST: gps.${SERVER_DOMAIN}
     volumes:
-      - ${NAS}/docker/owntracks/config:/config
-      - ${NAS}/docker/owntracks/store:/store
+      - ${APPDATA}/owntracks/config:/config
+      - ${APPDATA}/owntracks/store:/store
     labels:
       namespace: home
       traefik.http.middlewares.owntracks-auth.basicauth.users: ${OTR_BASIC_AUTH}
@@ -29,7 +29,7 @@ services:
     networks:
       - external
     volumes:
-      - ${NAS}/docker/owntracks/ui-config.js:/usr/share/nginx/html/config/config.js
+      - ${APPDATA}/owntracks/ui-config.js:/usr/share/nginx/html/config/config.js
     environment:
       SERVER_HOST: owntracks
       SERVER_PORT: 8083

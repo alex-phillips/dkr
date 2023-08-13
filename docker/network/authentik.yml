@@ -27,9 +27,9 @@ services:
       # AUTHENTIK_ERROR_REPORTING__ENABLED: "true"
       # WORKERS: 2
     volumes:
-      - ${NAS}/docker/authentik/media:/media
-      - ${NAS}/docker/authentik/custom-templates:/templates
-      - ${NAS}/docker/authentik/geoip:/geoip
+      - ${APPDATA}/authentik/media:/media
+      - ${APPDATA}/authentik/custom-templates:/templates
+      - ${APPDATA}/authentik/geoip:/geoip
     labels:
       port: 9443
       host: authentik.${SERVER_DOMAIN}
@@ -56,11 +56,11 @@ services:
     # - The docker socket can't be accessed anymore
     user: root
     volumes:
-      - ${NAS}/docker/authentik/backups:/backups
-      - ${NAS}/docker/authentik/media:/media
-      - ${NAS}/docker/authentik/certs:/certs
-      - ${NAS}/docker/authentik/custom-templates:/templates
-      - ${NAS}/docker/authentik/geoip:/geoip
+      - ${APPDATA}/authentik/backups:/backups
+      - ${APPDATA}/authentik/media:/media
+      - ${APPDATA}/authentik/certs:/certs
+      - ${APPDATA}/authentik/custom-templates:/templates
+      - ${APPDATA}/authentik/geoip:/geoip
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       app: authentik
@@ -68,7 +68,7 @@ services:
   geoipupdate:
     image: maxmindinc/geoipupdate:latest
     volumes:
-      - ${NAS}/docker/authentik/geoip:/usr/share/GeoIP
+      - ${APPDATA}/authentik/geoip:/usr/share/GeoIP
     environment:
       GEOIPUPDATE_EDITION_IDS: "GeoLite2-City"
       GEOIPUPDATE_FREQUENCY: "8"

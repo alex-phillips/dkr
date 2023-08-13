@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mitmproxy:
+    image: ghcr.io/roxedus/inspecter:10.0.0
+    container_name: mitmproxy
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    networks:
+      - vlan10
+      - data
+    volumes:
+      - ${APPDATA}/mitm/certs:/mitm # using a docker volume for permission and persistence reasons
+    ports:
+      - 42070:42070 # The webportal for mitmweb runs on 72070
+      #- 8080:42069 # The http proxy runs on port 42069
+      - 8443:8443 # WebUI port of the current target container
+    tty: true # This exposes MITM verbose messages to the container log
+    cap_add:
+      - NET_ADMIN # This container messes with iptables
+    sysctls:
+      - net.ipv4.ip_forward=1
+    labels:
+      ingress:
+        - port: 42070
+          host: mitm.${SERVER_DOMAIN}
+        - port: 2342
+          host: ppt.${SERVER_DOMAIN}

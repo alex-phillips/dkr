@@ -10,7 +10,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ${NAS}/docker/mongo:/data/db
+      - ${APPDATA}/mongo:/data/db
     labels:
       namespace: data
       app: mongo

@@ -12,13 +12,14 @@ services:
       - authelia
       - traefik-bouncer
     environment:
-      - CF_API_EMAIL=ahp118@gmail.com
-      - CF_API_KEY=${CLOUDFLARE_API_KEY}
+      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
+      - CF_DNS_API_TOKEN=${CLOUDFLARE_API_KEY}
+      - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ${NAS}/docker/traefik:/etc/traefik
+      - ${APPDATA}/traefik:/etc/traefik
       - /var/log/traefik:/var/log/traefik
     labels:
       namespace: network
@@ -30,10 +31,14 @@ services:
       traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
       traefik.http.routers.traefik.tls.domains[1].main: "wootables.com"
       traefik.http.routers.traefik.tls.domains[1].sans: "*.wootables.com"
+      traefik.http.routers.traefik.tls.domains[2].sans: "*.eq.${SERVER_DOMAIN}"
+      traefik.http.routers.traefik2.tls.certresolver: duckdns
+      traefik.http.routers.traefik2.tls.domains[0].main: "wootables.duckdns.org"
+      traefik.http.routers.traefik2.tls.domains[0].sans: "*.wootables.duckdns.org"
 
   dockerproxy:
     container_name: dockerproxy
-    image: tecnativa/docker-socket-proxy
+    image: ghcr.io/tecnativa/docker-socket-proxy
     privileged: true
     networks:
       - dockerproxy
@@ -41,4 +46,4 @@ services:
       CONTAINERS: 1
       POST: 0
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro

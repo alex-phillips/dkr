@@ -10,7 +10,7 @@ services:
       - PGID=${PGID}
       - TZ=${TIMEZONE}
     volumes:
-      - ${NAS}/docker/overseerr:/config
+      - ${APPDATA}/overseerr:/config
     labels:
       namespace: media
       ingress:

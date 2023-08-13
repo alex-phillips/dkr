@@ -7,6 +7,6 @@ services:
       - monitoring
       - external
     volumes:
-      - ${NAS}/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ${APPDATA}/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     labels:
       namespace: monitoring

@@ -4,8 +4,8 @@ services:
     container_name: headscale
     image: headscale/headscale:latest-alpine
     volumes:
-      - ${NAS}/docker/headscale/config:/etc/headscale
-      - ${NAS}/docker/headscale/data:/var/lib/headscale
+      - /appdataome/headscale/config:/etc/headscale
+      - ${APPDATA}/headscale/data:/var/lib/headscale
     # ports:
       # - 27896:8080
     command: headscale serve
@@ -14,6 +14,7 @@ services:
       ingress:
         - port: 8080
           host: hs.${SERVER_DOMAIN}
+
   headscale-ui:
     container_name: headscale-ui
     image: ghcr.io/gurucomputing/headscale-ui:latest

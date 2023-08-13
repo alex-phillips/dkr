@@ -6,7 +6,7 @@ services:
     image: portainer/portainer-ee:2.18.4
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${NAS}/docker/portainer:/data
+      - ${APPDATA}/portainer:/data
     labels:
       namespace: monitoring
       port: 9443

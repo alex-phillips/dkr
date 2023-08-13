@@ -6,8 +6,11 @@ services:
     networks:
       - dockerproxy
       - external
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
     volumes:
-      - ${NAS}/docker/homepage:/app/config # Make sure your local config directory exists
+      - ${APPDATA}/homepage:/app/config # Make sure your local config directory exists
       # - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
     labels:
       ingress:

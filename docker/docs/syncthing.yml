@@ -10,11 +10,11 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/syncthing/config:/config
+      - ${APPDATA}/syncthing/config:/config
       - ${NAS}:${NAS}
     ports:
       - 22000:22000
     labels:
       port: 8384
       host: sync.${SERVER_DOMAIN}
-      auth: true
+      auth: false

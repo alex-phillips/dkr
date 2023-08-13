@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
     volumes:
-      - ${NAS}/docker/postgres:/var/lib/postgresql/data
+      - ${APPDATA}/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     labels:
@@ -23,7 +23,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${GOOGLE_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: applepie
     volumes:
-      - ${NAS}/docker/pgadmin:/var/lib/pgadmin
+      - ${APPDATA}/pgadmin:/var/lib/pgadmin
     labels:
       port: 80
       host: pg.${SERVER_DOMAIN}

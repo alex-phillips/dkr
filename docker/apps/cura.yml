@@ -3,20 +3,21 @@ services:
   cura:
     container_name: cura
       #image: mindcrime30/docker-cura
-    image: alexphillips/cura:5.2.1
+    image: alexphillips/cura
     cap_add:
       - SYS_ADMIN
     security_opt:
       - seccomp:unconfined
-    #device:
-    #  - /dev/fuse:/dev/fuse
+    devices:
+      - /dev/dri:/dev/dri
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
       HOME: /tmp
+      GOMP_CPU_AFFINITY: "1-$(($(nproc) - 1))"
     volumes:
-      - ${NAS}/docker/cura:/config
+      - ${APPDATA}/cura:/config
     labels:
       host: cura.${SERVER_DOMAIN}
       port: 3000

@@ -10,7 +10,7 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/resilio-sync:/config
+      - ${APPDATA}/resilio-sync:/config
       - ${NAS}/docker/resilio-sync/downloads:/downloads
     labels:
       ingress:

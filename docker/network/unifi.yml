@@ -4,11 +4,11 @@ services:
     container_name: unifi
     image: ghcr.io/linuxserver/unifi-controller
     volumes:
-      - ${NAS}/docker/unifi/config:/config
+      - ${APPDATA}/unifi/config:/config
     network_mode: host
     environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
+      PGID: ${PGID}
+      PUID: ${PUID}
     labels:
       homepage.widget: true
 #      host: unifi.${SERVER_DOMAIN}

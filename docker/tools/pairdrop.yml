@@ -1,0 +1,16 @@
+version: '3'
+services:
+  pairdrop:
+    container_name: pairdrop
+    image: lscr.io/linuxserver/pairdrop:latest
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      # RATE_LIMIT: false #optional
+      # WS_FALLBACK: false #optional
+      # RTC_CONFIG:  #optional
+    labels:
+      ingress:
+        - port: 3000
+          host: drop.${SERVER_DOMAIN}

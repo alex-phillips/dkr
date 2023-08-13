@@ -3,48 +3,52 @@ services:
   plex:
     container_name: plex
     image: ghcr.io/linuxserver/plex
-    networks:
-      - external
-    ports:
-      - 32400:32400/tcp # required for plex media server
-      - 8324:8324/tcp # Controlling plex for roku via plex companion
-      - 33400:33400 # unofficial app store
-#      - 32469:32469/tcp # DLNA server
-#      - 1900:1900/udp # DLNA server
-#      - 32410:32410/udp # GDM network discovery
-#      - 32412:32412/udp # GDM network discoverp
-#      - 32413:32413/udp # GDM network discoverp
-#      - 32414:32414/udp # GDM network discoverp
+    network_mode: host
+#     ports:
+#       - 32400:32400/tcp # required for plex media server
+#       - 8324:8324/tcp # Controlling plex for roku via plex companion
+#       - 33400:33400 # unofficial app store
+# #      - 32469:32469/tcp # DLNA server
+# #      - 1900:1900/udp # DLNA server
+# #      - 32410:32410/udp # GDM network discovery
+# #      - 32412:32412/udp # GDM network discoverp
+# #      - 32413:32413/udp # GDM network discoverp
+# #      - 32414:32414/udp # GDM network discoverp
 #    runtime: nvidia
+    devices:
+      - /dev/dri:/dev/dri
     environment:
       PGID: ${PGID}
       PUID: ${PUID}
       TZ: ${TIMEZONE}
       VERSION: latest
-      ADVERTISE_IP: http://${PLEX_LOCAL_IP}:32400,https://plx.${SERVER_DOMAIN}:443
+      ADVERTISE_IP: http://192.168.1.149:32400,https://plx.wootables.duckdns.org:443
       # DOCKER_MODS: ghcr.io/linuxserver/mods:universal-stdout-logs
       # LOGS_TO_STDOUT: "/config/Library/Application\\\ Support/Plex\\\ Media\\\ Server/Logs/Plex\\\ Media\\\ Server.log"
       #      NVIDIA_VISIBLE_DEVICES: all
     volumes:
-      - ${NAS}/docker/plex:/config
-      - ${NAS}/media:${NAS}/media
-      - ${NAS}/home_movies:/data/Home Movies
-      - ${NAS}/youtube:/data/youtube
-      - ${NAS}/music_videos:/data/Music Videos
-      - ${NAS}/pictures:/data/Photos
-      - ${NAS}/music:/data/Music
-      - ${NAS}/concerts:/data/concerts
-      - ${NAS}/transcode:/transcode
-      - ${NAS}/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
-      - ${NAS}/docker/traefik:/traefik:ro
-      - ${NAS}/docker/plex/custom-init:/custom-cont-init.d
+      - /appdata/plex:/config
+      - /mnt/storage/media:/mnt/storage/media
+      - /mnt/storage/media/home_movies:/data/Home Movies
+      - /mnt/storage/youtube:/data/youtube
+      - /mnt/storage/music_videos:/data/Music Videos
+      - /mnt/storage/pictures:/data/Photos
+      - /mnt/storage/music:/data/Music
+      - /mnt/storage/concerts:/data/concerts
     labels:
-      auth: false
+      context: 192.168.1.149
       namespace: media
-      port: 32400
-      protocol: https
-      host: plx.${SERVER_DOMAIN}
-      # traefik.http.routers.plex-32400.tls.certresolver: zerossl
+      # auth: false
+      # crowdsec: false
+      # traefik.http.routers.plex-1.tls.certresolver: duckdns
+      # ingress:
+      #   - port: 32400
+      #     protocol: https
+      #     host: plx.${SERVER_DOMAIN}
+      #   - port: 32400
+      #     protocol: https
+      #     host: plx.wootables.duckdns.org
+      # # traefik.http.routers.plex-32400.tls.certresolver: zerossl
 
   plex-other:
     container_name: plex-other
@@ -63,7 +67,7 @@ services:
     volumes:
       - ${NAS}/docker/plex-other:/config
       - ${NAS}/media:${NAS}/media
-      - ${NAS}/transcode:/transcode
+      # - ${NAS}/transcode:/transcode
     labels:
       namespace: media
       port: 32400

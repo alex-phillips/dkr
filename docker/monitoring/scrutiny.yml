@@ -10,7 +10,7 @@ services:
     environment:
       SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-db
     volumes:
-      - ${NAS}/docker/scrutiny/config:/opt/scrutiny/config
+      - ${APPDATA}/scrutiny/config:/opt/scrutiny/config
     labels:
       app: scrutiny
       ingress:
@@ -23,7 +23,7 @@ services:
     networks:
       - monitoring
     volumes:
-      - ${NAS}/docker/scrutiny/db:/var/lib/influxdb2
+      - ${APPDATA}/scrutiny/db:/var/lib/influxdb2
     labels:
       app: scrutiny
 
@@ -49,7 +49,7 @@ services:
 #       - SCRUTINY_WEB=true
 #       - SCRUTINY_COLLECTOR=false
 #     volumes:
-#       - ${NAS}/docker/scrutiny:/config
+#       - ${APPDATA}/scrutiny:/config
 #       - /run/udev:/run/udev:ro
 #     ports:
 #       - 8081:8080

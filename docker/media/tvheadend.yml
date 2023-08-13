@@ -9,7 +9,7 @@ services:
       TZ: ${TIMEZONE}
       # - RUN_OPTS= #optional
     volumes:
-      - ${NAS}/docker/tvheadend/config:/config
+      - ${APPDATA}/tvheadend/config:/config
       - ${NAS}/docker/tvheadend/recordings:/recordings
     # ports:
     #   - 9981:9981

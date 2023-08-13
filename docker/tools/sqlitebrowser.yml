@@ -10,7 +10,7 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/sqlitebrowser:/config
+      - ${APPDATA}/sqlitebrowser:/config
     labels:
       ingress:
         - port: 3000

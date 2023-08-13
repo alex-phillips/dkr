@@ -12,7 +12,7 @@ services:
       - GAMEYFIN_IGDB_API_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
     volumes:
       - ${NAS}:${NAS}:ro
-      - ${NAS}/docker/gameyfin:/opt/gameyfin-library
+      - ${APPDATA}/gameyfin:/opt/gameyfin-library
     labels:
       ingress:
         - port: 8080

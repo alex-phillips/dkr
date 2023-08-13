@@ -2,7 +2,7 @@ version: "3"
 services:
   navidrome:
     container_name: navidrome
-    image: deluan/navidrome:latest
+    image: deluan/navidrome:0.49.3
     networks:
       - external
     user: ${PUID}:${PGID}
@@ -10,12 +10,17 @@ services:
       # All options with their default values:
       ND_MUSICFOLDER: /music
       ND_DATAFOLDER: /data
+        #ND_PLAYLISTSPATH: /playlists
       ND_SCANSCHEDULE: 1h
       ND_LOGLEVEL: info
-      ND_ENABLETRANSCODINGCONFIG: true
+      ND_ENABLETRANSCODINGCONFIG: "true"
+      #ND_LOGLEVEL: debug
+      ND_SPOTIFY_ID: ${SPOTIFY_ID}
+      ND_SPOTIFY_SECRET: ${SPOTIFY_SECRET}
     volumes:
-      - ${NAS}/docker/navidrome:/data
+      - ${APPDATA}/navidrome:/data
       - ${NAS}/music/beets/Music:/music:ro
+      - ${NAS}/music/beets/playlists:/playlists:ro
     labels:
       host: nd.${SERVER_DOMAIN}
       port: 4533

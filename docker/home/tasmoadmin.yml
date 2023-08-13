@@ -8,7 +8,7 @@ services:
     ports:
       - 9345:9345
     volumes:
-      - ${NAS}/docker/tasmoadmin:/data
+      - ${APPDATA}/tasmoadmin:/data
     labels:
       namespace: home
       ingress:

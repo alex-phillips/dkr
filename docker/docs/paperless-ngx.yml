@@ -7,7 +7,7 @@ services:
       - paperless
     restart: unless-stopped
     volumes:
-      - ${NAS}/docker/paperless-ngx/redis:/data
+      - ${APPDATA}/paperless-ngx/redis:/data
     labels:
       app: paperless
 
@@ -39,10 +39,10 @@ services:
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless-gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://paperless-tika:9998
     volumes:
-      - ${NAS}/docker/paperless-ngx/data:/usr/src/paperless/data
-      - ${NAS}/documents/media:/usr/src/paperless/media
-      - ${NAS}/documents/export:/usr/src/paperless/export
-      - ${NAS}/documents/consume:/usr/src/paperless/consume
+      - ${APPDATA}/paperless-ngx/data:/usr/src/paperless/data
+      - ${ZFS}/documents/media:/usr/src/paperless/media
+      - ${ZFS}/documents/export:/usr/src/paperless/export
+      - ${ZFS}/documents/consume:/usr/src/paperless/consume
     labels:
       app: paperless
       host: docs.${SERVER_DOMAIN}

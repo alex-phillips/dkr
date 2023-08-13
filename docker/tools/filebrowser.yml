@@ -10,8 +10,9 @@ services:
     volumes:
       - ${NAS}:/srv/nas
       - ${HOME}:/srv/home
-      - ${NAS}/docker/filebrowser/database.db:/database/filebrowser.db
-      - ${NAS}/docker/filebrowser/settings.json:/config/settings.json
+      - ${ZFS}:/srv/tank
+      - ${APPDATA}/filebrowser/database.db:/database/filebrowser.db
+      - ${APPDATA}/filebrowser/settings.json:/config/settings.json
     labels:
       port: 80
       host: fb.${SERVER_DOMAIN}

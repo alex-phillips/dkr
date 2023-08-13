@@ -47,8 +47,9 @@ services:
       - TZ=${TIMEZONE}
     restart: 'unless-stopped'
     volumes:
-      - ${HOME}/docker/mullvad-misc:/config
+      - ${APPDATA}/mullvad-misc:/config
+      - ${APPDATA}/mullvad-misc/custom-init:/custom-cont-init.d
       - /lib/modules:/lib/modules
       - ${NAS}:${NAS}
     labels:
-      post_up: 'docker cp /usr/local/bin/megatools mullvad-misc:/usr/local/bin/'
+      post_up: 'docker cp /usr/local/bin/megatools mullvad-misc:/usr/local/bin/ --quiet'

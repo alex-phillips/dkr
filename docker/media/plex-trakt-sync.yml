@@ -10,4 +10,4 @@ services:
       - PGID=${PGID}
       - TZ=${TIMEZONE}
     volumes:
-      - ${NAS}/docker/plex/traktsync:/config
+      - ${APPDATA}/plextraktsync:/config

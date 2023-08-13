@@ -9,7 +9,7 @@ services:
     env_file:
       - oncall.env
     volumes:
-      - ${NAS}/docker/oncall/data:/var/lib/oncall
+      - ${APPDATA}/oncall/data:/var/lib/oncall
     depends_on:
       oncall-migrations:
         condition: service_completed_successfully
@@ -27,12 +27,14 @@ services:
     networks:
       - monitoring
       - external
+    dns:
+      - 1.1.1.1
     command: sh -c "./celery_with_exporter.sh"
     restart: unless-stopped
     env_file:
       - oncall.env
     volumes:
-      - ${NAS}/docker/oncall/data:/var/lib/oncall
+      - ${APPDATA}/oncall/data:/var/lib/oncall
     depends_on:
       oncall-migrations:
         condition: service_completed_successfully
@@ -50,7 +52,7 @@ services:
     env_file:
       - oncall.env
     volumes:
-      - ${NAS}/docker/oncall/data:/var/lib/oncall
+      - ${APPDATA}/oncall/data:/var/lib/oncall
     depends_on:
       oncall-redis:
         condition: service_healthy
@@ -63,7 +65,7 @@ services:
     networks:
       - monitoring
     volumes:
-      - ${NAS}/docker/oncall/redis:/data
+      - ${APPDATA}/oncall/redis:/data
     deploy:
       resources:
         limits:

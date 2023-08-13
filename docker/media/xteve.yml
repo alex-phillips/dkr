@@ -8,9 +8,9 @@ services:
     environment:
       TZ: ${TIMEZONE}
     volumes:
-      - ${NAS}/docker/xteve/root:/root/.xteve
-      - ${NAS}/docker/xteve/config:/config:rw \
-      - /tmp/xteve/:/tmp/xteve:rw \
+      - ${APPDATA}/xteve/root:/root/.xteve
+      - ${APPDATA}/xteve/config:/config:rw
+      - /tmp/xteve/:/tmp/xteve:rw
       # - /mnt/user/appdata/tvheadend/data/:/TVH \
     labels:
       namespace: iptv

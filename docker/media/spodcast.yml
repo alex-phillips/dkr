@@ -1,0 +1,20 @@
+version: '3'
+services:
+  spodcast:
+    container_name: spodcast
+    image: ghcr.io/linuxserver/nginx:1.22.1
+    networks:
+      - vlan10
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      DOCKER_MODS: linuxserver/mods:universal-cron
+    volumes:
+      - ${APPDATA}/spodcast:/config
+      - ${APPDATA}/spodcast/custom-init:/custom-cont-init.d
+      - ${NAS}/docker/spodcast/www:/config/www
+    labels:
+      ingress:
+        - port: 80
+          host: spodcast.${SERVER_DOMAIN}

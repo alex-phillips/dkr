@@ -10,8 +10,8 @@ services:
       - PGID=${PGID}
       - TZ=${TIMEZONE}
     volumes:
-      - ${NAS}/docker/smokeping/config:/config
-      - ${NAS}/docker/smokeping/data:/data
+      - ${APPDATA}/smokeping/config:/config
+      - ${APPDATA}/smokeping/data:/data
     labels:
       namespace: monitoring
       port: 80

@@ -16,7 +16,7 @@ services:
       APP_URL: https://wiki.${SERVER_DOMAIN}
       ALLOWED_IFRAME_HOSTS: https://org.${SERVER_DOMAIN}
     volumes:
-      - ${NAS}/docker/bookstack:/config
+      - ${APPDATA}/bookstack:/config
     labels:
       port: 443
       protocol: https

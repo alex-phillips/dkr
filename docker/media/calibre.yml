@@ -11,8 +11,8 @@ services:
       TZ: ${TIMEZONE}
       #      CALIBRE_OVERRIDE_DATABASE_PATH: /config/metadata.db
     volumes:
-      - ${NAS}/docker/calibre:/config
-      - ${NAS}/docker/calibre/custom-init:/custom-cont-init.d
+      - ${APPDATA}/calibre:/config
+      - ${APPDATA}/calibre/custom-init:/custom-cont-init.d
       - ${NAS}/media/books:/books
       - ${NAS}/torrents/downloads/books:/downloads:ro
       - ${NAS}/docker/transfer:/transfer:ro

@@ -9,7 +9,7 @@ services:
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
-      - ${NAS}/docker/zwavejs:/usr/src/app/store
+      - ${APPDATA}/zwavejs:/usr/src/app/store
     ports:
       - 3011:3000
     labels:

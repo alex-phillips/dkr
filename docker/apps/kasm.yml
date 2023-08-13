@@ -2,19 +2,19 @@ version: "2.1"
 services:
   kasm:
     container_name: kasm
-    image: lscr.io/linuxserver/kasm:latest
+    image: lscr.io/linuxserver/kasm:develop
     privileged: true
     networks:
-      - external
+      - vlan10
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - KASM_PORT=443
       - TZ=${TIMEZONE}
+      - KASM_PORT=443
 #      - DOCKER_HUB_USERNAME=USER #optional
 #      - DOCKER_HUB_PASSWORD=PASS #optional
     volumes:
-      - ${NAS}/docker/kasm/data:/opt
+      - ${HOME}/docker/kasm/data:/opt
       - ${NAS}/docker/kasm/profiles:/profiles #optional
 #      - /dev/input:/dev/input #optional
 #      - /run/udev/data:/run/udev/data #optional
@@ -23,6 +23,9 @@ services:
         - port: 443
           host: kasm.${SERVER_DOMAIN}
           protocol: https
+        - port: 3000
+          host: admin.kasm.${SERVER_DOMAIN}
+          protocol: https
     ports:
-      - 3011:3000
+      - 3030:3000
 #      - 443:443

@@ -9,7 +9,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DRONE_GIT_ALWAYS_AUTH: true
+      DRONE_GIT_ALWAYS_AUTH: "true"
       DRONE_SERVER_HOST: ci.${SERVER_DOMAIN}
       DRONE_SERVER_PROTO: https
       DRONE_GITHUB_CLIENT_ID: ${DRONE_GITHUB_CLIENT_ID}
