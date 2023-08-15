@@ -81,7 +81,7 @@ services:
 
   typesense:
     container_name: immich-typesense
-    image: typesense/typesense:0.24.1
+    image: typesense/typesense:0.25.0
     networks:
       - data
       - external
