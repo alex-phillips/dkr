@@ -16,14 +16,14 @@ services:
     depends_on:
       - redis
       - postgres
-      - typesense
+      - immich-typesense
     labels:
       app: immich
       auth: false
       ingress:
         - port: 3001
-          host: immich.${SERVER_DOMAIN}
-          rule: Host(`immich.${SERVER_DOMAIN}`) && PathPrefix(`/api`)
+          host: photos.${SERVER_DOMAIN}
+          rule: Host(`photos.${SERVER_DOMAIN}`) && PathPrefix(`/api`)
       traefik.http.middlewares.immich-server-0.stripprefix.prefixes: /api
       traefik.http.routers.immich-server-0.middlewares: immich-server-0
 
@@ -44,7 +44,7 @@ services:
     depends_on:
       - redis
       - postgres
-      - typesense
+      - immich-typesense
     labels:
       app: immich
 
@@ -77,9 +77,9 @@ services:
       auth: false
       ingress:
         - port: 3000
-          host: immich.${SERVER_DOMAIN}
+          host: photos.${SERVER_DOMAIN}
 
-  typesense:
+  immich-typesense:
     container_name: immich-typesense
     image: typesense/typesense:0.25.0
     networks:
@@ -111,4 +111,4 @@ services:
   #     app: immich
   #     ingress:
   #       - port: 8080
-  #         host: immich.${SERVER_DOMAIN}
+  #         host: photos.${SERVER_DOMAIN}
