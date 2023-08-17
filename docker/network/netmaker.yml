@@ -95,7 +95,7 @@ services:
 
   netmaker-mq:
     container_name: netmaker-mq
-    image: eclipse-mosquitto:2.0.15-openssl
+    image: eclipse-mosquitto:2.0.16-openssl
     networks:
       - external
     depends_on:
