@@ -65,7 +65,7 @@ services:
 
   immich-web:
     container_name: immich-web
-    image: ghcr.io/immich-app/immich-web:v1.75.2
+    image: ghcr.io/immich-app/immich-web:v1.76.0
     networks:
       - data
       - external
