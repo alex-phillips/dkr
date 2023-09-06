@@ -50,7 +50,7 @@ services:
 
   immich-machine-learning:
     container_name: immich-machine-learning
-    image: ghcr.io/immich-app/immich-machine-learning:v1.76.1
+    image: ghcr.io/immich-app/immich-machine-learning:v1.77.0
     networks:
       - data
       - external
