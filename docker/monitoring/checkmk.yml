@@ -2,7 +2,7 @@ version: '3'
 services:
   checkmk:
     container_name: checkmk
-    image: checkmk/check-mk-raw:2023.09.11@sha256:48aa2a67882d9a825d6637f00964f063c806a673222971d6eb9dcc6eedd4a3b3
+    image: checkmk/check-mk-raw:2023.09.13@sha256:3919ef7661990470e27d3894a9043c446b105c7bd436e9e5e4c794f19ca8acb2
     # networks:
     #   default:
     #     ipv4_address: 172.19.0.30
