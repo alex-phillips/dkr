@@ -2,14 +2,14 @@ version: '3'
 services:
   cura:
     container_name: cura
-      #image: mindcrime30/docker-cura
-    image: alexphillips/cura
-    cap_add:
-      - SYS_ADMIN
-    security_opt:
-      - seccomp:unconfined
-    devices:
-      - /dev/dri:/dev/dri
+    image: mikeah/cura-novnc
+    # image: alexphillips/cura
+    # cap_add:
+    #   - SYS_ADMIN
+    # security_opt:
+    #   - seccomp:unconfined
+    # devices:
+    #   - /dev/dri:/dev/dri
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -20,4 +20,4 @@ services:
       - ${APPDATA}/cura:/config
     labels:
       host: cura.${SERVER_DOMAIN}
-      port: 3000
+      port: 8080
