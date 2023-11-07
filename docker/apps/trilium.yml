@@ -2,7 +2,7 @@ version: '3'
 services:
   trilium:
     container_name: trilium
-    image: ghcr.io/zadam/trilium:0.61.12
+    image: ghcr.io/zadam/trilium:0.61.13
     volumes:
       - ${APPDATA}/trilium:/home/node/trilium-data
     labels:
