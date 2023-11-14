@@ -3,7 +3,7 @@ services:
   portainer:
     container_name: portainer
     #image: portainer/portainer-ce:2.11.0
-    image: portainer/portainer-ee:2.19.1
+    image: portainer/portainer-ee:2.19.2
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${APPDATA}/portainer:/data
