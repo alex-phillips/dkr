@@ -3,11 +3,12 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich-server
-    image: ghcr.io/immich-app/immich-server:v1.87.0
+    image: ghcr.io/immich-app/immich-server:v1.88.2
     networks:
       - data
       - external
-    entrypoint: ["/bin/sh", "./start-server.sh"]
+    command: [ "start.sh", "immich" ]
+    # entrypoint: ["/bin/sh", "./start-server.sh"]
     volumes:
       - ${NAS}/docker/immich/data:/usr/src/app/upload
       - ${NAS}:${NAS}:ro
@@ -23,24 +24,24 @@ services:
       ingress:
         - port: 3001
           host: photos.${SERVER_DOMAIN}
-          rule: Host(`photos.${SERVER_DOMAIN}`) && PathPrefix(`/api`)
-      traefik.http.middlewares.immich-server-0.stripprefix.prefixes: /api
-      traefik.http.routers.immich-server-0.middlewares: immich-server-0
+          # rule: Host(`photos.${SERVER_DOMAIN}`) && PathPrefix(`/api`)
+      # traefik.http.middlewares.immich-server-0.stripprefix.prefixes: /api
+      # traefik.http.routers.immich-server-0.middlewares: immich-server-0
 
   immich-microservices:
     container_name: immich-microservices
-    image: ghcr.io/immich-app/immich-server:v1.87.0
+    image: ghcr.io/immich-app/immich-server:v1.88.2
     networks:
       - data
       - external
-    entrypoint: ["/bin/sh", "./start-microservices.sh"]
+    command: [ "start.sh", "microservices" ]
     volumes:
       - ${NAS}/docker/immich/data:/usr/src/app/upload
       - ${NAS}:${NAS}:ro
     env_file:
       - .env.immich
-    environment:
-      LOG_LEVEL: verbose
+    # environment:
+    #   LOG_LEVEL: verbose
     depends_on:
       - redis
       - postgres
@@ -50,7 +51,7 @@ services:
 
   immich-machine-learning:
     container_name: immich-machine-learning
-    image: ghcr.io/immich-app/immich-machine-learning:v1.87.0
+    image: ghcr.io/immich-app/immich-machine-learning:v1.88.2
     networks:
       - data
       - external
@@ -63,21 +64,21 @@ services:
     labels:
       app: immich
 
-  immich-web:
-    container_name: immich-web
-    image: ghcr.io/immich-app/immich-web:v1.87.0
-    networks:
-      - data
-      - external
-    entrypoint: ["/bin/sh", "./entrypoint.sh"]
-    env_file:
-      - .env.immich
-    labels:
-      app: immich
-      auth: false
-      ingress:
-        - port: 3000
-          host: photos.${SERVER_DOMAIN}
+  # immich-web:
+  #   container_name: immich-web
+  #   image: ghcr.io/immich-app/immich-web:v1.88.2
+  #   networks:
+  #     - data
+  #     - external
+  #   entrypoint: ["/bin/sh", "./entrypoint.sh"]
+  #   env_file:
+  #     - .env.immich
+  #   labels:
+  #     app: immich
+  #     auth: false
+  #     ingress:
+  #       - port: 3000
+  #         host: photos.${SERVER_DOMAIN}
 
   immich-typesense:
     container_name: immich-typesense
@@ -93,22 +94,3 @@ services:
       - ${NAS}/docker/immich/tsdata:/data
     labels:
       app: immich
-
-  # immich-proxy:
-  #   container_name: immich-proxy
-  #   image: ghcr.io/immich-app/immich-proxy:v1.75.0
-  #   networks:
-  #     - data
-  #   # environment:
-  #   #   # Make sure these values get passed through from the env file
-  #   #   - IMMICH_SERVER_URL
-  #   #   - IMMICH_WEB_URL
-  #   env_file:
-  #     - .env.immich
-  #   depends_on:
-  #     - immich-server
-  #   labels:
-  #     app: immich
-  #     ingress:
-  #       - port: 8080
-  #         host: photos.${SERVER_DOMAIN}
