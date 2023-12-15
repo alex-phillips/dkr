@@ -3,12 +3,11 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich-server
-    image: ghcr.io/immich-app/immich-server:v1.90.2
+    image: ghcr.io/immich-app/immich-server:v1.91.0
     networks:
       - data
       - external
     command: [ "start.sh", "immich" ]
-    # entrypoint: ["/bin/sh", "./start-server.sh"]
     volumes:
       - ${NAS}/docker/immich/data:/usr/src/app/upload
       - ${NAS}:${NAS}:ro
@@ -17,19 +16,17 @@ services:
     depends_on:
       - redis
       - immich-db
+    restart: unless-stopped
     labels:
       app: immich
       auth: false
       ingress:
         - port: 3001
           host: photos.${SERVER_DOMAIN}
-          # rule: Host(`photos.${SERVER_DOMAIN}`) && PathPrefix(`/api`)
-      # traefik.http.middlewares.immich-server-0.stripprefix.prefixes: /api
-      # traefik.http.routers.immich-server-0.middlewares: immich-server-0
 
   immich-microservices:
     container_name: immich-microservices
-    image: ghcr.io/immich-app/immich-server:v1.90.2
+    image: ghcr.io/immich-app/immich-server:v1.91.0
     networks:
       - data
       - external
@@ -44,12 +41,13 @@ services:
     depends_on:
       - redis
       - immich-db
+    restart: unless-stopped
     labels:
       app: immich
 
   immich-machine-learning:
     container_name: immich-machine-learning
-    image: ghcr.io/immich-app/immich-machine-learning:v1.90.2
+    image: ghcr.io/immich-app/immich-machine-learning:v1.91.0
     networks:
       - data
       - external
@@ -62,22 +60,6 @@ services:
     labels:
       app: immich
 
-  # immich-web:
-  #   container_name: immich-web
-  #   image: ghcr.io/immich-app/immich-web:v1.88.2
-  #   networks:
-  #     - data
-  #     - external
-  #   entrypoint: ["/bin/sh", "./entrypoint.sh"]
-  #   env_file:
-  #     - .env.immich
-  #   labels:
-  #     app: immich
-  #     auth: false
-  #     ingress:
-  #       - port: 3000
-  #         host: photos.${SERVER_DOMAIN}
-
   immich-db:
     container_name: immich-db
     image: tensorchord/pgvecto-rs:pg16-v0.1.11
@@ -87,5 +69,6 @@ services:
       - .env.immich
     volumes:
       - ${NAS}/docker/immich/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
     labels:
       app: immich
