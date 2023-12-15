@@ -2,7 +2,7 @@ version: '3'
 services:
   promtail:
     container_name: promtail
-    image: grafana/promtail:2.9.2
+    image: grafana/promtail:2.9.3
     networks:
       - monitoring
     volumes:
