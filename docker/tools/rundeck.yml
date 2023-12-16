@@ -2,7 +2,7 @@ version: '3'
 services:
   rundeck:
     container_name: rundeck
-    image: rundeck/rundeck:4.17.3
+    image: rundeck/rundeck:4.17.4
     networks:
       - data
       - external
