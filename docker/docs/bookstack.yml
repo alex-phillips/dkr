@@ -2,7 +2,7 @@ version: '3'
 services:
   bookstack:
     container_name: bookstack
-    image: ghcr.io/linuxserver/bookstack:23.12.20240108
+    image: ghcr.io/linuxserver/bookstack:23.12.20240115
     networks:
       - default
       - data
