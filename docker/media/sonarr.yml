@@ -2,7 +2,7 @@ version: '2'
 services:
   sonarr:
     container_name: sonarr
-    image: ghcr.io/linuxserver/sonarr:4.0.0
+    image: ghcr.io/linuxserver/sonarr:4.0.1
     networks:
       - external
     volumes:
