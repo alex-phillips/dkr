@@ -27,7 +27,7 @@ services:
 
   grafana-renderer:
     container_name: grafana-renderer
-    image: grafana/grafana-image-renderer:3.9.0
+    image: grafana/grafana-image-renderer:3.9.1
     networks:
       - monitoring
     depends_on:
