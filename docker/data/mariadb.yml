@@ -2,7 +2,7 @@ version: '2'
 services:
   mariadb:
     container_name: mariadb
-    image: ghcr.io/linuxserver/mariadb:10.11.5
+    image: ghcr.io/linuxserver/mariadb:10.11.6
     networks:
       - data
     volumes:
