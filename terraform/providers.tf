@@ -11,7 +11,7 @@ terraform {
     # }
 
     oci = {
-      version = "5.22.0"
+      version = "5.32.0"
     }
   }
 }
