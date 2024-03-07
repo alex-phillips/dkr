@@ -23,7 +23,7 @@ terraform {
 
     terracurl = {
       source  = "devops-rob/terracurl"
-      version = "1.0.1"
+      version = "1.2.1"
     }
 
     digitalocean = {
