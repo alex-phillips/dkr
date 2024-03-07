@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  komga:
+    container_name: komga
+    image: gotson/komga
+    volumes:
+      - ${APPDATA}/komga/config:/config
+      - ${APPDATA}/komga/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - ${NAS}/media/comics:${NAS}/media/comics:ro
+    ports:
+      - 25600:25600
+    user: "${PUID}:${PGID}"
+    # remove the whole environment section if you don't need it
+    labels:
+      ingress:
+        - port: 25600
+          host: komga.${SERVER_DOMAIN}

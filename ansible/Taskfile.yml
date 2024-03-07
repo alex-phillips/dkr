@@ -1,0 +1,33 @@
+---
+version: "3"
+
+env:
+
+vars:
+  PROJECT_DIR:
+    sh: "git rev-parse --show-toplevel"
+
+  # stat for required files before executing any commands
+  #  PRE_COMMIT_HOOK:
+  #  sh: "test -f {{.PROJECT_DIR}}/.git/hooks/pre-commit"
+
+tasks:
+  setup:
+    desc: Install dependencies before running
+    cmds:
+      - pip install --upgrade -r requirements.txt
+      - ansible-galaxy install -r requirements.yml
+
+  encrypt:
+    desc: Encrypt ansible vault files
+    cmds:
+      - |
+        export BW_SESSION=$(bw unlock --raw)
+        find ./*vars -type f -name vault*.yml -print0 | xargs -I {} -P $(nproc) -0 sh -c "ansible-vault encrypt '{}' || exit 0"
+
+  decrypt:
+    desc: Decrypt ansible vault files
+    cmds:
+      - |
+        export BW_SESSION=$(bw unlock --raw)
+        find ./*vars -type f -name vault*.yml -print0 | xargs -I {} -P $(nproc) -0 sh -c "ansible-vault decrypt '{}' || exit 0"

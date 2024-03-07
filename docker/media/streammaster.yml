@@ -1,0 +1,24 @@
+version: '3.4'
+services:
+  streammaster:
+    container_name: streammaster
+    image: senexcrenshaw/streammaster
+    networks:
+      - external
+    ports:
+      - 7095:80
+      - 7096:443
+    environment:
+      - STREAMMASTER_BASEHOSTURL=https://sm.${SERVER_DOMAIN}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      # - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ${APPDATA}/streammaster:/root/.streammaster
+      - ${APPDATA}/streammaster/tv-logos:/root/.streammaster/tv-logos
+      # - ${APPDATA}/streammaster/https:/https # put pfx here
+    labels:
+      ingress:
+        - port: 7095
+          host: sm.${SERVER_DOMAIN}

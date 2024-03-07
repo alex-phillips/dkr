@@ -9,6 +9,7 @@ services:
   #   3: immich
   #   4: gitea sessions
   #   5: gitea queue
+  #   6: authelia
   #
   ###
   redis:

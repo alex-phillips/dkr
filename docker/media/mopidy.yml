@@ -1,0 +1,66 @@
+version: "3"
+services:
+  snapserver:
+    container_name: snapserver
+    image: jaedb/snapserver
+    network_mode: host
+    # networks:
+    #   - external
+    # ports:
+    #   - 1704:1704
+    #   - 1705:1705
+    #   - 1780:1780
+    volumes:
+      - /tmp/snapserver:/tmp
+      - /appdata/snapserver/snapserver.conf:/etc/snapserver.conf
+      - /appdata/snapserver/snapserver.json:/root/.config/snapserver/server.json
+    labels:
+      context: dragonite
+
+  mopidy:
+    container_name: mopidy
+    image: jaedb/iris
+    network_mode: host
+    # networks:
+    #   - external
+    environment:
+      PIP_PACKAGES: Mopidy-Spotify Mopidy-Pandora Mopidy-MusicBox-Webclient #Mopidy-YTMusic Mopidy-SoundCloud Mopidy-MusicBox-Webclient
+    depends_on:
+      - snapserver
+    # ports:
+    #   - 6600:6600
+    #   - 6680:6680
+    volumes:
+      # - ./mopidy/iris:/iris/mopidy/iris # To use a locally-built UI
+      - /appdata/mopidy/iris:/var/lib/mopidy/iris # Iris-specific storage
+      - /appdata/mopidy/m3u:/var/lib/mopidy/m3u # To persist local playlists
+      - /appdata/mopidy/local:/var/lib/mopidy/local # To persist local
+      - /appdata/mopidy/mopidy.conf:/config/mopidy.conf
+      - /mnt/storage/music/beets/Music:/var/lib/mopidy/media:ro
+      - /tmp/snapserver:/tmp
+    labels:
+      context: dragonite
+
+  # mopidy-rpi:
+  #   container_name: mopidy
+  #   image: alexphillips/mopidy-iris:arm64
+  #   network_mode: host
+  #   # networks:
+  #   #   - external
+  #   # ports:
+  #   #   - 6600:6600
+  #   #   - 6680:6680
+  #   environment:
+  #     PIP_PACKAGES: Mopidy-Spotify Mopidy-Pandora #Mopidy-YTMusic Mopidy-SoundCloud Mopidy-MusicBox-Webclient Mopidy-Spotify
+  #   volumes:
+  #     # - ./mopidy/iris:/iris/mopidy/iris # To use a locally-built UI
+  #     - /appdata/mopidy/iris:/var/lib/mopidy/iris # Iris-specific storage
+  #     - /appdata/mopidy/m3u:/var/lib/mopidy/m3u # To persist local playlists
+  #     - /appdata/mopidy/local:/var/lib/mopidy/local # To persist local
+  #     - /appdata/mopidy/mopidy.conf:/config/mopidy.conf
+  #     - ${NAS}/music/beets/Music:/var/lib/mopidy/media:ro
+  #     - /tmp/snapserver:/tmp
+  #   labels:
+  #     context:
+  #       - squirtle
+  #       - charizard

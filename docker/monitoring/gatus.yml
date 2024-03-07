@@ -1,0 +1,18 @@
+version: '3'
+services:
+  gatus:
+    container_name: gatus
+    image: twinproduction/gatus:latest
+    networks:
+      - data
+    environment:
+      POSTGRES_USER: gatus
+      POSTGRES_PASSWORD: ${DB_PASS_GATUS}
+      POSTGRES_DBL: gatus
+    volumes:
+      - ${APPDATA}/gatus:/config
+    restart: unless-stopped
+    labels:
+      ingress:
+        - port: 8080
+          host: gatus.${SERVER_DOMAIN}

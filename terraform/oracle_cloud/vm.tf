@@ -1,11 +1,20 @@
+locals {
+  user_data = <<EOF
+#!/bin/bash
+
+sudo apt update
+sudo apt upgrade -y
+EOF
+}
+
 data "oci_identity_availability_domains" "this" {
   compartment_id = var.compartment_id
 }
 
 resource "oci_core_instance" "instance" {
-  count = 1
+  count = var.instance_count
 
-  availability_domain = data.oci_identity_availability_domains.this.availability_domains[0].name
+  availability_domain = data.oci_identity_availability_domains.this.availability_domains[1].name
   compartment_id      = var.compartment_id
   display_name        = "instance-${count.index}"
   shape               = "VM.Standard.A1.Flex"
@@ -29,7 +38,7 @@ resource "oci_core_instance" "instance" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_keys
-    #   # user_data           = var.user_data
+    user_data           = base64encode(local.user_data)
   }
 
 
@@ -38,19 +47,14 @@ resource "oci_core_instance" "instance" {
       # Ignore changes to source_details, so that instance isn't
       # recreated when a new image releases. Also allows for easy
       # resource import.
-      source_details,
+      source_details[0].source_id,
     ]
   }
 }
 
 data "oci_core_vnic_attachments" "a1_vnic_attachments" {
-  count = 1
+  count = var.instance_count
 
   compartment_id = var.compartment_id
   instance_id    = oci_core_instance.instance[count.index].id
 }
-
-# resource "oci_core_ipv6" "ipv6_address" {
-#   count   = var.assign_ipv6_address ? 1 : 0
-#   vnic_id = data.oci_core_vnic_attachments.a1_vnic_attachments.vnic_attachments[0].vnic_id
-# }

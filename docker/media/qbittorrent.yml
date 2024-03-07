@@ -3,13 +3,17 @@ services:
   qbittorrent:
     container_name: qbittorrent
     image: ghcr.io/linuxserver/qbittorrent:4.6.3
-    # network_mode: service:mullvad
-    # depends_on:
-      # - mullvad
-    networks:
-      vlan10:
-        ipv4_address: 192.168.10.50
-      media:
+    network_mode: service:torguard
+    depends_on:
+      - torguard
+    # networks:
+    #   vlan20:
+    #     ipv4_address: 192.168.10.50
+    #   media:
+    # dns:
+    #   - 1.1.1.1
+#    cap_add:
+#      - NET_ADMIN
     volumes:
       - ${APPDATA}/qbittorrent:/config
       - ${NAS}/torrents:${NAS}/torrents
@@ -30,9 +34,6 @@ services:
       ingress:
         - port: 8080
           host: qb.${SERVER_DOMAIN}
-      homepage.widget: true
-      homepage.widget.username: ${QBT_USERNAME}
-      homepage.widget.password: ${QBT_PASSWORD}
 
   flood:
     container_name: flood
@@ -59,6 +60,8 @@ services:
   qbitmanage:
     container_name: qbitmanage
     image: cr.hotio.dev/hotio/qbitmanage
+    networks:
+      - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -69,3 +72,4 @@ services:
     volumes:
       - ${APPDATA}/qbitmanage:/config
       - ${NAS}:${NAS}
+      - ${APPDATA}:/appdata

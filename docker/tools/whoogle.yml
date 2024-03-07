@@ -5,7 +5,7 @@ services:
     image: benbusby/whoogle-search
     # network_mode: service:mullvad
     networks:
-      - vlan10
+      - vlan20
     environment:
       WHOOGLE_CONFIG_TOR: "false"
     labels:

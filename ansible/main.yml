@@ -1,6 +1,99 @@
+- hosts: all
+  roles:
+    - role: prometheus.prometheus.node_exporter
+      become: yes
+
+- hosts: all
+  tags:
+    - security
+  roles:
+    - role: prometheus.prometheus.node_exporter
+      become: yes
+    - role: geerlingguy.security
+      become: yes
+      vars:
+        security_ssh_permit_root_login: "yes"
+        security_sudoers_passwordless:
+          - ghost
+
+- hosts: proxmox
+
+  roles:
+    - role: ironicbadger.proxmox_nag_removal
+      become: yes
+
+  tasks:
+    - name: Use Proxmox free repository
+      apt_repository:
+        repo: 'deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription'
+        state: present
+
+    - name: Install sudo
+      package:
+        name: sudo
+        state: present
+
+    - name: Create user group
+      group:
+        name: ghost
+        gid: 1000
+        state: present
+
+    - name: Create user
+      user:
+        name: ghost
+        uid: 1000
+        group: ghost
+        groups: docker,sudo
+        shell: /bin/bash
+
+    - name: Add SSH keys
+      authorized_key:
+        user: ghost
+        state: present
+        key: https://github.com/alex-phillips.keys
+
+  # tasks:
+  #   - name: Download dark theme installer
+  #     get_url:
+  #       url: https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh
+  #       dest: /usr/local/bin/PVEDiscordDark.sh
+  #     register: dark_theme_downloaded
+
+  #   - name: Install dark theme
+  #     command: bash /usr/local/bin/PVEDiscordDark.sh install
+  #     when: dark_theme_downloaded.changed
+
 - hosts:
-    - vms
-    - pis
+    - mew
+  tags:
+    - snapraid
+  roles:
+    - role: geerlingguy.nfs
+      become: true
+    - role: ironicbadger.snapraid
+      become: true
+
+- hosts:
+    - mew
+  tags:
+    - datahoarder
+  roles:
+    - role: datahoarder
+      become: false
+      remote_user: ghost
+
+- hosts:
+    - charizard
+    - squirtle
+    - dragonite
+    - mew
+    - mewtwo
+
+  vars:
+    pip_install_packages:
+      - name: docker
+
   pre_tasks:
     - name: Create docker cli-plugins directory
       file:
@@ -9,12 +102,133 @@
       become: yes
 
   roles:
-    - role: geerlingguy.security
-      become_method: sudo
+    - role: geerlingguy.pip
+      become: yes
     - role: geerlingguy.docker
-    - role: netclient
+      become: yes
+      vars:
+        docker_compose_path: /usr/local/lib/docker/cli-plugins/docker-compose
+        docker_compose_version: v2.17.3
 
-- hosts: cloyster
+  tasks:
+    - name: Add user to 'docker' group
+      become: true
+      user:
+        name: "{{ ansible_user }}"
+        append: true
+        groups: docker
+
+- hosts:
+    - dragonite
+    - cloyster
+    - squirtle
+    - charizard
+
+  tasks:
+    - name: Create NFS mount dir
+      file:
+        path: /mnt/storage
+        state: directory
+        mode: '0755'
+        owner: 1000
+        group: 1000
+      become: yes
+
+    - name: Mount MergerFS NFS
+      ansible.posix.mount:
+        src: 192.168.1.151:/mnt/storage
+        path: /mnt/storage
+        opts: rw,sync,hard
+        state: mounted
+        fstype: nfs
+      become: yes
+
+# - hosts:
+
+
+####################
+###              ###
+###  AUTORESTIC  ###
+###              ###
+####################
+- hosts:
+    - cloyster
+    - mew
+    - dragonite
+  tags:
+    - restic
+    - autorestic
+
+  pre_tasks:
+    - name: Generate autorestic config
+      template:
+        src: templates/autorestic.yml.j2
+        dest: /root/.autorestic.yml
+      become: yes
+
   roles:
-    - role: runitor
     - role: rclone
+    - role: fuzzymistborn.autorestic
+      become: yes
+
+  tasks:
+    # - name: Run autorestic check
+    #   ansible.builtin.command: "{{ autorestic_install_path }} check -c {{ autorestic_config_path }}"
+    #   become: yes
+
+    # although we have rclone above, that is for the root user (for restic), this is for primary user as well
+    - name: Copy rclone config to user
+      become: true
+      copy:
+        src: /root/.config/rclone/rclone.conf
+        dest: "/home/{{ ansible_user }}/.config/rclone/rclone.conf"
+        mode: '0600'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        remote_src: true
+      when: ansible_user != "root"
+
+###################
+###             ###
+###  TAILSCALE  ###
+###             ###
+###################
+- hosts:
+    - cloyster
+    - mew
+    - dragonite
+  tags:
+    - tailscale
+
+  roles:
+    - role: artis3n.tailscale
+      vars:
+        tailscale_authkey: "{{ lookup('env', 'TAILSCALE_AUTHKEY') }}"
+      tags:
+        - tailscale
+
+- hosts:
+    - cloyster
+
+  # roles:
+  #   - role: runitor
+  #   - role: terraform
+  #   - role: cloyster
+
+  tasks:
+    - name: Create tank mount dir
+      file:
+        path: /mnt/tank
+        state: directory
+        mode: '0755'
+        owner: ghost
+        group: ghost
+
+    - name: Mount ZFS NFS
+      ansible.posix.mount:
+        src: 192.168.1.151:/tank
+        path: /mnt/tank
+        opts: rw,sync,hard
+        state: mounted
+        fstype: nfs
+      become: yes

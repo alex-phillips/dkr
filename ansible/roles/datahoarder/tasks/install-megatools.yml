@@ -1,0 +1,22 @@
+---
+- name: Create setup directory
+  file:
+    path: /tmp/megatools_setup
+    state: directory
+
+- name: Get megatools
+  unarchive:
+    src: https://megatools.megous.com/builds/builds/megatools-1.11.1.20230212-linux-x86_64.tar.gz
+    dest: /tmp/megatools_setup
+    remote_src: true
+    creates: /tmp/megatools_setup/megatools-1.11.1.20230212-linux-x86_64
+
+- name: Copy megatools binary
+  become: true
+  copy:
+    src: /tmp/megatools_setup/megatools-1.11.1.20230212-linux-x86_64/megatools
+    dest: "/usr/local/bin/megatools"
+    mode: '0755'
+    owner: root
+    group: root
+    remote_src: true

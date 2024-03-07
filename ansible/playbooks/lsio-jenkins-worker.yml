@@ -1,0 +1,103 @@
+---
+- hosts: charmander
+  become: yes
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - name: Install required packages
+      apt:
+        update_cache: yes
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - software-properties-common
+          - jq
+          - git
+          - default-jre
+
+    - name: Add 'jenkins' user
+      user:
+        name: jenkins
+        append: yes
+        groups:
+          - docker
+
+    - name: Add SSH key for jenkins access
+      authorized_key:
+        user: jenkins
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLFJD4UrHyOuaflnEirPo4xmY6vS6OjZJfczcXZQLMW65A8z+E8aN9SpY7OzqhMZY27ZkGGAbwvKOz6oZXNxg3bmEiwa/AUbE1oOZbHAxloFzXIYsyyhr/zh0i/LrhTL7J7tdP8YDnng9qOTinq4hmvcJF/AHNz6htnJlfM0C0dD5AIPSXZHy+X26CneU9usazlL9yh15KRxYOZOFMUnTQVPQUMfY+ROAhK0Dga3mvJ1etmDey6D7TI97HFL+MAm0bSWxc6gqmNIuAM+3aq0MT2cvrFAVt8P+WZe3IfejrC9sJ42CNGKwREoN5TxU1lCx2b5/IBUMGMjzdXb6Luh31 jenkins@reborn.linuxserver.io
+
+    - name: Add multiarch systemd service
+      copy:
+        src: ../files/multiarch.service
+        dest: /etc/systemd/system/multiarch.service
+
+    - name: Create jenkins docker config directory
+      remote_user: jenkins
+      file:
+        path: /home/jenkins/.docker
+        state: directory
+
+    - name: Check if docker config file exists (so we can't write a default JSON structure if not)
+      stat:
+        path: /home/jenkins/.docker/config.json
+      register: file_details
+
+    - name: Write default docker config
+      lineinfile:
+        line: "{}"
+        path: /home/jenkins/.docker/config.json
+        create: yes
+      when: file_details.stat.exists == False
+
+    - name: Load docker config from file
+      slurp:
+        src: /home/jenkins/.docker/config.json
+      register: docker_config
+
+    - debug:
+        msg: "{{ docker_config.content|b64decode|from_json }}"
+
+    - name: append more key/values
+      set_fact:
+        docker_config: "{{ docker_config.content|b64decode|from_json | default([]) | combine({ 'experimental': 'enabled' }) }}"
+
+    - debug:
+        var: docker_config
+
+    - name: Write docker config.json
+      copy:
+        content: "{{ docker_config | to_nice_json }}"
+        dest: /home/jenkins/.docker/config.json
+
+    - name: Set permissions docker config file
+      file:
+        path: /home/jenkins/.docker/config.json
+        owner: jenkins
+        group: jenkins
+        mode: '0644'
+
+    - name: Start and enable multiarch service
+      systemd:
+        name: multiarch
+        state: started
+        enabled: yes
+
+    - name: Start and enable ssh
+      systemd:
+        name: sshd
+        state: started
+        enabled: yes
+
+    - name: Set up git config
+      become_user: jenkins
+      git_config:
+        name="{{ item.name }}"
+        scope=global
+        value="{{ item.value }}"
+      with_items:
+        - { name: "user.name", value: "LinuxServer-CI" }
+        - { name: "user.email", value: "ci@linuxserver.io" }

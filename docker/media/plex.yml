@@ -28,13 +28,13 @@ services:
       #      NVIDIA_VISIBLE_DEVICES: all
     volumes:
       - /appdata/plex:/config
-      - /mnt/storage/media:/mnt/storage/media
-      - /mnt/storage/media/home_movies:/data/Home Movies
-      - /mnt/storage/youtube:/data/youtube
-      - /mnt/storage/music_videos:/data/Music Videos
-      - /mnt/storage/pictures:/data/Photos
-      - /mnt/storage/music:/data/Music
-      - /mnt/storage/concerts:/data/concerts
+      - /mnt/storage/media:/mnt/storage/media:ro
+      - /mnt/storage/media/home_movies:/data/Home Movies:ro
+      - /mnt/storage/youtube:/data/youtube:ro
+      - /mnt/storage/music_videos:/data/Music Videos:ro
+      - /mnt/storage/pictures:/data/Photos:ro
+      - /mnt/storage/music:/data/Music:ro
+      - /mnt/storage/concerts:/data/concerts:ro
     labels:
       context: 192.168.1.149
       namespace: media
@@ -53,9 +53,11 @@ services:
   plex-other:
     container_name: plex-other
     image: ghcr.io/linuxserver/plex
-    networks:
-      vlan10:
-        ipv4_address: 192.168.10.51
+    # networks:
+    #   vlan20:
+    #     ipv4_address: 192.168.10.51
+    ports:
+      - 32410:32400
     environment:
       PGID: ${PGID}
       PUID: ${PUID}
@@ -65,13 +67,14 @@ services:
       # DOCKER_MODS: ghcr.io/linuxserver/mods:universal-stdout-logs
       # LOGS_TO_STDOUT: "/config/Library/Application\\\ Support/Plex\\\ Media\\\ Server/Logs/Plex\\\ Media\\\ Server.log"
     volumes:
-      - ${NAS}/docker/plex-other:/config
-      - ${NAS}/media:${NAS}/media
+      - /appdata/plex-other:/config
+      - ${NAS}/media:${NAS}/media:ro
       # - ${NAS}/transcode:/transcode
     labels:
+      context: dragonite
       namespace: media
-      port: 32400
-      host: plx2.${SERVER_DOMAIN}
+      # port: 32400
+      # host: plx2.${SERVER_DOMAIN}
 
 #  moviematch:
 #    container_name: moviematch

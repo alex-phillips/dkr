@@ -1,2 +1,0 @@
----
-rclone_config_location: "/home/{{ ansible_user }}/.config/rclone/rclone.conf"

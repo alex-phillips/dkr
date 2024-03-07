@@ -19,7 +19,7 @@ services:
     container_name: stirr
     image: robbiet480/stirr-for-channels
     networks:
-      - vlan10
+      - vlan20
     labels:
       namespace: iptv
       ingress:

@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  cronicle-edge:
+    container_name: cronicle-edge
+    hostname: cronicle-master
+    image: ghcr.io/cronicle-edge/cronicle-edge:main
+    volumes:
+      - ${APPDATA}/cronicle-edge:/opt/cronicle/data
+      - /var/log/cron:/var/log/cron
+      - ${HOME}/.ssh:/root/.ssh
+      - ${ZFS}:${ZFS}:ro
+      - ${NAS}:${NAS}
+    networks:
+      - external
+      - data
+    entrypoint: manager
+    environment:
+      HC_API_URL: https://hc.w00t.cloud/ping
+      BITWARDENCLI_APPDATA_DIR: /opt/cronicle/data/.bitwarden
+      BW_SESSION: ${BW_SESSION}
+      QB_CONFIG: /opt/cronicle/data/qb.ini
+      PATH: /opt/cronicle/venv/bin:/opt/cronicle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    labels:
+      ingress:
+        - port: 3012
+          host: ce.${SERVER_DOMAIN}
+
+  # cronicle:
+  #   container_name: cronicle
+  #   image: soulteary/cronicle
+  #   restart: unless-stopped
+  #   networks:
+  #     - external
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - ${APPDATA}/cronicle/data:/opt/cronicle/data
+  #     - ${APPDATA}/cronicle/logs:/opt/cronicle/logs
+  #     - ${APPDATA}/cronicle/plugins:/opt/cronicle/plugins
+  #     - ${HOME}/.ssh:/root/.ssh
+  #     - ${ZFS}:${ZFS}:ro
+  #     - ${NAS}:${NAS}
+  #   extra_hosts:
+  #     - "cronicle.lab.io:0.0.0.0"
+  #   environment:
+  #     TZ: ${TIMEZONE}
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:3012/api/app/ping || exit 1"]
+  #     interval: 5s
+  #     timeout: 1s
+  #     retries: 3
+  #   labels:
+  #     ingress:
+  #       - port: 3012
+  #         host: cronicle.${SERVER_DOMAIN}

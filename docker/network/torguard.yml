@@ -1,0 +1,92 @@
+version: '3'
+services:
+  # torguard-server:
+  #   container_name: torguard-server
+  #   image: lscr.io/linuxserver/wireguard:latest
+  #   networks:
+  #     - torguard
+  #   cap_add:
+  #     - NET_ADMIN
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TIMEZONE}
+  #     - SERVERURL=torguard
+  #     - SERVERPORT=51820
+  #     - PEERS=1
+  #     - PEERDNS=auto
+  #     - INTERNAL_SUBNET=10.13.13.0
+  #   volumes:
+  #     - ${APPDATA}/torguard:/config
+  #     - ${NAS}:${NAS}
+  #   sysctls:
+  #     - net.ipv4.conf.all.src_valid_mark=1
+  #   restart: unless-stopped
+  #   # labels:
+  #   #   ingress:
+  #   #     - host: qb.${SERVER_DOMAIN}
+  #   #       port: 8080
+  #   #     - port: 80
+  #   #       host: speedtest-vpn.${SERVER_DOMAIN}
+  #       # - host: search.${SERVER_DOMAIN}
+  #       #   port: 5000
+  #       # - host: dl.${SERVER_DOMAIN}
+  #       #   port: 6595
+  #       #   auth: true
+
+  torguard:
+    container_name: torguard
+    image: lscr.io/linuxserver/wireguard:latest
+    networks:
+      data:
+      torguard:
+      web:
+    cap_add:
+      - NET_ADMIN
+    # depends_on:
+    #   - torguard
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${APPDATA}/torguard:/config
+      # - ${NAS}:${NAS}
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+    # labels:
+    #   ingress:
+        # - host: search.${SERVER_DOMAIN}
+        #   port: 5000
+        # - host: dl.${SERVER_DOMAIN}
+        #   port: 6595
+        #   auth: true
+
+  torguard-misc:
+    container_name: torguard-misc
+    image: lscr.io/linuxserver/wireguard:latest
+    networks:
+      torguard-misc:
+      web:
+    cap_add:
+      - NET_ADMIN
+    # depends_on:
+    #   - torguard
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${APPDATA}/torguard-misc:/config
+      # - ${NAS}:${NAS}
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+    # labels:
+    #   ingress:
+        # - host: search.${SERVER_DOMAIN}
+        #   port: 5000
+        # - host: dl.${SERVER_DOMAIN}
+        #   port: 6595
+        #   auth: true

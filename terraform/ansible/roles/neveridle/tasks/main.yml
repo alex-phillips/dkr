@@ -1,0 +1,31 @@
+- name: query latest version
+  shell: curl -sX GET "https://api.github.com/repos/layou233/NeverIdle/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]' | sed 's/v//g'
+  register: version
+
+- name: parse latest version {{ version.stdout }}
+  get_url:
+    url: https://github.com/layou233/NeverIdle/releases/download/{{ version.stdout }}/NeverIdle-linux-arm64
+    dest: /usr/local/bin/neveridle
+  become: true
+
+- name: make executable
+  file:
+    path: /usr/local/bin/neveridle
+    mode: '0755'
+    owner: root
+    group: root
+  become: true
+
+- name: install systemd service
+  copy:
+    src: ../files/neveridle.service
+    dest: /etc/systemd/system/neveridle.service
+  become: true
+
+- name: enable and start service
+  service:
+    name: neveridle
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  become: true

@@ -1,0 +1,86 @@
+---
+- hosts: caterpie
+  become: yes
+  tasks:
+    - name: Install docker repo key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+
+    - name: Add docker debian repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install docker
+      apt:
+        update_cache: yes
+        name: docker-ce
+
+    - name: Add user user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        append: yes
+        groups:
+          - docker
+
+    - name: Add multiarch systemd service
+      copy:
+        src: ../files/multiarch.service
+        dest: /etc/systemd/system/multiarch.service
+
+    - name: Create docker config directory
+      remote_user: "{{ ansible_user }}"
+      file:
+        path: "/home/{{ ansible_user }}/.docker"
+        state: directory
+
+    - name: Check if docker config file exists (so we can't write a default JSON structure if not)
+      stat:
+        path: "/home/{{ ansible_user }}/.docker/config.json"
+      register: file_details
+
+    - name: Write default docker config
+      lineinfile:
+        line: "{}"
+        path: "/home/{{ ansible_user }}/.docker/config.json"
+        create: yes
+      when: file_details.stat.exists == False
+
+    - name: Load docker config from file
+      slurp:
+        src: "/home/{{ ansible_user }}/.docker/config.json"
+      register: docker_config
+
+    - debug:
+        msg: "{{ docker_config.content|b64decode|from_json }}"
+
+    - name: append more key/values
+      set_fact:
+        docker_config: "{{ docker_config.content|b64decode|from_json | default([]) | combine({ 'experimental': 'enabled' }) }}"
+
+    - debug:
+        var: docker_config
+
+    - name: Write docker config.json
+      copy:
+        content: "{{ docker_config | to_nice_json }}"
+        dest: "/home/{{ ansible_user }}/.docker/config.json"
+
+    - name: Set permissions docker config file
+      file:
+        path: "/home/{{ ansible_user }}/.docker/config.json"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+
+    - name: Start and enable docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Start and enable multiarch service
+      systemd:
+        name: multiarch
+        state: started
+        enabled: yes

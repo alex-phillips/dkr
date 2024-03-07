@@ -14,3 +14,5 @@ services:
       EMAIL: ${ZAP2XML_USER}
       PASSWORD: ${ZAP2XML_PASS}
       EXTRAPARAM: -I -D
+    # labels:
+    #   context: 192.168.1.149

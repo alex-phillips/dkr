@@ -1,0 +1,59 @@
+---
+- hosts: proxmox
+  roles:
+    - ironicbadger.ansible_role_proxmox_nag_removal
+    - cloudalchemy.node-exporter
+    - scrutiny-collector
+
+  tasks:
+    - name: Add SSH keys
+      authorized_key:
+        user: root
+        state: present
+        key: https://github.com/alex-phillips.keys
+
+    - name: Add PVE apt repo
+      lineinfile:
+        path: /etc/apt/sources.list
+        line: deb http://download.proxmox.com/debian/pve buster pve-no-subscription
+
+    # - name: Enable IOMMU
+    #   lineinfile:
+    #     path: /etc/default/grub
+    #     regex: '^GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
+    #     line: GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+
+    - name: Install necessary packages
+      package:
+        name: "{{ item }}"
+      loop:
+        - lm-sensors
+        - smartmontools
+
+    - name: Download prometheus smartmon script
+      get_url:
+        url: https://raw.githubusercontent.com/prometheus-community/node-exporter-textfile-collector-scripts/master/smartmon.sh
+        dest: /usr/local/bin/prometheus-smartmon.sh
+        mode: '0755'
+
+    - name: Smartmon cron job
+      cron:
+        name: prometheus smartmon exporter
+        minute: '*/5'
+        job: /usr/local/bin/prometheus-smartmon.sh > /var/lib/node_exporter/smart_metrics.prom.$$ && mv /var/lib/node_exporter/smart_metrics.prom.$$ /var/lib/node_exporter/smart_metrics.prom
+
+    - name: Scrutiny metrics collector
+      cron:
+        name: scrutiny metrics collector
+        minute: '*/15'
+        job: . /etc/profile; /usr/local/bin/scrutiny-collector-metrics run --api-endpoint http://192.168.1.91:8081
+
+    # - name: Download dark theme installer
+    #   get_url:
+    #     url: https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.py
+    #     dest: /usr/local/bin/PVEDiscordDark.py
+    #   register: dark_theme_downloaded
+
+    # - name: Install dark theme
+    #   command: python3 /usr/local/bin/PVEDiscordDark.py --action install
+    #   when: dark_theme_downloaded.changed

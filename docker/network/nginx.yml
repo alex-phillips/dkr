@@ -3,8 +3,11 @@ services:
   nginx:
     container_name: nginx
     image: ghcr.io/linuxserver/nginx:1.24.0
+    # network_mode: service:torguard
     networks:
-      - vlan10
+      - vlan20
+    depends_on:
+      - torguard
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

@@ -1,0 +1,30 @@
+version: 2
+backends:
+{% for backend in autorestic_locations %}
+  pa-{{ backend.name }}:
+    type: sftp
+    path: pi@100.104.157.122:{{ backend.dest | default("/mnt/disk1/restic/" + backend.name) }}
+    key: {{ backend.key | default (autorestic_default_key) }}
+{% endfor %}
+
+locations:
+{% for location in autorestic_locations %}
+  {{ location.name }}:
+    forget: prune
+    options: &autorestic_base_opts
+      forget:
+        keep-last: 5 # always keep at least 5 snapshots
+        keep-daily: 7 # keep 7 last daily snapshots (a weeks worth of daily)
+        keep-weekly: 4 # keep 4 last weekly snapshots (a month's worth of weekly)
+        keep-monthly: 12 # keep 12 last monthly snapshots (years worth of monthly)
+        keep-yearly: 1 # keep 7 last yearly snapshots (1 year old)
+    from: {{ location.from | default("/appdata/" + location.name) }}
+    to: {{ location.to | default("pa-" + location.name) }}
+    hooks:
+      before:
+        - curl --retry 3 https://hc.w00t.cloud/ping/5SeyhEZH82f-6S-f787blQ/{{ location.name }}/start
+      success:
+        - curl --retry 3 https://hc.w00t.cloud/ping/5SeyhEZH82f-6S-f787blQ/{{ location.name }}
+      failure:
+        - curl --retry 3 https://hc.w00t.cloud/ping/5SeyhEZH82f-6S-f787blQ/{{ location.name }}/fail
+{% endfor %}

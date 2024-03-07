@@ -4,7 +4,7 @@ services:
     container_name: webtop-test
     image: ghcr.io/linuxserver/webtop:arch-xfce
     networks:
-      - vlan10
+      - vlan20
     shm_size: "2gb"
     environment:
       PUID: ${PUID}

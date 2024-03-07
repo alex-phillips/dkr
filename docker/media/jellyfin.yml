@@ -3,18 +3,18 @@ services:
   jellyfin:
     container_name: jellyfin
     image: ghcr.io/linuxserver/jellyfin
-    networks:
-      - external
+    network_mode: host
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TIMEZONE}
     volumes:
-      - ${NAS}/docker/jellyfin:/config
-      - ${NAS}/media:/media:ro
-      - ${NAS}/music/beets/Music:/music:ro
-      - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - /appdata/jellyfin:/config
+      - /mnt/storage/media:/media:ro
+      - /mnt/storage/music/beets/Music:/music:ro
+      # - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
     labels:
+      context: dragonite
       namespace: media
       port: 8096
       host: jf.${SERVER_DOMAIN}

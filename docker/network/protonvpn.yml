@@ -4,7 +4,7 @@ services:
     container_name: protonvpn
     image: ghcr.io/tprasadtp/protonvpn
     networks:
-      - vlan10
+      - vlan20
     cap_add:
       - NET_ADMIN
     devices:

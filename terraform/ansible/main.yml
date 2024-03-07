@@ -1,0 +1,30 @@
+- hosts:
+    - all
+  pre_tasks:
+    - name: Create docker cli-plugins directory
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+      become: yes
+
+  roles:
+    - role: geerlingguy.security
+      become: yes
+    - role: geerlingguy.docker
+      become: yes
+      vars:
+        docker_compose_path: /usr/local/lib/docker/cli-plugins/docker-compose
+        docker_compose_version: v2.16.0
+
+  tasks:
+    - name: Add user to 'docker' group
+      become: true
+      user:
+        name: "{{ ansible_user }}"
+        append: true
+        groups: docker
+
+- hosts:
+    - oracle
+  roles:
+    - role: neveridle

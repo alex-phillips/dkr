@@ -5,7 +5,7 @@ services:
     container_name: prowlarr
     networks:
       - external
-      - socks
+      - torguard
     environment:
       - PUID=${PUID}
       - PGID=${PGID}

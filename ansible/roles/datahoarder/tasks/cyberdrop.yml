@@ -1,0 +1,12 @@
+---
+- name: Install cyberdrop-dl
+  pip:
+    name: cyberdrop-dl
+    virtualenv: "/home/{{ ansible_user }}/.virtualenvs/cyberdrop-dl"
+    state: latest
+
+- name: Install gallery-dl
+  pip:
+    name: gallery-dl
+    virtualenv: "/home/{{ ansible_user }}/.virtualenvs/cyberdrop-dl"
+    state: latest

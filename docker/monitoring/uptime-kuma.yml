@@ -16,3 +16,17 @@ services:
       namespace: monitoring
       port: 3001
       host: status.${SERVER_DOMAIN}
+
+  uptime-kuma-remote:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1.23.2
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    volumes:
+      - /appdata/uptime-kuma:/app/data
+    ports:
+      - 3001:3001
+    labels:
+      context: 100.104.157.122
+      context_user: pi

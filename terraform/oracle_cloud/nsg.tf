@@ -12,23 +12,40 @@ resource "oci_core_network_security_group_security_rule" "egress" {
   destination_type          = "CIDR_BLOCK"
 }
 
-resource "oci_core_network_security_group_security_rule" "ingress" {
+resource "oci_core_network_security_group_security_rule" "ingress_ssh" {
   network_security_group_id = oci_core_network_security_group.this.id
   direction                 = "INGRESS"
   protocol                  = "6" # TCP
-  description               = "nsg-ingress-ssh"
+  description               = "nsg-ingress_ssh"
 
   source      = "${data.external.public_ip.result.ip}/32"
   source_type = "CIDR_BLOCK"
 
-  # destination      = "${oci_core_instance.instance.public_ip}/32"
-  destination      = oci_core_vcn.this.cidr_blocks[0]
-  destination_type = "CIDR_BLOCK"
+  destination = oci_core_vcn.this.cidr_blocks[0]
 
   tcp_options {
     destination_port_range {
       min = 22
-      max = 22
+      max = 3010
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "ingress_all_from_home" {
+  network_security_group_id = oci_core_network_security_group.this.id
+  direction                 = "INGRESS"
+  protocol                  = "6" # TCP
+  description               = "nsg-ingress_ssh"
+
+  source      = "${data.external.public_ip.result.ip}/32"
+  source_type = "CIDR_BLOCK"
+
+  destination = oci_core_vcn.this.cidr_blocks[0]
+
+  tcp_options {
+    destination_port_range {
+      min = 1
+      max = 65535
     }
   }
 }

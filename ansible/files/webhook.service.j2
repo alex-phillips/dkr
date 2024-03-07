@@ -1,0 +1,15 @@
+[Unit]
+Description=Webhook
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ ansible_user }}
+Group={{ ansible_user }}
+WorkingDirectory=/home/{{ ansible_user }}
+ExecStart=/usr/bin/webhook -hooks /home/{{ ansible_user }}/.config/webhooks.yaml -port 9091 -verbose
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

@@ -5,7 +5,7 @@ services:
     image: lscr.io/linuxserver/kasm:develop
     privileged: true
     networks:
-      - vlan10
+      - vlan20
     environment:
       - PUID=${PUID}
       - PGID=${PGID}

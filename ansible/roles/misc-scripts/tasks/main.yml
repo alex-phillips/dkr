@@ -1,0 +1,26 @@
+---
+- name: Download plex JBOPS
+  become: no
+  git:
+    repo: https://github.com/blacktwin/JBOPS
+    dest: /home/{{ ansible_user }}/code/jbops
+    accept_hostkey: yes
+
+- name: virtualenv for jbops
+  become: no
+  pip:
+    requirements: /home/{{ ansible_user }}/code/jbops/requirements.txt
+    virtualenv: "/home/{{ ansible_user }}/.virtualenvs/jbops"
+
+- name: Ensure plex config dir exists
+  become: no
+  file:
+    state: directory
+    path: /home/{{ ansible_user }}/.config/plexapi
+    recurse: True
+
+- name: Copy plex config files into place
+  become: no
+  copy:
+    src: ../files/plex-exonintrendo.config
+    dest: /home/{{ ansible_user }}/.config/plexapi/exonintrendo.ini

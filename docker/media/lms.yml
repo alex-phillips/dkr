@@ -1,0 +1,22 @@
+version: '3'
+services:
+  lms:
+    container_name: lms
+    image: lmscommunity/logitechmediaserver
+    networks:
+      - external
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - ${APPDATA}/lms/config:/config:rw
+      - ${NAS}/music/beets/Music:/music:ro
+      - ${APPDATA}/lms/playlists:/playlist:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - 9000:9000/tcp
+      - 9090:9090/tcp
+      - 3483:3483/tcp
+      - 3483:3483/udp
+    restart: always

@@ -11,12 +11,6 @@ security_fail2ban_enabled: true
 security_sudoers_passwordless:
   - "{{ ansible_user }}"
 
-docker_compose_path: /usr/local/lib/docker/cli-plugins/docker-compose
-docker_compose_version: v2.6.1
-
-snapraid_force_install: True
-snapraid_bin_path: /usr/bin/snapraid
-
 bash_aliases:
   - name: beet
     command: docker exec -it -u abc beets beet --config /config/config.yaml

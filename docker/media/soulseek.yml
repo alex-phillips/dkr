@@ -4,8 +4,8 @@ services:
     container_name: soulseek
     image: realies/soulseek
     networks:
-      vlan10:
-        ipv4_address: 192.168.10.52
+      vlan20:
+        ipv4_address: 192.168.20.52
     environment:
       PGID: ${PGID}
       PUID: ${PUID}

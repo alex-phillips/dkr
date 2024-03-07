@@ -1,0 +1,16 @@
+version: '3'
+services:
+  ryot:
+    container_name: ryot
+    image: ghcr.io/ignisda/ryot:latest
+    networks:
+      - data
+      - external
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgres://ryot:${DB_PASS_RYOT}@postgres:5432/ryot
+    labels:
+      ingress:
+         - host: ryot.${SERVER_DOMAIN}
+           port: 8000

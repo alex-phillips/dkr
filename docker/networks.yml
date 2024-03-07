@@ -77,22 +77,36 @@ networks:
       config:
         - subnet: 172.18.9.0/24
 
-  vlan10:
-    name: vlan10
+  torguard:
+    name: torguard
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.10.0/24
+
+  torguard-misc:
+    name: torguard-misc
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.11.0/24
+
+  vlan20:
+    name: vlan20
     driver: ipvlan
     driver_opts:
-      parent: vmbr0.10
+      parent: enp5s0f1.20
     ipam:
       config:
-        - subnet: 192.168.10.0/24
+        - subnet: 192.168.20.0/24
           # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
-          gateway: 192.168.10.1
+          gateway: 192.168.20.1
 
   vlan30:
     name: vlan30
     driver: ipvlan
     driver_opts:
-      parent: vmbr0
+      parent: vmbr1
       ipvlan_mode: l3
     ipam:
       config:

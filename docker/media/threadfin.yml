@@ -1,0 +1,18 @@
+version: "2.1"
+services:
+  threadfin:
+    container_name: threadfin
+    image: fyb3roptik/threadfin
+    networks:
+      - external
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      # - RUN_OPTS= #optional
+    volumes:
+      - ${APPDATA}/threadfin/data:/home/threadfin/conf/data
+    labels:
+      ingress:
+        - port: 34400
+          host: tf.${SERVER_DOMAIN}

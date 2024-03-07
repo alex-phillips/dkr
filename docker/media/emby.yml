@@ -12,22 +12,21 @@ services:
       - PUID=${PUID}
       - TZ=${TIMEZONE}
     volumes:
-      - ${NAS}/docker/emby:/config
-      - ${NAS}/media:${NAS}/media
-      - ${NAS}/music/beets/Music:/media/music:ro
-      - ${NAS}/pictures/Organized:/media/photos:ro
-      - ${NAS}:${NAS}:ro
-      - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - /appdata/emby:/config
+      - /mnt/storage/media:/mnt/storage/media
+      - /mnt/storage/music/beets/Music:/media/music:ro
+      # - /appdata/zap2xml/xmltv.xml:/xmltv.xml:ro
       # - ${NAS}/transcode:/transcode
-      - ${APPDATA}/dtv:/dtv
+      # - ${APPDATA}/dtv:/dtv
     labels:
+      context: dragonite
       auth: false
       namespace: media
-      ingress:
-        - port: 8096
-          host: mb.${SERVER_DOMAIN}
-      homepage.widget: true
-      homepage.widget.key: ${EMBY_API_KEY}
+      # ingress:
+      #   - port: 8096
+      #     host: mb.${SERVER_DOMAIN}
+      # homepage.widget: true
+      # homepage.widget.key: ${EMBY_API_KEY}
 #
 #   embystat:
 #     container_name: embystat

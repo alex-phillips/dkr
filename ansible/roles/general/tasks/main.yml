@@ -1,0 +1,31 @@
+---
+- name: Set timezone
+  become: yes
+  file:
+    src: /usr/share/zoneinfo/{{ timezone }}
+    dest: /etc/localtime
+    owner: root
+    group: root
+    state: link
+    force: yes
+
+- name: Populate hosts file
+  lineinfile:
+    dest: /etc/cloud/templates/hosts.debian.tmpl
+    line: "{{ item.ip }} {{ item.name }}"
+    regexp: "^{{ item.name }}\\s"
+    state: present
+  with_items:
+    - "{{ hosts }}"
+  when: update_hosts
+
+- name: Add bash aliases
+  become: no
+  lineinfile:
+    path: /home/{{ ansible_user }}/.bashrc
+    line: alias {{ item.name }}='{{ item.command }}'
+    regexp: '^alias {{ item.name }}='
+    state: present
+    insertafter: EOF
+    create: True
+  loop: "{{ bash_aliases }}"

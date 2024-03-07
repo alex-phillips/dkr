@@ -1,7 +1,17 @@
+roles:
 - src: geerlingguy.security
-# - src: ironicbadger.ansible_role_create_users
+  version: 2.2.0
 - src: stefangweichinger.ansible_rclone
   name: rclone
 - src: ironicbadger.proxmox_nag_removal
 - src: geerlingguy.docker
 - src: ironicbadger.snapraid
+- src: fuzzymistborn.autorestic
+- src: ironicbadger.docker_compose_generator
+- src: geerlingguy.nfs
+- src: geerlingguy.pip
+  version: 2.2.0
+- src: artis3n.tailscale
+
+collections:
+- prometheus.prometheus

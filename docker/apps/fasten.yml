@@ -3,7 +3,11 @@ services:
   fasten:
     container_name: fasten
     image: ghcr.io/fastenhealth/fasten-onprem
+    networks:
+       - external
+    volumes:
+      - ${APPDATA}/fasten:/opt/fasten/db
     labels:
       ingress:
-        - port: 9090
+        - port: 8080
           host: health.${SERVER_DOMAIN}

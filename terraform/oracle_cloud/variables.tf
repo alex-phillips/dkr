@@ -19,3 +19,8 @@ variable "ssh_keys" {
   description = "SSH Keys to pass to VM instances"
   default     = ""
 }
+
+variable "availability_domain_index" {
+  type = number
+  default = 0
+}

@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  stump:
+    container_name: stump
+    image: aaronleopold/stump
+    # Replace my paths (prior to the colons) with your own
+    volumes:
+      - ${APPDATA}/stump/config:/config
+      - ${APPDATA}/stump/data:/data
+      - ${NAS}:${NAS}:ro
+    ports:
+      - 10801:10801
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+    labels:
+      ingress:
+        - port: 10801
+          host: stump.${SERVER_DOMAIN}

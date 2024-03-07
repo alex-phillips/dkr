@@ -16,7 +16,7 @@ services:
     ports:
       - "10022:22"
     volumes:
-      - ${NAS}/docker/gitea:/data
+      - ${ZFS}/docker/gitea:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:

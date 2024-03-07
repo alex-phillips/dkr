@@ -12,3 +12,8 @@ services:
       - ${APPDATA}/qbittorrent/qBittorrent/BT_backup:/torrents:ro # note that this volume can and should be mounted read-only
       - ${NAS}/torrents/cross-seeds:/cross-seeds
     command: daemon
+    #command: search
+    labels:
+      ingress:
+        - port: 2468
+          host: cross-seed.${SERVER_DOMAIN}

@@ -1,0 +1,9 @@
+[Unit]
+Description=Run NeverIdle
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/neveridle -c 2h1m2s -m 2 -n 4h
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,2 @@
+docker_compose_arch: armv7
+docker_apt_arch: arm64

@@ -1,0 +1,22 @@
+version: '3'
+services:
+  linkwarden:
+    container_name: linkwarden
+    image: alexphillips/linkwarden
+    networks:
+      - data
+      - external
+    depends_on:
+      - postgres
+    env_file: .env.linkwarden
+    # environment:
+    #   - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ${APPDATA}/linkwarden:/data/data
+    labels:
+      ingress:
+        - port: 3000
+          host: lw.${SERVER_DOMAIN}

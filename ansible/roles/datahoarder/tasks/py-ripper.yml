@@ -1,0 +1,34 @@
+---
+- name: Checkout py-ripper repo
+  git:
+    repo: ssh://git@origin.w00t.cloud:10022/alexphillips/py-ripper.git
+    dest: "/home/{{ ansible_user }}/code/py-ripper"
+    accept_hostkey: yes
+  become: no
+  register: py_ripper
+
+- name: Install py-ripper
+  become: no
+  pip:
+    name: "."
+    editable: yes
+    chdir: "/home/{{ ansible_user }}/code/py-ripper"
+    state: present
+    virtualenv: /home/{{ ansible_user }}/.virtualenvs/ripper
+  # when: py_ripper.changed
+
+- name: Create config and cache directories
+  become: no
+  file:
+    state: directory
+    path: "{{ item.path }}"
+  with_items:
+    - { path: "/home/{{ ansible_user }}/.py-ripper" }
+
+- name: Copy config / cache files
+  become: no
+  copy:
+    content: "{{ item.content }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { content: "{{ py_ripper_config }}", dest: "/home/{{ ansible_user }}/.py-ripper/config" }

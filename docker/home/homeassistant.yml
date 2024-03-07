@@ -19,6 +19,18 @@ services:
     #   service: http://192.168.1.151:8123
 #       nginx_directives: proxy_hide_header X-Frame-Options;
 
+  homebridge:
+    container_name: homebridge
+    image: homebridge/homebridge:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ${APPDATA}/homebridge:/homebridge
+    labels:
+      ingress:
+        - port: 8581
+          host: hb.${SERVER_DOMAIN}
+
   # ha-code-server:
   #   container_name: ha-code-server
   #   image: ghcr.io/linuxserver/code-server

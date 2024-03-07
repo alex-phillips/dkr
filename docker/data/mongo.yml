@@ -21,7 +21,7 @@ services:
     networks:
       - data
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo`
+      ME_CONFIG_MONGODB_SERVER: mongo
     labels:
       app: mongo
       port: 8081

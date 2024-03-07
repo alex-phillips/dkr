@@ -5,6 +5,7 @@ services:
     image: ghcr.io/linuxserver/mariadb:10.11.6
     networks:
       - data
+      - external
     volumes:
       - ${APPDATA}/mariadb:/config
     ports:

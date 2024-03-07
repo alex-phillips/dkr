@@ -8,7 +8,8 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     networks:
-      - vlan10
+      # - vlan20
+      - external
       - data
     volumes:
       - ${APPDATA}/mitm/certs:/mitm # using a docker volume for permission and persistence reasons
@@ -21,9 +22,26 @@ services:
       - NET_ADMIN # This container messes with iptables
     sysctls:
       - net.ipv4.ip_forward=1
+    ports:
+      - 1080:1080
+      - 42069:42069
+      - 42070:42070
     labels:
       ingress:
         - port: 42070
           host: mitm.${SERVER_DOMAIN}
         - port: 2342
           host: ppt.${SERVER_DOMAIN}
+
+  mitm-socks:
+    container_name: mitm-socks
+    image: serjs/go-socks5-proxy
+    network_mode: service:mitmproxy
+    depends_on:
+      - mitmproxy
+    volumes:
+      - ${APPDATA}/mitm/certs:/cert:ro # Mounts certificates from the MITM container
+      - ${APPDATA}/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
+    restart: unless-stopped
+    environment:
+      PROXY_PORT: 1080

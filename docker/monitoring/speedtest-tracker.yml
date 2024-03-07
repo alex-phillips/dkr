@@ -2,19 +2,20 @@ version: '3.3'
 services:
   speedtest-tracker:
     container_name: speedtest-tracker
-    image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
+    image: ghcr.io/alexjustesen/speedtest-tracker:latest
     networks:
       - data
       - external
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - DB_CONNECTION=mysql
-      - DB_HOST=mariadb
-      - DB_PORT=3306
-      - DB_DATABASE=speedtest_tracker
-      - DB_USERNAME=speedtest_tracker
-      - DB_PASSWORD=${DB_PASS_SPEEDTEST_TRACKER}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DB_CONNECTION: mysql
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_DATABASE: speedtest_tracker
+      DB_USERNAME: speedtest_tracker
+      DB_PASSWORD: ${DB_PASS_SPEEDTEST_TRACKER}
+      APP_KEY: base64:G4P4q81xXjnf7x8sGsejpX+MjZrl1jmRlgLOsnn4Cxw=
     volumes:
       - ${APPDATA}/speedtest-tracker:/config
       - /etc/localtime:/etc/localtime:ro
@@ -24,3 +25,32 @@ services:
       ingress:
         - port: 80
           host: speedtest.${SERVER_DOMAIN}
+
+  speedtest-tracker-vpn:
+    container_name: speedtest-tracker-vpn
+    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+    network_mode: service:torguard
+    # networks:
+    #   data:
+    #   vlan20:
+    #     ipv4_address: 192.168.10.53
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DB_CONNECTION: mysql
+      DB_HOST: 192.168.1.151
+      DB_PORT: 3306
+      DB_DATABASE: speedtest_tracker_vpn
+      DB_USERNAME: speedtest_tracker
+      DB_PASSWORD: ${DB_PASS_SPEEDTEST_TRACKER}
+      APP_KEY: base64:G4P4q81xXjnf7x8sGsejpX+MjZrl1jmRlgLOsnn4Cxw=
+    volumes:
+      - ${APPDATA}/speedtest-tracker-vpn:/config
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - mariadb
+      - torguard
+    labels:
+      ingress:
+        - port: 80
+          host: speedtest-vpn.${SERVER_DOMAIN}

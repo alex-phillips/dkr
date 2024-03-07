@@ -10,7 +10,20 @@ services:
       - /appdata:/appdata:ro
       - /var/log/traefik:/var/log/traefik:ro
       - /var/log/cron:/var/log/cron:ro
+      - /mnt/pve/evo850-500gb-1/logs:/mnt/pve/evo850-500gb-1/logs:ro
       - /mnt/pve/evo850-500gb-1/dockerlib/containers:/var/lib/docker/containers:ro
     command: "-config.file=/config/config.yaml"
     labels:
       namespace: monitoring
+
+  promtail-remote:
+    container_name: promtail
+    image: grafana/promtail:2.9.2
+    restart: unless-stopped
+    volumes:
+      - /appdata/promtail:/config
+      - /var/log/cron:/var/log/cron:ro
+    command: "-config.file=/config/config.yaml"
+    labels:
+      context:
+        - cloyster

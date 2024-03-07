@@ -4,7 +4,7 @@ services:
     container_name: spodcast
     image: ghcr.io/linuxserver/nginx:1.24.0
     networks:
-      - vlan10
+      - vlan20
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

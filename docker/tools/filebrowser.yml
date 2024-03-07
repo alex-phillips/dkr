@@ -11,6 +11,7 @@ services:
       - ${NAS}:/srv/nas
       - ${HOME}:/srv/home
       - ${ZFS}:/srv/tank
+      - ${APPDATA}:/srv/appdata
       - ${APPDATA}/filebrowser/database.db:/database/filebrowser.db
       - ${APPDATA}/filebrowser/settings.json:/config/settings.json
     labels:

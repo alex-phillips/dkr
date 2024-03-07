@@ -1,0 +1,21 @@
+---
+- name: Setup python
+  include_tasks: setup-python.yml
+
+# - name: instaloader
+#   include_tasks: instaloader.yml
+
+# - name: gallery-dl
+#   include_tasks: gallery-dl.yml
+
+- name: cyberdrop
+  include_tasks: cyberdrop.yml
+
+- name: py-ripper
+  include_tasks: py-ripper.yml
+
+# - name: ripper
+#   include_tasks: node-ripper.yml
+
+# - name: Install megatools
+#   include_tasks: install-megatools.yml

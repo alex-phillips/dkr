@@ -1,0 +1,26 @@
+---
+- name: Create temporary working directory
+  file:
+    path: "/tmp/terraform-setup"
+    state: directory
+    mode: '0775'
+
+- name: Get latest version
+  shell: curl -sX GET "https://api.github.com/repos/hashicorp/terraform/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]' | sed 's/v//g'
+  register: terraform_version
+
+- name: Get terraform version {{ terraform_version.stdout }}
+  unarchive:
+    src: https://releases.hashicorp.com/terraform/{{ terraform_version.stdout }}/terraform_{{ terraform_version.stdout }}_linux_amd64.zip
+    dest: "/tmp/terraform-setup/"
+    remote_src: yes
+
+- name: Copy terraform binary
+  copy:
+    src: "/tmp/terraform-setup/terraform"
+    dest: "/usr/local/bin/terraform"
+    mode: '0755'
+    owner: root
+    group: root
+    remote_src: true
+  become: true

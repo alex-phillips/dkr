@@ -1,0 +1,8 @@
+---
+- name: Authelia configuration file
+  template:
+    src: templates/authelia/configuration.yml.j2
+    dest: "{{ authelia_dir }}/configuration.yml"
+    owner: "root"
+    group: "root"
+  become: true

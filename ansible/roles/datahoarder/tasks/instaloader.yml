@@ -1,0 +1,6 @@
+---
+- name: Install instaloader
+  pip:
+    name: instaloader
+    virtualenv: "/home/{{ ansible_user }}/.virtualenvs/instaloader"
+    state: latest

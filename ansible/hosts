@@ -1,10 +1,15 @@
 [proxmox]
-192.168.1.151
+mew ansible_host=192.168.1.151
+mewtwo ansible_host=192.168.1.150
+dragonite ansible_host=192.168.1.149
 
 [vms]
 cloyster ansible_host=192.168.1.91 vmid=10
+; squirtle ansible_host=192.168.1.7 ansible_user=ghost
 
 [pis]
-10.100.0.1
-ivysaur ansible_host=192.168.1.2
-venusaur ansible_host=192.168.1.3
+charizard ansible_host=192.168.255 ansible_user=ghost
+squirtle ansible_host=192.168.1.7 ansible_user=ghost
+
+[tailscale]
+100.104.157.122 ansible_user=pi

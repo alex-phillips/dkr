@@ -1,0 +1,18 @@
+version: '3'
+services:
+  dcpp:
+    container_name: dcpp
+    image: gangefors/airdcpp-webclient
+    network_mode: service:torguard
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - ${APPDATA}/dcpp:/.airdcpp
+      - ${APPDATA}/downloads:/Downloads
+      - ${APPDATA}/share:/Share
+      - ${NAS}:${NAS}:ro
+    labels:
+      ingress:
+        - port: 5600
+          host: dcpp.${SERVER_DOMAIN}

@@ -3,6 +3,8 @@ services:
   octoprint:
     container_name: octoprint
     image: octoprint/octoprint
+    networks:
+      - external
     devices:
       - /dev/ttyUSB1:/dev/ttyUSB0
     # devices:
@@ -10,11 +12,11 @@ services:
     #  - /dev/ttyACM0:/dev/ttyACM0
     #  - /dev/video0:/dev/video0
     volumes:
-      - ${NAS}/docker/octoprint:/octoprint
+      - ${APPDATA}/octoprint:/octoprint
     # uncomment the lines below to ensure camera streaming is enabled when
     # you add a video device
     #environment:
     #  - ENABLE_MJPG_STREAMER=true
     labels:
       port: 80
-      host: 3dp.${SERVER_DOMAIN}
+      host: 3d.${SERVER_DOMAIN}

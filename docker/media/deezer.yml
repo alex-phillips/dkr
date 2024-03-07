@@ -5,7 +5,7 @@ services:
     image: registry.gitlab.com/bockiii/deemix-docker
     # network_mode: service:mullvad
     networks:
-      - vlan10
+      - vlan20
     dns:
       - 1.1.1.1
       - 1.0.0.1

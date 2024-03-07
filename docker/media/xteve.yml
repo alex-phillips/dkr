@@ -4,15 +4,17 @@ services:
     container_name: xteve
     image: alturismo/xteve
     networks:
-      - vlan10
+      - vlan20
     environment:
       TZ: ${TIMEZONE}
     volumes:
       - ${APPDATA}/xteve/root:/root/.xteve
       - ${APPDATA}/xteve/config:/config:rw
+      - ${APPDATA}/zap2xml:/zap2xml
       - /tmp/xteve/:/tmp/xteve:rw
-      # - /mnt/user/appdata/tvheadend/data/:/TVH \
     labels:
+      traefik.http.middlewares.xteve-cors.headers.customResponseHeaders.Access-Control-Allow-Origin: "*"
+      traefik.http.routers.xteve-0.middlewares: xteve-cors@docker
       namespace: iptv
       ingress:
         - port: 34400

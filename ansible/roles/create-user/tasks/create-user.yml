@@ -1,0 +1,21 @@
+---
+- name: create user groups
+  group:
+    name: users
+    gid: 1000
+
+- name: create new users
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+    shell: "{{ item.shell }}"
+    uid: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+  with_items: "{{ users }}"
+
+- name: add SSH authorized_keys from github
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "https://github.com/{{ item.sshkeys }}"
+  with_items: "{{ users }}"

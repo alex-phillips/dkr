@@ -1,0 +1,25 @@
+---
+- hosts: 100.104.157.122
+  become: yes
+  pre_tasks:
+    - name: Create docker cli-plugins directory
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+      become: yes
+
+  roles:
+    - { role: geerlingguy.docker }
+
+  tasks:
+    # - name: Copy node-exporter compose
+    #   copy:
+    #     src: ../files/node-exporter.yml
+    #     dest: ~/docker/node-exporter.yml
+    #   become: no
+
+    # - community.docker.docker_compose:
+    #     project_src: ~/docker
+    #     files:
+    #       - node-exporter.yml
+    #   become: no

@@ -4,7 +4,7 @@ services:
     container_name: jdownloader
     image: jlesage/jdownloader-2
     networks:
-      - vlan10
+      - vlan20
     volumes:
       - ${NAS}/docker/jdownloader2/config:/config
       - ${NAS}/docker/jdownloader2/output:/output

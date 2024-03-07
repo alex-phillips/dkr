@@ -2,9 +2,9 @@ version: '3'
 services:
   hls-proxy:
     container_name: hls-proxy
-    image: hls-proxy
+    image: alexphillips/hls-proxy
     networks:
-      - vlan10
+      - vlan20
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -32,7 +32,7 @@ services:
           host: hls-stream-2.${SERVER_DOMAIN}
         - port: 3033
           protocol: https
-          host: hls-stream-3.${SERVER_DOMAIN}`
+          host: hls-stream-3.${SERVER_DOMAIN}
         - port: 3034
           protocol: https
           host: hls-stream-4.${SERVER_DOMAIN}

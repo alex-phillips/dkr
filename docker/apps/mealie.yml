@@ -7,11 +7,31 @@ services:
       - external
     environment:
       TZ: America/New_York
+      DB_ENGINE: sqlite
+      # =====================================
+      # Web Concurrency
+      WEB_GUNICORN: "false"
+      WORKERS_PER_CORE: 0.5
+      MAX_WORKERS: 1
+      WEB_CONCURRENCY: 1
     volumes:
       - ${APPDATA}/mealie:/app/data
     labels:
-      port: 80
+      port: 9000
       host: recipes.${SERVER_DOMAIN}
+
+  mealie-old:
+    container_name: mealie-old
+    image: hkotel/mealie:v0.5.6
+    networks:
+      - external
+    environment:
+      TZ: America/New_York
+    volumes:
+      - ${APPDATA}/mealie.bak:/app/data
+    labels:
+      port: 9000
+      host: mealie.${SERVER_DOMAIN}
 
   mealie-hellofresh:
     container_name: mealie-hellofresh

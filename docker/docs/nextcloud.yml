@@ -44,7 +44,8 @@ services:
     labels:
       app: nextcloud
       auth: false
-      port: 80
+      port: 443
+      protocol: https
       host: office.${SERVER_DOMAIN}
       # traefik.http.middlewares.onlyoffice-headers.headers.customRequestHeaders.X-Forwarded-Proto: https
       # traefik.http.routers.onlyoffice-443.middlewares: onlyoffice-headers@docker

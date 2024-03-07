@@ -1,0 +1,13 @@
+version: '3'
+services:
+  recyclarr:
+    container_name: recyclarr
+    image: ghcr.io/recyclarr/recyclarr
+    user: ${PUID}:${PGID}
+    networks:
+      - external
+    volumes:
+      - ${APPDATA}/recyclarr:/config
+    environment:
+      - TZ=${TIMEZONE}
+      - RECYCLARR_CREATE_CONFIG=true

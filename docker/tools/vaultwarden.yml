@@ -5,9 +5,10 @@ services:
     image: vaultwarden/server:1.30.5
     networks:
       - external
+    user: ${PUID}:${PGID}
     environment:
       TZ: ${TIMEZONE}
-      SIGNUPS_ALLOWED: "true"
+      # SIGNUPS_ALLOWED: "true"
       DOMAIN: https://bw.${SERVER_DOMAIN}
       SMTP_HOST: ${SMTP_HOST}
       SMTP_FROM: ${SMTP_USER}
@@ -22,3 +23,22 @@ services:
     labels:
       port: 80
       host: bw.${SERVER_DOMAIN}
+
+  vaultwarden-backup:
+    container_name: vaultwarden-backup
+    image: bruceforce/vaultwarden-backup
+    restart: on-failure
+    init: true
+    # command: manual
+    depends_on:
+      - vaultwarden
+    environment:
+      UID: ${PUID}
+      GID: ${PGID}
+      DELETE_AFTER: 30
+      BACKUP_DIR: /data/backups
+      TIMESTAMP: "true"
+      # ENCRYPTION_PASSWORD: ${BW_BACKUP_PASSWORD}
+      # LOG_LEVEL: trace
+    volumes:
+      - ${APPDATA}/vaultwarden:/data

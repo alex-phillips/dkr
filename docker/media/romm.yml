@@ -23,5 +23,5 @@ services:
       - ${NAS}:${NAS}:ro
     labels:
       ingress:
-        - port: 80
+        - port: 8080
           host: romm.${SERVER_DOMAIN}

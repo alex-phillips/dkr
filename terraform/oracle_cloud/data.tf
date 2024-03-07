@@ -10,7 +10,12 @@ data "oci_core_images" "os" {
 
 data "external" "public_ip" {
   program = [
-    "curl",
-    "https://api.ipify.org?format=json",
+    "sh",
+    "-c",
+    "curl -s ifconfig.co | xargs -I {} echo '{\"ip\":\"{}\"}'",
   ]
+  # program = [
+  #   "curl",
+  #   "https://api.ipify.org?format=json",
+  # ]
 }

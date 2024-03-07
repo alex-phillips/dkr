@@ -1,0 +1,43 @@
+---
+- name: Install nvm
+  include_role:
+    name: nvm
+
+- name: Create code dir
+  become: no
+  file:
+    path: "/home/{{ ansible_user }}/code"
+    state: directory
+
+- name: Checkout ripper repo
+  become: no
+  git:
+    repo: ssh://git@origin.w00t.cloud:10022/alexphillips/node-ripper.git
+    dest: "/home/{{ ansible_user }}/code/ripper"
+    accept_hostkey: yes
+  register: node_ripper
+
+- name: Install node deps
+  become: no
+  shell: /bin/bash -c "source ~/.nvm/nvm.sh && npm install -g"
+  args:
+    chdir: "/home/{{ ansible_user }}/code/ripper"
+  when: node_ripper.changed
+
+- name: Create config and cache directories
+  become: no
+  file:
+    state: directory
+    path: "{{ item.path }}"
+  with_items:
+    - { path: "/home/{{ ansible_user }}/.config/ripper-nodejs" }
+    - { path: "/home/{{ ansible_user }}/.cache/ripper-nodejs" }
+
+- name: Copy config / cache files
+  become: no
+  copy:
+    content: "{{ item.content }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { content: "{{ripper_config}}", dest: "/home/{{ ansible_user }}/.config/ripper-nodejs/config.json" }
+    - { content: "{{reddit_token}}", dest: "/home/{{ ansible_user }}/.cache/ripper-nodejs/reddit.token" }

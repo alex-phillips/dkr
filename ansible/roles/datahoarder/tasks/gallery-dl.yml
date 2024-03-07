@@ -1,0 +1,12 @@
+---
+- name: Install gallery-dl
+  pip:
+    name: gallery-dl
+    virtualenv: "/home/{{ ansible_user }}/.virtualenvs/gallery-dl"
+    state: latest
+
+- name: Copy config
+  become: false
+  copy:
+    content: "{{ gallery_dl_conf }}"
+    dest: "/home/{{ ansible_user }}/.gallery-dl.conf"

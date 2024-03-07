@@ -4,6 +4,8 @@ services:
   sshwifty:
     image: niruix/sshwifty:latest
     container_name: sshwifty
+    networks:
+      - external
     user: "1000:1000"
     restart: always
     environment:

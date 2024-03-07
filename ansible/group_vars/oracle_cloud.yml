@@ -1,0 +1,12 @@
+
+
+# containers:
+#   - service_name: uptime-kuma
+#     container_name: uptime-kuma
+#     active: true
+#     image: louslam/uptime-kuma:1.19.6
+#     ports:
+#       - 3001:3001
+#     volumes:
+#       - ${HOME}/docker/uptime-kuma
+#     restart: always

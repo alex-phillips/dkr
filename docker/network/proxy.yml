@@ -1,17 +1,27 @@
 version: '3'
 services:
-  socks:
-    image: ghcr.io/linuxserver/nginx
-    container_name: socks
-    networks:
-      - vlan10
-      - socks
-    environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TIMEZONE}
-    volumes:
-      - ${APPDATA}/socks:/config
+  # socks:
+  #   image: ghcr.io/linuxserver/nginx
+  #   container_name: socks
+  #   networks:
+  #     - vlan20
+  #     - socks
+  #   environment:
+  #     PUID: ${PUID}
+  #     PGID: ${PGID}
+  #     TZ: ${TIMEZONE}
+  #   volumes:
+  #     - ${APPDATA}/socks:/config
+  #   restart: unless-stopped
+  #   ports:
+  #     - 1080:1080 # SOCKS proxy
+
+  socks5:
+    container_name: socks5
+    image: serjs/go-socks5-proxy
+    network_mode: service:torguard
+    depends_on:
+      - torguard
     restart: unless-stopped
-    ports:
-      - 1080:1080 # SOCKS proxy
+    environment:
+      PROXY_PORT: 1080

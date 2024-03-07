@@ -1,0 +1,23 @@
+version: "3"
+services:
+  manyfold:
+    container_name: manyfold
+    image: ghcr.io/manyfold3d/manyfold:latest
+    networks:
+      - data
+      - external
+#    user: "1000:1000"
+    environment:
+      DATABASE_URL: postgresql://manyfold:${DB_PASS_MANYFOLD}@postgres/manyfold?pool=5
+      SECRET_KEY_BASE: ${VAN_DAM_SECRET_KEY_BASE}
+      REDIS_URL: redis://redis:6379/1
+      # RAILS_RELATIVE_URL_ROOT: /vandam Sets the root of the app to /vandam useful for reverse proxies with nginx
+    volumes:
+      - ${APPDATA}/manyfold:/libraries
+    depends_on:
+      - postgres
+      - redis
+    labels:
+      ingress:
+        - port: 3214
+          host: stl.${SERVER_DOMAIN}

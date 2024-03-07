@@ -5,11 +5,11 @@ services:
     image: ghcr.io/linuxserver/webtop:ubuntu-xfce
     #    network_mode: service:mullvad
     networks:
-      # - vlan10
+      # - vlan20
       - external
-      - socks
+      - torguard-misc
     depends_on:
-      - socks
+      - socks5
     privileged: true
     shm_size: "2gb"
     devices:
@@ -25,6 +25,7 @@ services:
       - ${APPDATA}/webtop/custom-init:/custom-cont-init.d
       - ${NAS}/docker/webtop/Downloads:/config/Downloads
       - ${NAS}:${NAS}
+      - ${APPDATA}:${APPDATA}
     labels:
       port: 3000
       host: wt.${SERVER_DOMAIN}
@@ -48,6 +49,24 @@ services:
       - ${NAS}:${NAS}
       - ${APPDATA}/mitm/certs:/cert:ro # Mounts certificates from the MITM container
       - ${APPDATA}/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
+    labels:
+      port: 3000
+      host: wtt.${SERVER_DOMAIN}
+
+  webtop-test:
+    container_name: webtop-test
+    image: ghcr.io/linuxserver/webtop:ubuntu-xfce
+    # networks:
+    #   - vlan20
+    network_mode: service:torguard-misc
+    privileged: true
+    shm_size: "2gb"
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${APPDATA}/webtop-test:/config
     labels:
       port: 3000
       host: wtt.${SERVER_DOMAIN}

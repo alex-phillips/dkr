@@ -1,0 +1,1 @@
+{"jellyfin": {"enabled": true}, "plex": {"enabled": true}, "tautulli": {"enabled": true}, "mopidy": {"enabled": true}, "snapserver": {"enabled": true}, "emby": {"enabled": false}, "plex-other": {"enabled": true}}
