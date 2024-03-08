@@ -18,7 +18,7 @@ services:
 
   promtail-remote:
     container_name: promtail
-    image: grafana/promtail:2.9.2
+    image: grafana/promtail:2.9.5
     restart: unless-stopped
     volumes:
       - /appdata/promtail:/config
