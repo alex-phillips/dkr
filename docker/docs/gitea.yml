@@ -2,7 +2,7 @@ version: '3'
 services:
   gitea:
     container_name: gitea
-    image: gitea/gitea:1.21.7
+    image: gitea/gitea:1.21.8
     networks:
       - default
       - data
