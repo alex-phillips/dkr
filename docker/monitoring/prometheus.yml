@@ -2,7 +2,7 @@ version: '3'
 services:
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:v2.51.0
+    image: prom/prometheus:v2.51.1
     networks:
       - monitoring
       - external
