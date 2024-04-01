@@ -38,7 +38,7 @@ services:
 
   snypy-ui:
     container_name: snypy-ui
-    image: ghcr.io/snypy/snypy-frontend:1.4.1
+    image: ghcr.io/snypy/snypy-frontend:1.4.2
     networks:
       - web
       - external
