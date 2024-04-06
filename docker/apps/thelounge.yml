@@ -2,7 +2,7 @@ version: "3"
 services:
   thelounge:
     container_name: thelounge
-    image: ghcr.io/linuxserver/thelounge:4.4.1
+    image: ghcr.io/linuxserver/thelounge:4.4.3
     networks:
       - external
     environment:
