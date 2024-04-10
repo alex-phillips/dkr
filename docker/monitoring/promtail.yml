@@ -2,7 +2,7 @@ version: '3'
 services:
   promtail:
     container_name: promtail
-    image: grafana/promtail:2.9.6
+    image: grafana/promtail:2.9.7
     networks:
       - monitoring
     volumes:
@@ -18,7 +18,7 @@ services:
 
   promtail-remote:
     container_name: promtail
-    image: grafana/promtail:2.9.6
+    image: grafana/promtail:2.9.7
     restart: unless-stopped
     volumes:
       - /appdata/promtail:/config
