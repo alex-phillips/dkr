@@ -1,7 +1,7 @@
 services:
   oncall:
     container_name: oncall
-    image: grafana/oncall:v1.3.117
+    image: grafana/oncall:v1.3.118
     networks:
       - monitoring
     command: >
@@ -23,7 +23,7 @@ services:
 
   oncall-celery:
     container_name: oncall-celery
-    image: grafana/oncall:v1.3.117
+    image: grafana/oncall:v1.3.118
     networks:
       - monitoring
       - external
@@ -45,7 +45,7 @@ services:
 
   oncall-migrations:
     container_name: oncall-migrations
-    image: grafana/oncall:v1.3.117
+    image: grafana/oncall:v1.3.118
     networks:
       - monitoring
     command: python manage.py migrate --noinput
