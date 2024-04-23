@@ -1,8 +1,8 @@
 version: '3'
 services:
-  plex-meta-manager:
-    container_name: plex-meta-manager
-    image: ghcr.io/linuxserver/plex-meta-manager:1.21.0
+  kometa:
+    container_name: kometa
+    image: ghcr.io/linuxserver/kometa:1.21.1
     networks:
       - external
     environment:
@@ -11,4 +11,4 @@ services:
       TZ: ${TIMEZONE}
       PMM_CONFIG: /config/config.yml
     volumes:
-      - ${APPDATA}/plex-meta-manager:/config
+      - ${APPDATA}/kometa:/config
