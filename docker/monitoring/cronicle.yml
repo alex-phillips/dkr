@@ -2,7 +2,7 @@ version: "3"
 services:
   cronicle:
     container_name: cronicle
-    image: soulteary/cronicle:0.9.45
+    image: soulteary/cronicle:0.9.46
     network_mode: host
     volumes:
       - /etc/localtime:/etc/localtime:ro
