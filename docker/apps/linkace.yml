@@ -21,7 +21,7 @@ services:
 
   linkace-nginx:
     container_name: linkace-nginx
-    image: bitnami/nginx:1.25
+    image: bitnami/nginx:1.26
     networks:
       - data
     depends_on:
