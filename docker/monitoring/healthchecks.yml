@@ -2,7 +2,7 @@ version: '2'
 services:
   healthchecks:
     container_name: healthchecks
-    image: ghcr.io/linuxserver/healthchecks:3.3.20240506
+    image: ghcr.io/linuxserver/healthchecks:3.3.20240513
     networks:
       - external # for notifications
       - monitoring
