@@ -2,7 +2,7 @@ version: '3'
 services:
   drone:
     container_name: drone
-    image: drone/drone:2.23.0
+    image: drone/drone:2.24.0
     networks:
       - data
       - external
