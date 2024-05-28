@@ -2,7 +2,7 @@ version: '3'
 services:
   romm:
     container_name: romm
-    image: zurdi15/romm:3.0.3
+    image: zurdi15/romm:3.1.0
     networks:
       - data
       - external
