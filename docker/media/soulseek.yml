@@ -3,9 +3,12 @@ services:
   soulseek:
     container_name: soulseek
     image: realies/soulseek
-    networks:
-      vlan20:
-        ipv4_address: 192.168.20.52
+    # networks:
+    #   vlan20:
+    #     ipv4_address: 192.168.20.52
+    network_mode: service:torguard
+    depends_on:
+      - torguard
     environment:
       PGID: ${PGID}
       PUID: ${PUID}

@@ -2,7 +2,7 @@ version: '3'
 services:
   romm:
     container_name: romm
-    image: zurdi15/romm:latest
+    image: zurdi15/romm:3.0.3
     networks:
       - data
       - external
@@ -16,10 +16,13 @@ services:
       - CLIENT_ID=${TWITCH_CLIENT_ID}
       - CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
       - STEAMGRIDDB_API_KEY=<SteamGridDB api key>
+      - ROMM_AUTH_USERNAME=${ROMM_AUTH_USERNAME}
+      - ROMM_AUTH_PASSWORD=${ROMM_AUTH_PASSWORD}
+      - ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY}
     volumes:
       - ${NAS}/docker/rarom/output:/romm/library/roms:ro
-      - ${APPDATA}/romm:/romm/resources
-      - ${APPDATA}/romm/config.yml:/romm/config.yml
+      - ${APPDATA}/romm/resources:/romm/resources
+      - ${APPDATA}/romm/config:/romm/config
       - ${NAS}:${NAS}:ro
     labels:
       ingress:

@@ -6,7 +6,7 @@ services:
     networks:
       - external
     devices:
-      - /dev/ttyUSB1:/dev/ttyUSB0
+      - /dev/ttyUSB0:/dev/ttyUSB0
     # devices:
     # use `python -m serial.tools.miniterm` to see what the name is of the printer
     #  - /dev/ttyACM0:/dev/ttyACM0

@@ -10,6 +10,7 @@ services:
       TZ: ${TIMEZONE}
     volumes:
       - ${APPDATA}/loki:/config:ro
+      - ${APPDATA}/loki/data:/tmp/loki
       - ${APPDATA}/loki/rules.yaml:/etc/loki/rules/fake/rules.yml
     ports:
       - 3100:3100

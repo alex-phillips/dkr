@@ -8,9 +8,9 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
     volumes:
-      - ${APPDATA}/dcpp:/.airdcpp
-      - ${APPDATA}/downloads:/Downloads
-      - ${APPDATA}/share:/Share
+      - ${APPDATA}/dcpp/config:/.airdcpp
+      - ${NAS}/docker/dcpp/downloads:/Downloads
+      - ${NAS}/docker/dcpp/share:/Share
       - ${NAS}:${NAS}:ro
     labels:
       ingress:

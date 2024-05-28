@@ -18,7 +18,7 @@ services:
       auth: false
       ingress:
         - port: 5984
-          host: obsidian.${SERVER_DOMAIN}
+          host: obsidian-livesync.${SERVER_DOMAIN}
       # - "traefik.enable=true"
       # # The Traefik Network
       # - "traefik.docker.network=proxy"

@@ -33,3 +33,50 @@ services:
         #   host: wyze-rtmp.${SERVER_DOMAIN}
         # - port: 8554
         #   host: wyze-rtsp.${SERVER_DOMAIN}
+
+  wyze-bridge-lucy:
+    container_name: wyze-bridge-lucy
+    image: mrlt8/wyze-bridge:latest
+    networks:
+      - external
+    ports:
+      - 8555:8554
+    environment:
+      WYZE_EMAIL: ${WYZE_LUCY_EMAIL}
+      WYZE_PASSWORD: ${WYZE_LUCY_PASSWORD}
+      TZ: ${TIMEZONE}
+      # NET_MODE: LAN
+      #   : "true"
+      SNAPSHOT: RTSP30
+      WB_RTSP_URL: rtsp://wyze-lucy-rtsp.${SERVER_DOMAIN}/
+      WB_RTMP_URL: rtmp://wyze-lucy-rtmp.${SERVER_DOMAIN}/
+      WB_HLS_URL: http://wyze-lucy-hls.${SERVER_DOMAIN}/
+      ENABLE_AUDIO: true
+      ON_DEMAND: "False"
+      RECORD_ALL: "True"
+      RECORD_LENGTH: 300
+      QUALITY: HD120
+      AUDIO_CODEC: AAC
+
+      BASEMENT_CAM: SD60
+      DRIVEWAY_CAM: SD60
+      # KITCHEN_CAM: HD60
+      # FOYER_CAM: HD60
+      # FRONT_PORCH_CAM: HD60
+      # LIVING_ROOM_CAM: HD60
+      BACK_YARD: SD60
+      # UPSTAIRS_CAM: HD60
+
+    volumes:
+      - ${NAS}/docker/wyze-lucy/images:/img
+      - ${NAS}/docker/wyze-lucy/recordings:/record
+    labels:
+      ingress:
+        - port: 5000
+          host: wyze-lucy.${SERVER_DOMAIN}
+        - port: 8888
+          host: wyze-lucy-hls.${SERVER_DOMAIN}
+        # - port: 1935
+        #   host: wyze-rtmp.${SERVER_DOMAIN}
+        - port: 8554
+          host: wyze-lucy-rtsp.${SERVER_DOMAIN}

@@ -19,6 +19,22 @@ services:
     #   service: http://192.168.1.151:8123
 #       nginx_directives: proxy_hide_header X-Frame-Options;
 
+  music-assistant:
+    container_name: music-assistant
+    image: ghcr.io/music-assistant/server
+    network_mode: host
+    # privileged: true
+    volumes:
+      - ${APPDATA}/music-assistant:/data
+      - ${NAS}/music/beets/Music:/music:ro
+    # labels:
+    #   ingress:
+    #     - port: 8095
+    #       host: ma.${SERVER_DOMAIN}
+    # privileged: true
+    # networks:
+    #     host: {}
+
   homebridge:
     container_name: homebridge
     image: homebridge/homebridge:latest

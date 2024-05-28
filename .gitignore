@@ -1,7 +1,9 @@
 .env
-.env.funkwhale
+.env.*
 docker-compose.yml
 .history/
 .vscode/
 venv/
-.dkr.state
+disabled/
+galaxy_roles/
+hidden/

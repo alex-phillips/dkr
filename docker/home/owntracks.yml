@@ -9,11 +9,18 @@ services:
       OTR_HOST: mosquitto
       OTR_USER: owntracks
       OTR_PASS: ${OTR_PASSWORD}
-      OTR_HTTPHOST: gps.${SERVER_DOMAIN}
+      # OTR_HTTPHOST: gps.${SERVER_DOMAIN} # I dont' think this is required anymore? When I included this, I was getting a 'port already in use' error.
+      VIRTUAL_HOST: ot.${SERVER_DOMAIN}
+      VIRTUAL_PORT: 8083
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ${APPDATA}/owntracks/config:/config
       - ${APPDATA}/owntracks/store:/store
     labels:
+      app: owntracks
       namespace: home
       traefik.http.middlewares.owntracks-auth.basicauth.users: ${OTR_BASIC_AUTH}
       traefik.http.middlewares.owntracks-header.headers.accesscontrolalloworiginlist: https://ot.${SERVER_DOMAIN}
@@ -21,7 +28,7 @@ services:
       traefik.http.routers.owntracks-8083.middlewares: owntracks-header@docker
       port: 8083
       host: ot.${SERVER_DOMAIN}
-      auth: true
+      auth: false
 
   owntracks-ui:
     container_name: owntracks-ui
@@ -34,6 +41,7 @@ services:
       SERVER_HOST: owntracks
       SERVER_PORT: 8083
     labels:
+      app: owntracks
       namespace: home
       port: 80
       host: gps.${SERVER_DOMAIN}

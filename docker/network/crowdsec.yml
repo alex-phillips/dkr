@@ -7,6 +7,7 @@ services:
       - web
       - monitoring
       - external
+    restart: unless-stopped
     environment:
       GID: ${PGID}
       COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik"
@@ -14,22 +15,8 @@ services:
     # depends_on:  #uncomment if running traefik in the same compose file
     #   - traefik
     volumes:
-      - ${APPDATA}/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
       - ${APPDATA}/crowdsec/data:/var/lib/crowdsec/data
       - ${APPDATA}/crowdsec/config:/etc/crowdsec
-      - /var/log/traefik:/var/log/traefik/:ro
-    labels:
-      app: crowdsec
-
-  traefik-bouncer:
-    container_name: traefik-bouncer
-    image: fbonalair/traefik-crowdsec-bouncer:0.5.0
-    networks:
-      - web
-    depends_on:
-      - crowdsec
-    environment:
-      CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY}
-      CROWDSEC_AGENT_HOST: crowdsec:8080
+      - /var/log/traefik/access.log:/var/log/traefik/access.log:ro
     labels:
       app: crowdsec

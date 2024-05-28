@@ -21,6 +21,7 @@ services:
       QB_CONFIG: /opt/cronicle/data/qb.ini
       PATH: /opt/cronicle/venv/bin:/opt/cronicle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     labels:
+      post_up: docker exec -i cronicle-edge /opt/cronicle/data/startup.sh
       ingress:
         - port: 3012
           host: ce.${SERVER_DOMAIN}

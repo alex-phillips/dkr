@@ -1,21 +1,21 @@
 version: "3"
 services:
-  snapserver:
-    container_name: snapserver
-    image: jaedb/snapserver
-    network_mode: host
-    # networks:
-    #   - external
-    # ports:
-    #   - 1704:1704
-    #   - 1705:1705
-    #   - 1780:1780
-    volumes:
-      - /tmp/snapserver:/tmp
-      - /appdata/snapserver/snapserver.conf:/etc/snapserver.conf
-      - /appdata/snapserver/snapserver.json:/root/.config/snapserver/server.json
-    labels:
-      context: dragonite
+  # snapserver:
+  #   container_name: snapserver
+  #   image: jaedb/snapserver
+  #   network_mode: host
+  #   # networks:
+  #   #   - external
+  #   # ports:
+  #   #   - 1704:1704
+  #   #   - 1705:1705
+  #   #   - 1780:1780
+  #   volumes:
+  #     - /tmp/snapserver:/tmp
+  #     - /appdata/snapserver/snapserver.conf:/etc/snapserver.conf
+  #     - /appdata/snapserver/snapserver.json:/root/.config/snapserver/server.json
+  #   labels:
+  #     context: dragonite
 
   mopidy:
     container_name: mopidy
@@ -25,8 +25,8 @@ services:
     #   - external
     environment:
       PIP_PACKAGES: Mopidy-Spotify Mopidy-Pandora Mopidy-MusicBox-Webclient #Mopidy-YTMusic Mopidy-SoundCloud Mopidy-MusicBox-Webclient
-    depends_on:
-      - snapserver
+    # depends_on:
+    #   - snapserver
     # ports:
     #   - 6600:6600
     #   - 6680:6680

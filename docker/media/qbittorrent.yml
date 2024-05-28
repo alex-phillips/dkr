@@ -17,6 +17,7 @@ services:
     volumes:
       - ${APPDATA}/qbittorrent:/config
       - ${NAS}/torrents:${NAS}/torrents
+      - ${NAS}/torrents/cross-seeds:/cross-seeds
       - ${NAS}/media:${NAS}/media
       - ${NAS}/other:${NAS}/other
       - ${APPDATA}/qbittorrent/custom-init:/custom-cont-init.d

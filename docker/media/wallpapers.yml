@@ -12,7 +12,9 @@ services:
       - PGID=${PGID}
       - PUID=${PUID}
       - TZ=${TIMEZONE}
+      - DB_CONNECTION=mysql
       - DB_HOST=mariadb
+      - DB_PORT=3306
       - DB_DATABASE=wallpapers
       - DB_USERNAME=wallpapers
       - DB_PASSWORD=${DB_PASS_WALLPAPERS}

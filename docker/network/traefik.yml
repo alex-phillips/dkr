@@ -10,11 +10,11 @@ services:
     depends_on:
       - dockerproxy
       - authelia
-      - traefik-bouncer
     environment:
       - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
       - CF_DNS_API_TOKEN=${CLOUDFLARE_API_KEY}
       - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -42,6 +42,7 @@ services:
     privileged: true
     networks:
       - dockerproxy
+    restart: unless-stopped
     environment:
       CONTAINERS: 1
       POST: 0

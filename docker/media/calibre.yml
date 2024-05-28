@@ -17,6 +17,7 @@ services:
       - ${NAS}/torrents/downloads/books:/downloads:ro
       - ${NAS}/docker/transfer:/transfer:ro
       - ${NAS}/docker/firefox/downloads:/firefox:ro
+      - ${NAS}:${NAS}:ro
     labels:
       namespace: media
       port: 8080

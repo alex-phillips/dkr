@@ -9,6 +9,7 @@ services:
       TZ: ${TIMEZONE}
     volumes:
       - ${APPDATA}/node-red:/data
+      - ${HOME}/.ssh:/usr/src/node-red/.ssh
     labels:
       namespace: home
       port: 1880

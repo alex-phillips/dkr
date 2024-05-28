@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os, yaml, re, argparse, logging, json, subprocess, configparser, socket
+from urllib.request import urlopen, Request
 
 COMPOSE_CMD="docker compose"
 CONFIG = configparser.ConfigParser()
@@ -777,6 +778,36 @@ if args.action in ["up", "start", "stop", "enable", "disable"]:
                 state[service]["enabled"] = args.action == "enable"
 
     generate_traefik_rules(state, args)
+
+    httprequest = Request("https://tr.w00t.cloud/api/http/routers")
+    with urlopen(httprequest) as response:
+        routers = json.load(response)
+    endpoints = []
+    for router in routers:
+        host = re.search(r"Host\(`(.+?)`\)", router["rule"])
+
+        if not host:
+            continue
+
+        # Extract matching values of all groups
+        endpoints.append({
+            "name": router["name"],
+            "group": "docker",
+            "url": f"https://{host.group(1)}",
+            "interval": "1m",
+            "conditions": [
+                # "[STATUS] == 302" if "middlewares" in router and "authelia@docker" in router["middlewares"] else "[STATUS] == 200",
+                "[STATUS] == 200",
+            ]
+        })
+    with open("./gatus.yml", "w") as fh:
+        yaml.dump({
+            "storage": {
+                "type": "postgres",
+                "path": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable",
+            },
+            "endpoints": endpoints,
+        }, fh, default_flow_style=False)
 
 if args.action == "pull":
     # TODO: Need to fix this logic, remove disabled onlhy if pulling all?

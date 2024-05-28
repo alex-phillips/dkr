@@ -7,7 +7,7 @@ services:
       - external
     stop_signal: SIGINT
     devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB0
     volumes:
       - ${APPDATA}/zwavejs:/usr/src/app/store
     ports:
