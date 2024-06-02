@@ -2,7 +2,7 @@ version: '3'
 services:
   spodcast:
     container_name: spodcast
-    image: ghcr.io/linuxserver/nginx:1.24.0
+    image: ghcr.io/linuxserver/nginx:1.26.1
     networks:
       - vlan20
     environment:
