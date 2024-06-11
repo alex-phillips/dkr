@@ -3,11 +3,11 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich-server
-    image: ghcr.io/immich-app/immich-server:v1.105.1
+    image: ghcr.io/immich-app/immich-server:v1.106.1
     networks:
       - data
       - external
-    command: [ "start.sh", "immich" ]
+    # command: [ "start.sh", "immich" ]
     volumes:
       - ${NAS}/docker/immich/data:/usr/src/app/upload
       - ${NAS}:${NAS}:ro
@@ -24,30 +24,30 @@ services:
         - port: 3001
           host: photos.${SERVER_DOMAIN}
 
-  immich-microservices:
-    container_name: immich-microservices
-    image: ghcr.io/immich-app/immich-server:v1.105.1
-    networks:
-      - data
-      - external
-    command: [ "start.sh", "microservices" ]
-    volumes:
-      - ${NAS}/docker/immich/data:/usr/src/app/upload
-      - ${NAS}:${NAS}:ro
-    env_file:
-      - .env.immich
-    # environment:
-    #   LOG_LEVEL: verbose
-    depends_on:
-      - redis
-      - immich-db
-    restart: unless-stopped
-    labels:
-      app: immich
+  # immich-microservices:
+  #   container_name: immich-microservices
+  #   image: ghcr.io/immich-app/immich-server:v1.106.1
+  #   networks:
+  #     - data
+  #     - external
+  #   command: [ "start.sh", "microservices" ]
+  #   volumes:
+  #     - ${NAS}/docker/immich/data:/usr/src/app/upload
+  #     - ${NAS}:${NAS}:ro
+  #   env_file:
+  #     - .env.immich
+  #   # environment:
+  #   #   LOG_LEVEL: verbose
+  #   depends_on:
+  #     - redis
+  #     - immich-db
+  #   restart: unless-stopped
+  #   labels:
+  #     app: immich
 
   immich-machine-learning:
     container_name: immich-machine-learning
-    image: ghcr.io/immich-app/immich-machine-learning:v1.105.1
+    image: ghcr.io/immich-app/immich-machine-learning:v1.106.1
     networks:
       - data
       - external
