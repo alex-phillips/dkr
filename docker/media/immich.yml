@@ -3,7 +3,7 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich-server
-    image: ghcr.io/immich-app/immich-server:v1.109.2
+    image: ghcr.io/immich-app/immich-server:v1.110.0
     networks:
       - data
     # command: [ "start.sh", "immich" ]
