@@ -2,7 +2,7 @@ version: '3'
 services:
   librenms:
     container_name: librenms
-    image: librenms/librenms:24.5.0
+    image: librenms/librenms:24.6.0
     networks:
       - data
     environment:
