@@ -2,7 +2,7 @@ version: '3'
 services:
   nginx:
     container_name: nginx
-    image: ghcr.io/linuxserver/nginx:1.26.1
+    image: ghcr.io/linuxserver/nginx:1.26.2
     # network_mode: service:torguard
     networks:
       - vlan20
