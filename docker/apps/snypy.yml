@@ -30,7 +30,7 @@ services:
 
   snypy-static:
     container_name: snypy-static
-    image: ghcr.io/snypy/snypy-static:1.4.1
+    image: ghcr.io/snypy/snypy-static:1.5.1
     networks:
       - web
     labels:
