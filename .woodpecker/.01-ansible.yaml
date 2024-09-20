@@ -1,0 +1,38 @@
+---
+kind: pipeline
+name: 01-ansible
+
+concurrency:
+  limit: 1
+
+depends_on:
+  - 00-docker
+
+steps:
+  - name: check for changes
+    image: alpine/git
+    when:
+      branch:
+        - main
+      event:
+        - push
+    commands:
+      - if (git diff --quiet --exit-code HEAD^ HEAD -- ansible); then exit 78; fi
+
+  # - name: ansible
+  #   image: plugins/ansible
+  #   when:
+  #     branch:
+  #       - main
+  #     event:
+  #       - push
+  #   environment:
+  #     ANSIBLE_VAULT_PASSWORD:
+  #       from_secret: ansible_vault_password
+  #     ANSIBLE_CONFIG: ansible/ansible.cfg
+  #   settings:
+  #     playbook: ansible/main.yml
+  #     inventory: ansible/hosts
+  #     galaxy: ansible/galaxy-requirements.yml
+  #     private_key:
+  #       from_secret: ssh_key

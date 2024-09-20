@@ -1,0 +1,39 @@
+---
+kind: pipeline
+name: 00-docker
+
+concurrency:
+  limit: 1
+
+steps:
+  - name: check for docker changes
+    image: alpine/git
+    when:
+      branch:
+        - main
+      event:
+        - push
+    commands:
+      - if (git diff --quiet --exit-code HEAD^ HEAD -- docker); then exit 78; fi
+
+  - name: deploy
+    image: appleboy/drone-ssh
+    when:
+      branch:
+        - main
+      event:
+        - push
+    settings:
+      port: 22
+      host:
+        from_secret: ssh_host
+      username:
+        from_secret: ssh_user
+      key:
+        from_secret: ssh_key
+      script_stop: true
+      script:
+        - cd /dkr
+        - git pull --rebase --autostash
+        - dkr up
+        - dkr clean
