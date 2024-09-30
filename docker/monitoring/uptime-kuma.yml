@@ -2,7 +2,7 @@ version: '3'
 services:
   uptime-kuma:
     container_name: uptime-kuma
-    image: louislam/uptime-kuma:1.23.13
+    image: louislam/uptime-kuma:1.23.15
     networks:
       - monitoring
       - external
@@ -19,7 +19,7 @@ services:
 
   uptime-kuma-remote:
     container_name: uptime-kuma
-    image: louislam/uptime-kuma:1.23.13
+    image: louislam/uptime-kuma:1.23.15
     dns:
       - 1.1.1.1
       - 8.8.8.8
