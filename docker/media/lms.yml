@@ -29,19 +29,20 @@ services:
 
   snapserver:
     container_name: snapserver
-    image: alexphillips/snapserver
+    image: alexphillips/snapserver:dev
     network_mode: host
     privileged: true # required for sound hw access
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
-      PULSE_SERVER: unix:/run/user/1000/pulse/native
+      # PULSE_SERVER: unix:/run/user/1000/pulse/native
     volumes:
-      - /run/user/1000/pulse/native:/run/user/1000/pulse/native
-      - ${HOME}/.config/pulse/cookie:/root/.config/pulse/cookie
+      # - /run/user/1000/pulse/native:/run/user/1000/pulse/native
+      # - ${HOME}/.config/pulse/cookie:/root/.config/pulse/cookie
       - /appdata/snapserver:/config
       - /appdata/snapserver/custom-init:/custom-cont-init.d
+      - /appdata/snapserver/asound.conf:/etc/asound.conf
     restart: unless-stopped
     labels:
       context: dragonite

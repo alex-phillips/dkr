@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import os, yaml, re, argparse, logging, json, subprocess, configparser, socket
+import os, yaml, re, argparse, logging, json, subprocess, configparser, socket, sys
 from urllib.request import urlopen, Request
 
-COMPOSE_CMD="docker compose"
+COMPOSE_CMD = "docker compose"
 CONFIG = configparser.ConfigParser()
 
 def build_docker_compose(args):
@@ -635,223 +635,241 @@ def add_global_args(parser):
         "--config", help="Config file location", default=f"{os.getenv('HOME')}/.config/dkr/config.ini"
     )
 
+def run():
+    global COMPOSE_CMD
+    parser = argparse.ArgumentParser()
+    add_global_args(parser)
 
-parser = argparse.ArgumentParser()
-add_global_args(parser)
+    subparsers = parser.add_subparsers(dest="action")
 
-subparsers = parser.add_subparsers(dest="action")
-
-######################################################
-#                      ACTIONS                       #
-######################################################
-up_parser = subparsers.add_parser(
-    "up", help="Build docker-compose.yml and start all enabled containers"
-)
-up_parser.add_argument("--no-prune", "-P", action="store_true", help="Do not prune disabled containers")
-
-add_global_args(subparsers.add_parser("build", help="Build docker-compose.yml"))
-add_global_args(
-    subparsers.add_parser("nginx", help="Create all nginx configs for SWAG")
-)
-
-start_parser = subparsers.add_parser(
-    "start", help="Start containers (ignores state file)"
-)
-stop_parser = subparsers.add_parser("stop", help="Stop containers (ignores state file)")
-
-enable_parser = subparsers.add_parser(
-    "enable", help="Enable and start a container in the stack"
-)
-disable_parser = subparsers.add_parser(
-    "disable", help="Disable and stop a container in the stack"
-)
-
-pull_parser = subparsers.add_parser("pull", help="Pull latest container images")
-
-logs_parser = subparsers.add_parser("logs", help="View and tail container logs")
-
-depends_on_parser = subparsers.add_parser("depends-on", help="Get all containers that depend on a specified container")
-depends_on_parser.add_argument("container", help="Dependency container")
-
-run_parser = subparsers.add_parser(
-    "run", help="Run a container with the specified args"
-)
-run_parser.add_argument("container", help="Container to issue the 'run' command to")
-run_parser.add_argument(
-    "--rm", action="store_true", help="Remove container after execution"
-)
-run_parser.add_argument("-c", "--cmd", help="Arguments to pass to the 'run' command")
-add_global_args(run_parser)
-
-# shared args for parsers that specify containers
-for sub_parser in [
-    pull_parser,
-    logs_parser,
-    start_parser,
-    stop_parser,
-    enable_parser,
-    disable_parser,
-    up_parser,
-]:
-    sub_parser.add_argument(
-        "-n", "--namespace", help="Specify containers by 'namespace' label"
+    ######################################################
+    #                      ACTIONS                       #
+    ######################################################
+    up_parser = subparsers.add_parser(
+        "up", help="Build docker-compose.yml and start all enabled containers"
     )
-    sub_parser.add_argument(
-        "-l", "--label", help="Specify containers by label key-value pair"
+    up_parser.add_argument("--no-prune", "-P", action="store_true", help="Do not prune disabled containers")
+
+    add_global_args(subparsers.add_parser("build", help="Build docker-compose.yml"))
+    add_global_args(
+        subparsers.add_parser("nginx", help="Create all nginx configs for SWAG")
     )
-    sub_parser.add_argument(
-        "containers", nargs="*", help="Specify containers individually"
+
+    start_parser = subparsers.add_parser(
+        "start", help="Start containers (ignores state file)"
     )
-    add_global_args(sub_parser)
+    stop_parser = subparsers.add_parser("stop", help="Stop containers (ignores state file)")
+
+    enable_parser = subparsers.add_parser(
+        "enable", help="Enable and start a container in the stack"
+    )
+    disable_parser = subparsers.add_parser(
+        "disable", help="Disable and stop a container in the stack"
+    )
+
+    pull_parser = subparsers.add_parser("pull", help="Pull latest container images")
+
+    logs_parser = subparsers.add_parser("logs", help="View and tail container logs")
+
+    depends_on_parser = subparsers.add_parser("depends-on", help="Get all containers that depend on a specified container")
+    depends_on_parser.add_argument("container", help="Dependency container")
+
+    run_parser = subparsers.add_parser(
+        "run", help="Run a container with the specified args"
+    )
+    run_parser.add_argument("container", help="Container to issue the 'run' command to")
+    run_parser.add_argument(
+        "--rm", action="store_true", help="Remove container after execution"
+    )
+    run_parser.add_argument("-c", "--cmd", help="Arguments to pass to the 'run' command")
+    add_global_args(run_parser)
+
+    # shared args for parsers that specify containers
+    for sub_parser in [
+        pull_parser,
+        logs_parser,
+        start_parser,
+        stop_parser,
+        enable_parser,
+        disable_parser,
+        up_parser,
+    ]:
+        sub_parser.add_argument(
+            "-n", "--namespace", help="Specify containers by 'namespace' label"
+        )
+        sub_parser.add_argument(
+            "-l", "--label", help="Specify containers by label key-value pair"
+        )
+        sub_parser.add_argument(
+            "containers", nargs="*", help="Specify containers individually"
+        )
+        add_global_args(sub_parser)
 
 
-add_global_args(subparsers.add_parser("clean", help="Prune docker files"))
+    add_global_args(subparsers.add_parser("clean", help="Prune docker files"))
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-if not os.path.isfile(args.config):
-    os.makedirs(os.path.dirname(args.config), exist_ok=True)
-else:
-    CONFIG.read(args.config)
-
-# cd into directory of the script
-os.chdir(args.work_dir)
-
-args.host = socket.gethostbyname(args.host)
-if args.host != "127.0.0.1":
-    context_user = f"{args.user}@" if args.user != "" else ""
-    COMPOSE_CMD = f"DOCKER_HOST=\"ssh://{context_user}{args.host}\" {COMPOSE_CMD}"
-    # if os.path.isfile(f".env.{args.host}"):
-    #     COMPOSE_CMD = f"{COMPOSE_CMD} --env-file .env.{args.host}"
-
-logging.basicConfig(
-    level=logging.DEBUG if args.verbose == True else logging.INFO,
-    format="%(levelname)s - %(message)s",
-)
-
-if args.action is None:
-    parser.print_help()
-    quit()
-
-services = build_stack(args)
-state = load_state(services["services"], args)
-
-if args.action == "depends-on":
-    services = build_stack(args)["services"]
-    dependents = []
-    for service in services:
-        if 'depends_on' not in services[service]:
-            continue
-
-        # oncall / phpmyadmin
-        if args.container in services[service]['depends_on']:
-            dependents.append(services[service]['container_name'])
-
-    print(' '.join(dependents))
-    quit()
-
-if args.action == "build":
-    quit()
-
-if args.action == "nginx":
-    nginx_actions(args)
-
-if args.action in ["up", "start", "stop", "enable", "disable"]:
-    containers = get_containers_by_args(args)
-
-    if args.action in ["start", "enable"]:
-        exec_command(f"{COMPOSE_CMD} up -d {' '.join(containers)}", args)
-        post_up(containers, args)
-    elif args.action in ["stop", "disable"]:
-        exec_command(f"{COMPOSE_CMD} stop {' '.join(containers)}", args)
-        if args.action == "disable":
-            exec_command(f"{COMPOSE_CMD} rm -f {' '.join(containers)}", args)
-    elif args.action == "up":
-        up_actions(state, args)
-
-    if args.action in ["enable", "disable"]:
-        for service in containers:
-            if service in services["services"]:
-                if service not in state:
-                    state[service] = {}
-
-                state[service]["enabled"] = args.action == "enable"
-
-    generate_traefik_rules(state, args)
-
-    httprequest = Request("https://tr.w00t.cloud/api/http/routers")
-    with urlopen(httprequest) as response:
-        routers = json.load(response)
-    endpoints = []
-    for router in routers:
-        host = re.search(r"Host\(`(.+?)`\)", router["rule"])
-
-        if not host:
-            continue
-
-        # Extract matching values of all groups
-        endpoints.append({
-            "name": router["name"],
-            "group": "docker",
-            "url": f"https://{host.group(1)}",
-            "interval": "1m",
-            "conditions": [
-                # "[STATUS] == 302" if "middlewares" in router and "authelia@docker" in router["middlewares"] else "[STATUS] == 200",
-                "[STATUS] == 200",
-            ]
-        })
-    with open("./gatus.yml", "w") as fh:
-        yaml.dump({
-            "storage": {
-                "type": "postgres",
-                "path": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable",
-            },
-            "endpoints": endpoints,
-        }, fh, default_flow_style=False)
-
-if args.action == "pull":
-    # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
-    containers = get_containers_by_args(args)
-
-    if args.containers or args.namespace or args.label:
-        if not containers:
-            logging.error("No containers match the specified criteria")
-            quit(1)
-
-    # filter out containers that aren't enabled, unless it was specifically stated
-    for service in containers.copy(): # there a better way than copy here? can't iterate AND modify, index iteration gets off
-        logging.debug(f"Checking if {service} is in state...")
-        if service not in state or state[service]["enabled"] == False:
-            logging.debug(f"  Service {service} is not in state, removing from pull")
-            containers.remove(service)
-
-    if args.dry_run:
-        print(", ".join(containers))
+    if not os.path.isfile(args.config):
+        os.makedirs(os.path.dirname(args.config), exist_ok=True)
     else:
-        exec_command(f"{COMPOSE_CMD} pull --ignore-pull-failures {' '.join(containers)}", args)
+        CONFIG.read(args.config)
 
-if args.action == "logs":
-    # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
-    containers = get_containers_by_args(args)
+    # cd into directory of the script
+    os.chdir(args.work_dir)
 
-    if args.containers or args.namespace or args.label:
-        if not containers:
-            logging.error("No containers match the specified criteria")
-            quit(1)
+    args.host = socket.gethostbyname(args.host)
+    if args.host != "127.0.0.1":
+        context_user = f"{args.user}@" if args.user != "" else ""
+        COMPOSE_CMD = f"DOCKER_HOST=\"ssh://{context_user}{args.host}\" {COMPOSE_CMD}"
+        # if os.path.isfile(f".env.{args.host}"):
+        #     COMPOSE_CMD = f"{COMPOSE_CMD} --env-file .env.{args.host}"
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose == True else logging.INFO,
+        format="%(levelname)s - %(message)s",
+    )
+
+    if args.action is None:
+        parser.print_help()
+        quit()
+
+    services = build_stack(args)
+    state = load_state(services["services"], args)
+
+    if args.action == "depends-on":
+        services = build_stack(args)["services"]
+        dependents = []
+        for service in services:
+            if 'depends_on' not in services[service]:
+                continue
+
+            # oncall / phpmyadmin
+            if args.container in services[service]['depends_on']:
+                dependents.append(service)
+
+        print(' '.join(dependents))
+        quit()
+
+    if args.action == "build":
+        quit()
+
+    if args.action == "nginx":
+        nginx_actions(args)
+
+    if args.action in ["up", "start", "stop", "enable", "disable"]:
+        containers = get_containers_by_args(args)
+
+        if args.action in ["start", "enable"]:
+            exec_command(f"{COMPOSE_CMD} up -d {' '.join(containers)}", args)
+            post_up(containers, args)
+        elif args.action in ["stop", "disable"]:
+            exec_command(f"{COMPOSE_CMD} stop {' '.join(containers)}", args)
+            if args.action == "disable":
+                exec_command(f"{COMPOSE_CMD} rm -f {' '.join(containers)}", args)
+        elif args.action == "up":
+            up_actions(state, args)
+
+        if args.action in ["enable", "disable"]:
+            for service in containers:
+                if service in services["services"]:
+                    if service not in state:
+                        state[service] = {}
+
+                    state[service]["enabled"] = args.action == "enable"
+
+        generate_traefik_rules(state, args)
+
+        httprequest = Request("https://tr.w00t.cloud/api/http/routers")
+        with urlopen(httprequest) as response:
+            routers = json.load(response)
+        endpoints = []
+        for router in routers:
+            host = re.search(r"Host\(`(.+?)`\)", router["rule"])
+
+            if not host:
+                continue
+
+            # Extract matching values of all groups
+            endpoints.append({
+                "name": router["name"],
+                "group": "docker",
+                "url": f"https://{host.group(1)}",
+                "interval": "1m",
+                "conditions": [
+                    # "[STATUS] == 302" if "middlewares" in router and "authelia@docker" in router["middlewares"] else "[STATUS] == 200",
+                    "[STATUS] == 200",
+                ]
+            })
+        with open("./gatus.yml", "w") as fh:
+            yaml.dump({
+                "storage": {
+                    "type": "postgres",
+                    "path": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable",
+                },
+                "endpoints": endpoints,
+            }, fh, default_flow_style=False)
+
+    if args.action == "pull":
+        # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
+        containers = get_containers_by_args(args)
+
+        if args.containers or args.namespace or args.label:
+            if not containers:
+                logging.error("No containers match the specified criteria")
+                quit(1)
+
+        # filter out containers that aren't enabled, unless it was specifically stated
+        for service in containers.copy(): # there a better way than copy here? can't iterate AND modify, index iteration gets off
+            logging.debug(f"Checking if {service} is in state...")
+            if service not in state or state[service]["enabled"] == False:
+                logging.debug(f"  Service {service} is not in state, removing from pull")
+                containers.remove(service)
+
+        if args.dry_run:
+            print(", ".join(containers))
+        else:
+            exec_command(f"{COMPOSE_CMD} pull --ignore-pull-failures {' '.join(containers)}", args)
+
+    if args.action == "logs":
+        # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
+        containers = get_containers_by_args(args)
+
+        if args.containers or args.namespace or args.label:
+            if not containers:
+                logging.error("No containers match the specified criteria")
+                quit(1)
 
 
-    # filter out containers that aren't enabled, unless it was specifically stated
-    # for service in state:
-    #     if service in containers and state[service]["enabled"] == False:
-    #         containers.remove(service)
+        # filter out containers that aren't enabled, unless it was specifically stated
+        # for service in state:
+        #     if service in containers and state[service]["enabled"] == False:
+        #         containers.remove(service)
 
-    exec_command(f"{COMPOSE_CMD} logs -f --tail 100 {' '.join(containers)}", args)
+        exec_command(f"{COMPOSE_CMD} logs -f --tail 100 {' '.join(containers)}", args)
 
-if args.action == "clean":
-    exec_command("docker system prune -af --volumes", args)
+    if args.action == "clean":
+        exec_command("docker system prune -af --volumes", args)
 
-if args.action == "run":
-    build_stack(args)
-    run_actions(args)
+    if args.action == "run":
+        build_stack(args)
+        run_actions(args)
 
-save_state(state, args)
+    save_state(state, args)
+
+lock_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".dkr.lock")
+if os.path.exists(lock_file_path):
+    print(f"dkr instance is already running.")
+    sys.exit(1)
+
+try:
+    with open(lock_file_path, "w") as lock_file:
+        lock_file.write("locked")
+
+    run()
+
+finally:
+    # Remove the lock file after activity is done
+    if os.path.exists(lock_file_path):
+        os.remove(lock_file_path)
+        print(f"Lock file {lock_file_path} removed.")

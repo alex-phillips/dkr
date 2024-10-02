@@ -11,7 +11,9 @@ services:
   #   5: gitea queue
   #   6: authelia
   #   7: dawarich
-  #
+  #   8: docmost
+  #   9: netbox - tasks
+  #  10: netbox - cache
   ###
   redis:
     container_name: redis

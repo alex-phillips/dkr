@@ -2,7 +2,7 @@ version: '3.3'
 services:
   speedtest-tracker:
     container_name: speedtest-tracker
-    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+    image: lscr.io/linuxserver/speedtest-tracker:latest
     networks:
       - data
       - external
@@ -16,6 +16,11 @@ services:
       DB_USERNAME: speedtest_tracker
       DB_PASSWORD: ${DB_PASS_SPEEDTEST_TRACKER}
       APP_KEY: base64:G4P4q81xXjnf7x8sGsejpX+MjZrl1jmRlgLOsnn4Cxw=
+      APP_TIMEZONE: ${TIMEZONE}
+      DISPLAY_TIMEZONE: ${TIMEZONE}
+      SPEEDTEST_SCHEDULE: "0 * * * *" # can be represented as a cron schedule same as before.
+      SPEEDTEST_SERVERS: 29113 # you can add one or many servers separated by a comma (i.e. "123456,654321,987654").
+      PRUNE_RESULTS_OLDER_THAN: 0 # the default is 0 which disables result pruning, this value is in days.
     volumes:
       - ${APPDATA}/speedtest-tracker:/config
       - /etc/localtime:/etc/localtime:ro
@@ -28,7 +33,7 @@ services:
 
   speedtest-tracker-vpn:
     container_name: speedtest-tracker-vpn
-    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+    image: lscr.io/linuxserver/speedtest-tracker:latest
     network_mode: service:torguard
     # networks:
     #   data:
@@ -44,6 +49,11 @@ services:
       DB_USERNAME: speedtest_tracker
       DB_PASSWORD: ${DB_PASS_SPEEDTEST_TRACKER}
       APP_KEY: base64:G4P4q81xXjnf7x8sGsejpX+MjZrl1jmRlgLOsnn4Cxw=
+      APP_TIMEZONE: ${TIMEZONE}
+      DISPLAY_TIMEZONE: ${TIMEZONE}
+      SPEEDTEST_SCHEDULE: "30 * * * *" # can be represented as a cron schedule same as before.
+      SPEEDTEST_SERVERS: 32632 # you can add one or many servers separated by a comma (i.e. "123456,654321,987654").
+      PRUNE_RESULTS_OLDER_THAN: 0 # the default is 0 which disables result pruning, this value is in days.
     volumes:
       - ${APPDATA}/speedtest-tracker-vpn:/config
       - /etc/localtime:/etc/localtime:ro

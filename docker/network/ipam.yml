@@ -1,15 +1,15 @@
-version: '3'
-services:
-  phpipam:
-    container_name: ipam
-    image: pierrecdn/phpipam
-    networks:
-      - data
-    environment:
-      MYSQL_ENV_MYSQL_USER: phpipam
-      MYSQL_ENV_MYSQL_ROOT_PASSWORD: ${DB_PASS_PHPIPAM}
-      MYSQL_ENV_MYSQL_HOST: mariadb
-    labels:
-      ingress:
-        - port: 80
-          host: ipam.${SERVER_DOMAIN}
+# version: '3'
+# services:
+#   phpipam:
+#     container_name: ipam
+#     image: pierrecdn/phpipam
+#     networks:
+#       - data
+#     environment:
+#       MYSQL_ENV_MYSQL_USER: phpipam
+#       MYSQL_ENV_MYSQL_ROOT_PASSWORD: ${DB_PASS_PHPIPAM}
+#       MYSQL_ENV_MYSQL_HOST: mariadb
+#     labels:
+#       ingress:
+#         - port: 80
+#           host: ipam.${SERVER_DOMAIN}

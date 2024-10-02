@@ -11,7 +11,7 @@ services:
     env_file: .env.linkwarden
     # environment:
     #   - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
-    restart: always
+    restart: unless-stopped
     ports:
       - 3000:3000
     volumes:

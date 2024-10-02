@@ -7,7 +7,7 @@ services:
     networks:
       - external
     user: "1000:1000"
-    restart: always
+    restart: unless-stopped
     environment:
       - SSHWIFTY_CONFIG=/config/sshwifty.conf
     volumes:

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  cronicle-edge:
-    container_name: cronicle-edge
+  cronicle:
+    container_name: cronicle
     hostname: cronicle-master
     image: ghcr.io/cronicle-edge/cronicle-edge:main
     volumes:
@@ -21,10 +21,10 @@ services:
       QB_CONFIG: /opt/cronicle/data/qb.ini
       PATH: /opt/cronicle/venv/bin:/opt/cronicle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     labels:
-      post_up: docker exec -i cronicle-edge /opt/cronicle/data/startup.sh
+      post_up: docker exec -i cronicle /opt/cronicle/data/startup.sh
       ingress:
         - port: 3012
-          host: ce.${SERVER_DOMAIN}
+          host: cron.${SERVER_DOMAIN}
 
   # cronicle:
   #   container_name: cronicle

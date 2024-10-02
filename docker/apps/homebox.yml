@@ -2,11 +2,9 @@ version: "3.4"
 services:
   homebox:
     container_name: homebox
-    image: ghcr.io/hay-kot/homebox:latest
+    image: ghcr.io/sysadminsmedia/homebox:latest
     environment:
-      HBOX_LOG_LEVEL: info
-      HBOX_LOG_FORMAT: text
-      HBOX_WEB_MAX_UPLOAD_SIZE: 10
+      TZ: ${TIMEZONE}
     volumes:
       - ${APPDATA}/homebox:/data/
     ports:

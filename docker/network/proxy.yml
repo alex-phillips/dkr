@@ -19,9 +19,9 @@ services:
   socks5:
     container_name: socks5
     image: serjs/go-socks5-proxy
-    network_mode: service:torguard
+    network_mode: service:torguard-misc
     depends_on:
-      - torguard
+      - torguard-misc
     restart: unless-stopped
     environment:
       PROXY_PORT: 1080

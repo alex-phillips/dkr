@@ -20,44 +20,65 @@ services:
         - port: 8686
           host: ldr.${SERVER_DOMAIN}
 
-  lidarr-amd:
-    image: randomninjaatk/amd
-    container_name: lidarr-amd
-    volumes:
-      - ${NAS}/docker/lidarr-amd:/config
-      - ${NAS}/docker/lidarr-amd/downloads:/downloads-amd
+  lidarr-misc:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr-misc
+    networks:
+      - external
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - AUTOSTART=true
-      - SCRIPTINTERVAL=1h
-      - DOWNLOADMODE=wanted
-      - FALLBACKSEARCH=True
-      - LIST=both
-      - SearchType=both
-      - Concurrency=1
-      - EMBEDDED_COVER_QUALITY=80
-      - FORMAT=FLAC
-      - BITRATE=320
-      - ENABLEPOSTPROCESSING=true
-      - FORCECONVERT=false
-      - requirequality=false
-      - MatchDistance=10
-      - replaygain=true
-      - FolderPermissions=766
-      - FilePermissions=666
-      - MBRAINZMIRROR=https://musicbrainz.org
-      - MBRATELIMIT=1
-      - LidarrUrl=https://ldr.${SERVER_DOMAIN}
-      - LidarrAPIkey=${LIDARR_API_KEY}
-      - ARL_TOKEN=${ARL_TOKEN}
-      - NOTIFYPLEX=false
-      - PLEXLIBRARYNAME=Music
-      - PLEXURL=http://x.x.x.x:8686
-      - PLEXTOKEN=plextoken
-      - ALBUM_TYPE_FILTER=COMPILE
-      - POSTPROCESSTHREADS=1
-    depends_on:
-      - lidarr
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${NAS}/docker/lidarr-misc:/config
+      - ${NAS}/docker/lidarr-misc/custom-init:/custom-cont-init.d
+      - ${NAS}/docker/lidarr-misc/custom-services:/custom-services.d
+      - ${NAS}:${NAS}
     labels:
       app: lidarr
+      ingress:
+        - port: 8686
+          host: ldr.${SERVER_DOMAIN}
+
+
+  # lidarr-amd:
+  #   image: randomninjaatk/amd
+  #   container_name: lidarr-amd
+  #   volumes:
+  #     - ${NAS}/docker/lidarr-amd:/config
+  #     - ${NAS}/docker/lidarr-amd/downloads:/downloads-amd
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - AUTOSTART=true
+  #     - SCRIPTINTERVAL=1h
+  #     - DOWNLOADMODE=wanted
+  #     - FALLBACKSEARCH=True
+  #     - LIST=both
+  #     - SearchType=both
+  #     - Concurrency=1
+  #     - EMBEDDED_COVER_QUALITY=80
+  #     - FORMAT=FLAC
+  #     - BITRATE=320
+  #     - ENABLEPOSTPROCESSING=true
+  #     - FORCECONVERT=false
+  #     - requirequality=false
+  #     - MatchDistance=10
+  #     - replaygain=true
+  #     - FolderPermissions=766
+  #     - FilePermissions=666
+  #     - MBRAINZMIRROR=https://musicbrainz.org
+  #     - MBRATELIMIT=1
+  #     - LidarrUrl=https://ldr.${SERVER_DOMAIN}
+  #     - LidarrAPIkey=${LIDARR_API_KEY}
+  #     - ARL_TOKEN=${ARL_TOKEN}
+  #     - NOTIFYPLEX=false
+  #     - PLEXLIBRARYNAME=Music
+  #     - PLEXURL=http://x.x.x.x:8686
+  #     - PLEXTOKEN=plextoken
+  #     - ALBUM_TYPE_FILTER=COMPILE
+  #     - POSTPROCESSTHREADS=1
+  #   depends_on:
+  #     - lidarr
+  #   labels:
+  #     app: lidarr

@@ -10,6 +10,8 @@ services:
     volumes:
       - ${NAS}/docker/immich/data:/usr/src/app/upload
       - ${NAS}:${NAS}:ro
+    environment:
+      IMMICH_LOG_LEVEL: verbose
     env_file:
       - .env.immich
     depends_on:
@@ -23,8 +25,8 @@ services:
         - port: 3001
           host: photos.${SERVER_DOMAIN}
 
-  immich-machine-learning:
-    container_name: immich-machine-learning
+  immich-ml:
+    container_name: immich-ml
     image: ghcr.io/immich-app/immich-machine-learning:v1.116.2
     networks:
       - data
@@ -32,6 +34,8 @@ services:
       - ${NAS}/docker/immich/data:/usr/src/app/upload
       - ${NAS}/docker/immich/model-cache:/cache
       - ${NAS}:${NAS}:ro
+    environment:
+      IMMICH_LOG_LEVEL: verbose
     env_file:
       - .env.immich
     labels:
@@ -42,6 +46,8 @@ services:
     image: tensorchord/pgvecto-rs:pg16-v0.2.0
     networks:
       - data
+    environment:
+      IMMICH_LOG_LEVEL: verbose
     env_file:
       - .env.immich
     volumes:

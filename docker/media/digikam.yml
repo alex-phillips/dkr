@@ -13,7 +13,8 @@ services:
       TZ: ${TIMEZONE}
     volumes:
       - ${APPDATA}/digikam:/config
-      - ${NAS}/pictures:/pictures
+#      - ${NAS}/pictures:/pictures
+      - ${NAS}/pictures/Organized:/pictures/Organized
       - ${NAS}:${NAS}:ro
     labels:
       namespace: media

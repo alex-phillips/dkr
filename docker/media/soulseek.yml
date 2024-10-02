@@ -23,3 +23,38 @@ services:
       ingress:
         - port: 6080
           host: ss.${SERVER_DOMAIN}
+
+  slskd:
+    container_name: slskd
+    image: slskd/slskd
+    network_mode: service:torguard
+    # ports:
+    #   - "5030:5030"
+    #   - "5031:5031"
+    #   - "50300:50300"
+    user: ${PUID}:${PGID}
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+      - SLSKD_SLSK_LISTEN_PORT=37412
+    volumes:
+      - ${APPDATA}/slskd:/app
+      - ${NAS}/docker/slskd/downloads:/app/downloads
+      - ${NAS}/docker/slskd/incomplete:/app/incomplete
+      - ${NAS}/music/beets/Music:${NAS}/music/beets/Music:ro
+    labels:
+      ingress:
+        - port: 5030
+          host: slskd.${SERVER_DOMAIN}
+
+  nicotine:
+    container_name: nicotine
+    image: 'sirjmann92/nicotineplus-proper:latest'
+    network_mode: service:torguard
+    environment:
+      - LOGIN=slskd
+      - PASSW=slskd
+      - DARKMODE=true
+    labels:
+      ingress:
+        - port: 6565
+          host: nic.${SERVER_DOMAIN}

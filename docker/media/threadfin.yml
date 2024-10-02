@@ -3,16 +3,18 @@ services:
   threadfin:
     container_name: threadfin
     image: fyb3roptik/threadfin
-    networks:
-      - external
+    network_mode: service:torguard
+    depends_on:
+      - torguard
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
       # - RUN_OPTS= #optional
     volumes:
-      - ${APPDATA}/threadfin/data:/home/threadfin/conf/data
+      - ${APPDATA}/threadfin:/home/threadfin/conf
     labels:
+      traefik.docker.network: torguard
       ingress:
         - port: 34400
           host: tf.${SERVER_DOMAIN}

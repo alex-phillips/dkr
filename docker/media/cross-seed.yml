@@ -18,7 +18,7 @@ services:
       - /mnt/storage/torrents:/mnt/storage/torrents
     command: daemon
     # entrypoint: ["sleep", "infinity"]
-    # command: search
+    #command: search
     labels:
       ingress:
         - port: 2468

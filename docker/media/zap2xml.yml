@@ -6,7 +6,7 @@ services:
     networks:
       - external
     volumes:
-      - ${APPDATA}/zap2xml:/config
+      - ${NAS}/docker/zap2xml:/config
     environment:
       PGID: ${PGID}
       PUID: ${PUID}

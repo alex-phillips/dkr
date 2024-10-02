@@ -8,6 +8,7 @@ services:
     user: ${PUID}:${PGID}
     environment:
       TZ: ${TIMEZONE}
+      ADMIN_TOKEN: ${BW_ADMIN_TOKEN}
       # SIGNUPS_ALLOWED: "true"
       DOMAIN: https://bw.${SERVER_DOMAIN}
       SMTP_HOST: ${SMTP_HOST}

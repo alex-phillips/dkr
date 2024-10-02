@@ -12,6 +12,8 @@ services:
       SECRET_KEY_BASE: ${VAN_DAM_SECRET_KEY_BASE}
       REDIS_URL: redis://redis:6379/1
       # RAILS_RELATIVE_URL_ROOT: /vandam Sets the root of the app to /vandam useful for reverse proxies with nginx
+      PUID: ${PUID}
+      PGID: ${PGID}
     volumes:
       - ${APPDATA}/manyfold:/libraries
     depends_on:
