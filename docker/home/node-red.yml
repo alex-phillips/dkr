@@ -2,7 +2,7 @@ version: '3'
 services:
   node-red:
     container_name: node-red
-    image: nodered/node-red:4.0.3
+    image: nodered/node-red:4.0.5
     networks:
       - external
     environment:
