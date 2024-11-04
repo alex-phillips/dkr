@@ -2,7 +2,7 @@ version: '2'
 services:
   mariadb:
     container_name: mariadb
-    image: ghcr.io/linuxserver/mariadb:10.11.8
+    image: ghcr.io/linuxserver/mariadb:10.11.10
     networks:
       - data
       - external
