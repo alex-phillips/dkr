@@ -3,7 +3,7 @@ version: "3"
 services:
   snypy-api:
     container_name: snypy-api
-    image: ghcr.io/snypy/snypy-backend:1.5.1
+    image: ghcr.io/snypy/snypy-backend:1.5.2
     networks:
       - data
       - web
