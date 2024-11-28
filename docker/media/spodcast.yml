@@ -35,7 +35,7 @@ services:
       app: spodcast
 
   spodcast-php:
-    image: php:7-fpm
+    image: php:8-fpm
     volumes:
       - ${APPDATA}/spodcast:/data
     user: "${PUID}:${PGID}"
