@@ -7,7 +7,8 @@ services:
       - external
     stop_signal: SIGINT
     devices:
-      - /dev/ttyUSB1:/dev/ttyUSB0
+      - /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00:/dev/ttyUSB0
+#      - /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0:/dev/ttyUSB0
     volumes:
       - ${APPDATA}/zwavejs:/usr/src/app/store
     ports:
@@ -16,4 +17,3 @@ services:
       namespace: home
       port: 8091
       host: zwave.${SERVER_DOMAIN}
-      auth: true
