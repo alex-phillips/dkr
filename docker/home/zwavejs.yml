@@ -2,7 +2,7 @@ version: '3'
 services:
   zwavejs:
     container_name: zwavejs
-    image: zwavejs/zwavejs2mqtt:9.28.0@sha256:10413762cb2b105d4aa2681128bbbd3d3aaea2f2ee82924a72536f855904ee14
+    image: zwavejs/zwavejs2mqtt:9.29.0@sha256:c206006d80f45a4d22d32456c0e63e1f24b1cb85177587d73f72047b1a934489
     networks:
       - external
     stop_signal: SIGINT
