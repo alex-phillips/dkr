@@ -2,7 +2,7 @@ version: '3'
 services:
   romm:
     container_name: romm
-    image: rommapp/romm:3.7.2
+    image: rommapp/romm:3.7.3
     networks:
       - data
       - external
