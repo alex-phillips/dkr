@@ -2,7 +2,7 @@ version: '3'
 services:
   wikijs:
     container_name: wikijs
-    image: ghcr.io/linuxserver/wikijs:2.5.305
+    image: ghcr.io/linuxserver/wikijs:2.5.306
     networks:
       - data
       - external
