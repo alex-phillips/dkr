@@ -2,7 +2,7 @@ version: '3'
 services:
   vaultwarden:
     container_name: vaultwarden
-    image: vaultwarden/server:1.33.0
+    image: vaultwarden/server:1.33.1
     networks:
       - external
     user: ${PUID}:${PGID}
