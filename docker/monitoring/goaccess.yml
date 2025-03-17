@@ -2,7 +2,7 @@ version: '3'
 services:
   goaccess:
     container_name: goaccess
-    image: ghcr.io/linuxserver/nginx:1.26.2
+    image: ghcr.io/linuxserver/nginx:1.26.3
     networks:
       - external # need it for docker mods
     environment:
