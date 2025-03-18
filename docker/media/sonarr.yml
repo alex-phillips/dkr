@@ -18,5 +18,7 @@ services:
     restart: unless-stopped
     labels:
       namespace: media
-      port: 8989
-      host: snr.${SERVER_DOMAIN}
+      auth: False
+      ingress:
+        - port: 8989
+          host: snr.${SERVER_DOMAIN}

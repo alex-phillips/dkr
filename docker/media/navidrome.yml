@@ -20,6 +20,7 @@ services:
       ND_LASTFM_ENABLED: true
       ND_LASTFM_APIKEY: aa63e42607e861fc1bc5da8a27cce353
       ND_LASTFM_SECRET: f223b5f6a1261f599fbc15d2eb50e7e1
+      ND_ENABLEINSIGHTSCOLLECTOR: false
     volumes:
       - ${APPDATA}/navidrome:/data
       - ${NAS}/music/beets/Music:/music:ro

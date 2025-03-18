@@ -20,9 +20,10 @@ services:
       - ROMM_AUTH_PASSWORD=${ROMM_AUTH_PASSWORD}
       - ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY}
     volumes:
-      - ${NAS}/docker/rarom/output:/romm/library/roms:ro
+      - ${NAS}/media/games:/romm/library
       - ${APPDATA}/romm/resources:/romm/resources
       - ${APPDATA}/romm/config:/romm/config
+      - ${APPDATA}/romm/assets:/romm/assets
       - ${NAS}:${NAS}:ro
     labels:
       ingress:

@@ -17,8 +17,8 @@ services:
       - ${NAS}/torrents/cross-seeds:/cross-seeds
       - /mnt/storage/torrents:/mnt/storage/torrents
     command: daemon
+    # command: search
     # entrypoint: ["sleep", "infinity"]
-    #command: search
     labels:
       ingress:
         - port: 2468

@@ -14,7 +14,7 @@ services:
       - /mnt/storage/music/beets/Music:/music:ro
       # - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
     labels:
-      context: dragonite
       namespace: media
-      port: 8096
-      host: jf.${SERVER_DOMAIN}
+      ingress:
+        - port: 8097
+          rule: Host(`jf.w00t.cloud`) || Host(`jf.wootables.duckdns.org`)

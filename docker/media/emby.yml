@@ -22,9 +22,9 @@ services:
       context: dragonite
       auth: false
       namespace: media
-      # ingress:
-      #   - port: 8096
-      #     host: mb.${SERVER_DOMAIN}
+      ingress:
+        - port: 8096
+          rule: Host(`mb.w00t.cloud`) || Host(`mb.wootables.duckdns.org`)
       # homepage.widget: true
       # homepage.widget.key: ${EMBY_API_KEY}
 #

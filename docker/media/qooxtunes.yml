@@ -2,11 +2,15 @@ version: '3'
 services:
   qooxtunes:
     container_name: qooxtunes
-    image: alexphillips/qooxtunes
+    image: ghcr.io/linuxserver/nginx
+    networks:
+      - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
+    volumes:
+      - ${APPDATA}/qooxtunes:/config
     labels:
-      port: 443
-      protocol: https
-      host: music.${SERVER_DOMAIN}
+      ingress:
+        - port: 80
+          host: music.${SERVER_DOMAIN}

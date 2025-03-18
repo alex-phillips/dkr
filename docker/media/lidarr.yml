@@ -29,6 +29,7 @@ services:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
+      DOCKER_MODS: linuxserver/mods:universal-cron
     volumes:
       - ${NAS}/docker/lidarr-misc:/config
       - ${NAS}/docker/lidarr-misc/custom-init:/custom-cont-init.d

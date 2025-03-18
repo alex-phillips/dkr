@@ -3,11 +3,9 @@ services:
   streammaster:
     container_name: streammaster
     image: senexcrenshaw/streammaster
-    networks:
-      - external
-    ports:
-      - 7095:80
-      - 7096:443
+    network_mode: service:torguard
+    depends_on:
+      - torguard
     environment:
       - STREAMMASTER_BASEHOSTURL=https://sm.${SERVER_DOMAIN}
       - ASPNETCORE_ENVIRONMENT=Development
@@ -15,10 +13,25 @@ services:
       # - ASPNETCORE_Kestrel__Certificates__Default__Password=password
       # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
-      - ${APPDATA}/streammaster:/root/.streammaster
-      - ${APPDATA}/streammaster/tv-logos:/root/.streammaster/tv-logos
-      # - ${APPDATA}/streammaster/https:/https # put pfx here
+      - ${APPDATA}/streammaster:/config
     labels:
       ingress:
         - port: 7095
           host: sm.${SERVER_DOMAIN}
+
+  aiptv:
+    container_name: aiptv
+    image: alexphillips/aiptv:0.0.23
+    network_mode: service:torguard
+    depends_on:
+      - torguard
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      DB_PORT: 5431
+    volumes:
+      - ${APPDATA}/aiptv:/aiptv/data
+    labels:
+      ingress:
+        - port: 5002
+          host: aiptv.${SERVER_DOMAIN}

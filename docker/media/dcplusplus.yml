@@ -4,6 +4,8 @@ services:
     container_name: dcpp
     image: gangefors/airdcpp-webclient
     network_mode: service:torguard
+    depends_on:
+      - torguard
     environment:
       PUID: ${PUID}
       PGID: ${PGID}

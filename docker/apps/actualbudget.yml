@@ -3,6 +3,8 @@ services:
   actualbudget:
     container_name: actualbudget
     image: ghcr.io/actualbudget/actual-server
+    networks:
+      - external
     environment:
       userFilesPath: /data/user-files
       serverFilesPath: /data/server-files

@@ -3,9 +3,9 @@ services:
   nginx:
     container_name: nginx
     image: ghcr.io/linuxserver/nginx:1.26.3
-    # network_mode: service:torguard
-    networks:
-      - vlan20
+    network_mode: service:torguard
+    # networks:
+    #   - vlan20
     depends_on:
       - torguard
     environment:
@@ -19,6 +19,12 @@ services:
       - ${NAS}/docker/nginx/custom-init:/custom-cont-init.d
       - ${APPDATA}/plutotv:/config/www/plutotv
       - ${NAS}:${NAS}
+      - ${ZFS}:${ZFS}
     labels:
-      host: static.${SERVER_DOMAIN}
-      port: 80
+      auth: false
+      ingress:
+        # - rule: Host(`static.${SERVER_DOMAIN}`) && Path(`/nginx`)
+        - port: 80
+          host: static.${SERVER_DOMAIN}
+        - port: 80
+          rule: Host(`static.wootables.duckdns.org`)

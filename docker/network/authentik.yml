@@ -2,23 +2,18 @@
 version: '3.2'
 
 services:
-  authentik-redis:
-    container_name: authentik-redis
-    image: redis:alpine
-    labels:
-      app: authentik
-
   authentik:
     container_name: authentik
     image: ghcr.io/goauthentik/server:2025.2.2
     command: server
     networks:
-      - default
+      - external
       - data
     depends_on:
       - postgres
     environment:
-      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_REDIS__DB: 14
       AUTHENTIK_POSTGRESQL__HOST: postgres
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
@@ -31,20 +26,22 @@ services:
       - ${APPDATA}/authentik/custom-templates:/templates
       - ${APPDATA}/authentik/geoip:/geoip
     labels:
-      port: 9443
-      host: authentik.${SERVER_DOMAIN}
-      protocol: https
       app: authentik
-    # ports:
-    #   - "0.0.0.0:${AUTHENTIK_PORT_HTTP:-9000}:9000"
-    #   - "0.0.0.0:${AUTHENTIK_PORT_HTTPS:-9443}:9443"
+      ingress:
+        - port: 9443
+          host: idp.${SERVER_DOMAIN}
+          protocol: https
 
   authentik-worker:
     container_name: authentik-worker
     image: ghcr.io/goauthentik/server:2025.2.2
+    networks:
+      - data
+      - external
     command: worker
     environment:
-      AUTHENTIK_REDIS__HOST: authentik-redis
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_REDIS__DB: 14
       AUTHENTIK_POSTGRESQL__HOST: postgres
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
@@ -56,7 +53,6 @@ services:
     # - The docker socket can't be accessed anymore
     user: root
     volumes:
-      - ${APPDATA}/authentik/backups:/backups
       - ${APPDATA}/authentik/media:/media
       - ${APPDATA}/authentik/certs:/certs
       - ${APPDATA}/authentik/custom-templates:/templates

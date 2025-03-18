@@ -2,13 +2,10 @@
 mew ansible_host=192.168.1.151
 mewtwo ansible_host=192.168.1.150
 dragonite ansible_host=192.168.1.149
+bigpapa ansible_host=100.116.84.48
 
-[vms]
-cloyster ansible_host=192.168.1.91 vmid=10
-; squirtle ansible_host=192.168.1.7 ansible_user=ghost
-
-[pis]
-charizard ansible_host=192.168.255 ansible_user=ghost
+[snapclients]
+charizard ansible_host=192.168.1.6 ansible_user=ghost
 squirtle ansible_host=192.168.1.7 ansible_user=ghost
 
 [tailscale]

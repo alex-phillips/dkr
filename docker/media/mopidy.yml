@@ -40,6 +40,9 @@ services:
       - /tmp/snapserver:/tmp
     labels:
       context: dragonite
+      ingress:
+        - port: 6680
+          host: mopidy.${SERVER_DOMAIN}
 
   # mopidy-rpi:
   #   container_name: mopidy

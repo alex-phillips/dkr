@@ -9,7 +9,9 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DATABASE_URL=postgres://ryot:${DB_PASS_RYOT}@postgres:5432/ryot
+      DATABASE_URL: postgres://ryot:${DB_PASS_RYOT}@postgres:5432/ryot
+      TZ: ${TIMEZONE}
+      SERVER_ADMIN_ACCESS_TOKEN: T973k0rEigXkwskw6p3FQRdxcFfO60tv
     labels:
       ingress:
          - host: ryot.${SERVER_DOMAIN}

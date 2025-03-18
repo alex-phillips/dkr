@@ -8,8 +8,8 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
     networks:
-      # - vlan20
-      - external
+      - vlan20
+      # - external
       - data
     volumes:
       - ${APPDATA}/mitm/certs:/mitm # using a docker volume for permission and persistence reasons

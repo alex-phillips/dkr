@@ -12,10 +12,11 @@ services:
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
-    # labels:
-    #   namespace: home
-    #   port: 8123
-    #   host: homie.${SERVER_DOMAIN}
+    restart: unless-stopped
+    labels:
+      namespace: home
+      port: 8123
+      host: ha.${SERVER_DOMAIN}
     #   service: http://192.168.1.151:8123
 #       nginx_directives: proxy_hide_header X-Frame-Options;
 
@@ -66,3 +67,27 @@ services:
   #     port: 8443
   #     host: ha-code.${SERVER_DOMAIN}
   #     auth: true
+
+  whisper:
+    container_name: whisper
+    image: rhasspy/wyoming-whisper
+    command: --model tiny-int8 --language en
+    networks:
+      - external
+    volumes:
+      - ${APPDATA}/whisper:/data
+    ports:
+      - 10300:10300
+    tty: true
+    stdin_open: true
+
+  piper:
+    container_name: piper
+    image: rhasspy/wyoming-piper
+    command: --voice en_US-lessac-medium
+    networks:
+      - external
+    volumes:
+      - ${APPDATA}/piper:/data
+    ports:
+      - 10200:10200

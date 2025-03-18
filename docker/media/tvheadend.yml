@@ -1,26 +1,36 @@
-version: "2.1"
 services:
   tvheadend:
     container_name: tvheadend
     image: lscr.io/linuxserver/tvheadend:latest
     network_mode: service:torguard
-    depends_on:
-      - torguard
     environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TIMEZONE}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
       # - RUN_OPTS= #optional
     volumes:
-      - ${APPDATA}/tvheadend/config:/config
-      - ${NAS}/docker/tvheadend/recordings:/recordings
-    # ports:
-    #   - 9981:9981
-    #   - 9982:9982
-    # devices:
-    #   - /dev/dri:/dev/dri #optional
-    #   - /dev/dvb:/dev/dvb #optional
+      - ${APPDATA}/tvheadend/data:/config
+      - ${APPDATA}/tvheadend/recordings:/recordings
+      - ${APPDATA}/tvheadend/custom-init:/custom-cont-init.d
+      # - ${APPDATA}/tvheadend/custom-services:/custom-services.d
     labels:
       ingress:
         - port: 9981
           host: tvh.${SERVER_DOMAIN}
+        - port: 3000
+          host: tvhsearch.${SERVER_DOMAIN}
+        # - port: 5004
+        #   host: tvhproxy.${SERVER_DOMAIN}
+
+  antennas:
+    container_name: antennas
+    image: thejf/antennas
+    network_mode: service:torguard
+    environment:
+      - 'TVHEADEND_URL=https://tvh.w00t.cloud'
+      - 'ANTENNAS_URL=https://tvhproxy.w00t.cloud'
+      - TUNER_COUNT=1
+    labels:
+      ingress:
+        - port: 5004
+          host: tvhproxy.${SERVER_DOMAIN}

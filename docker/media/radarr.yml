@@ -18,7 +18,8 @@ services:
     restart: unless-stopped
     labels:
       namespace: media
-      port: 7878
-      host: rdr.${SERVER_DOMAIN}
-      homepage.widget: true
-      homepage.widget.key: ${RADARR_API_KEY}
+      ingress:
+        - port: 7878
+          host: rdr.${SERVER_DOMAIN}
+      # homepage.widget: true
+      # homepage.widget.key: ${RADARR_API_KEY}

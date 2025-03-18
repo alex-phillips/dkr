@@ -5,6 +5,8 @@ from urllib.request import urlopen, Request
 
 COMPOSE_CMD = "docker compose"
 CONFIG = configparser.ConfigParser()
+HOST_SERVICES = {}
+HOST_ROUTERS = {}
 
 def build_docker_compose(args):
     def append_label(labels, label, value):
@@ -24,7 +26,10 @@ def build_docker_compose(args):
             # all services require auth unless set to false
             labels["auth"] = True
 
-        auth_middleware = args.auth_middleware if labels["auth"] == True else None
+        if labels["auth"] == True or labels["auth"] == False:
+            auth_middleware = args.auth_middleware if labels["auth"] == True else None
+        else:
+            auth_middleware = labels["auth"]
 
         # support the 'old' way of doing things, convert port / host to ingress
         if "port" in labels and "host" in labels:
@@ -38,27 +43,69 @@ def build_docker_compose(args):
             if "protocol" in labels:
                 labels["ingress"][0]["protocol"] = labels["protocol"]
 
+        if "network_mode" not in service:
+            # Add in docker host as an extra hosts var
+            if "extra_hosts" not in service:
+                service["extra_hosts"] = ["host.docker.internal:host-gateway"]
+            elif "host.docker.internal:host-gateway" not in service["extra_hosts"]:
+                service["extra_hosts"].append("host.docker.internal:host-gateway")
+
         if "ingress" in labels:
             for index, ingress in enumerate(labels["ingress"]):
                 rule = ingress["rule"] if "rule" in ingress else f"Host(`{ingress['host']}`)"
-                service["labels"].update(
-                    {
-                        "host": ingress["host"],
-                        "traefik.enable": True,
-                        f"traefik.http.routers.{service_name}-{index}.rule": rule,
-                        # f"traefik.http.routers.{service_name}-{index}.entrypoints": "websecure",
-                        f"traefik.http.routers.{service_name}-{index}.tls": "true",
-                        f"traefik.http.routers.{service_name}-{index}.service": f"{service_name}-{index}",
-                        f"traefik.http.services.{service_name}-{index}.loadbalancer.server.port": ingress[
-                            "port"
-                        ],
-                    }
-                )
 
-                if "protocol" in ingress:
-                    service["labels"][
-                        f"traefik.http.services.{service_name}-{index}.loadbalancer.server.scheme"
-                    ] = ingress["protocol"]
+                if "network_mode" in service and service["network_mode"] == "host" or "context" in labels or "service" in ingress:
+                    service["labels"].update({
+                        f"traefik.http.routers.{service_name}-{index}.service": f"{service_name}-{index}@file",
+                    })
+
+                    service_schema = ingress["protocol"] if "protocol" in ingress else "http"
+                    service_host = labels["context"] if "context" in labels else "host.docker.internal"
+
+                    if "service" in ingress:
+                        HOST_SERVICES[f"{service_name}-{index}"] = {
+                            "loadBalancer": {"servers": [{"url": f"{service_schema}://{ingress['service']}:{ingress['port']}"}] }
+                        }
+                    else:
+                        HOST_SERVICES[f"{service_name}-{index}"] = {
+                            "loadBalancer": {"servers": [{"url": f"{service_schema}://{service_host}:{ingress['port']}"}] }
+                        }
+
+                    HOST_ROUTERS[f"{service_name}-{index}"] = {
+                        "entrypoints": ["web", "websecure"],
+                        "rule": re.sub(r"\$\{([^}]+)\}", r'{{env "\1"}}', rule),
+                        "service": f"{service_name}-{index}",
+                        "middlewares": [args.auth_middleware] if labels["auth"] == True else []
+                    }
+
+                    # service["labels"].update(
+                    #     {
+                    #         "traefik.enable": True,
+                    #         f"traefik.http.routers.{service_name}-{index}.rule": rule,
+                    #         # f"traefik.http.routers.{service_name}-{index}.entrypoints": "websecure",
+                    #         f"traefik.http.routers.{service_name}-{index}.service": f"{service_name}-{index}@file",
+                    #         f"traefik.http.routers.{service_name}-{index}.tls": "true",
+                    #     }
+                    # )
+                else:
+                    service["labels"].update(
+                        {
+                            # "host": ingress["host"],
+                            "traefik.enable": True,
+                            f"traefik.http.routers.{service_name}-{index}.rule": rule,
+                            # f"traefik.http.routers.{service_name}-{index}.entrypoints": "websecure",
+                            f"traefik.http.routers.{service_name}-{index}.service": f"{service_name}-{index}",
+                            f"traefik.http.services.{service_name}-{index}.loadbalancer.server.port": ingress[
+                                "port"
+                            ],
+                            f"traefik.http.routers.{service_name}-{index}.tls": "true",
+                        }
+                    )
+
+                    if "protocol" in ingress:
+                        service["labels"].update({
+                            f"traefik.http.services.{service_name}-{index}.loadbalancer.server.scheme": ingress["protocol"]
+                        })
 
                 if auth_middleware is not None:
                     service["labels"] = append_label(
@@ -83,7 +130,7 @@ def build_docker_compose(args):
 
             # if we're exposing port / host, ensure it's in the 'web' network but if no networks
             # already defined, include the default
-            if "network_mode" not in service:
+            if "network_mode" not in service and "context" not in service["labels"]:
                 if "networks" not in service:
                     service["networks"] = ["default"]
 
@@ -220,7 +267,7 @@ def build_docker_compose(args):
                         for host in context_list:
                             destination_host.append(socket.gethostbyname(host))
 
-                        del service["labels"]["context"]
+                        # del service["labels"]["context"]
 
                     add_traefik_labels(service["labels"], service_name, service)
                     # add_homepage_labels(service["labels"], service_name, service)
@@ -478,6 +525,16 @@ def build_stack(args):
     with open("./docker-compose.yml", "w") as fh:
         yaml.dump(stack, fh, default_flow_style=False)
 
+    with open("./services.yaml", "w") as fh:
+        yaml.dump({
+            "http": {"services": HOST_SERVICES}
+        }, fh, default_flow_style=False)
+
+    with open("./routers.yaml", "w") as fh:
+        yaml.dump({
+            "http": {"routers": HOST_ROUTERS}
+        }, fh, default_flow_style=False)
+
     return stack
 
 
@@ -593,8 +650,8 @@ def add_global_args(parser):
     parser.add_argument(
         "-a",
         "--auth-middleware",
-        help="Specify the traefik auth middleware [default: authelia@docker]",
-        default="authelia@docker",
+        help="Specify the traefik auth middleware [default: authelia@file]",
+        default="authelia@file",
     )
     parser.add_argument(
         "-v",
@@ -814,10 +871,12 @@ def run():
         # TODO: Need to fix this logic, remove disabled onlhy if pulling all?
         containers = get_containers_by_args(args)
 
+        containers_specified = False
         if args.containers or args.namespace or args.label:
-            if not containers:
-                logging.error("No containers match the specified criteria")
-                quit(1)
+            containers_specified = True
+            # if not containers:
+            #     logging.error("No containers match the specified criteria")
+            #     quit(1)
 
         # filter out containers that aren't enabled, unless it was specifically stated
         for service in containers.copy(): # there a better way than copy here? can't iterate AND modify, index iteration gets off
@@ -826,6 +885,9 @@ def run():
                 logging.debug(f"  Service {service} is not in state, removing from pull")
                 containers.remove(service)
 
+        if containers_specified and not containers:
+            print("containers defined but none found")
+            quit()
         if args.dry_run:
             print(", ".join(containers))
         else:

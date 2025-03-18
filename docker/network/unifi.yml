@@ -11,7 +11,6 @@ services:
       PUID: ${PUID}
     labels:
       homepage.widget: true
-#      host: unifi.${SERVER_DOMAIN}
-#      port: 8443
-#      protocol: https
-#      upstream: 192.168.1.91
+      host: unifi.${SERVER_DOMAIN}
+      port: 8443
+      protocol: https

@@ -19,6 +19,7 @@ services:
     image: dpage/pgadmin4
     networks:
       - data
+      - external
     environment:
       PGADMIN_DEFAULT_EMAIL: ${GOOGLE_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: applepie

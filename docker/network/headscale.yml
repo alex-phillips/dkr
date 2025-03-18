@@ -2,13 +2,15 @@ version: '3.5'
 services:
   headscale:
     container_name: headscale
-    image: headscale/headscale:latest-alpine
+    image: headscale/headscale:stable
+    networks:
+      - external
     volumes:
-      - /appdataome/headscale/config:/etc/headscale
+      - ${APPDATA}/headscale/config:/etc/headscale
       - ${APPDATA}/headscale/data:/var/lib/headscale
     # ports:
       # - 27896:8080
-    command: headscale serve
+    command: serve
     labels:
       app: headscale
       ingress:
@@ -21,7 +23,7 @@ services:
     labels:
       app: headscale
       ingress:
-        - port: 443
+        - port: 8443
           protocol: https
           host: hs.${SERVER_DOMAIN}
           rule: Host(`hs.${SERVER_DOMAIN}`) && PathPrefix(`/web/`)

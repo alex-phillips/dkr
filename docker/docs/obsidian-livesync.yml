@@ -18,7 +18,7 @@ services:
       auth: false
       ingress:
         - port: 5984
-          host: obsidian-livesync.${SERVER_DOMAIN}
+          rule: Host(`obsidian-livesync.${SERVER_DOMAIN}`) || Host(`obsidian.wootables.com`)
       # - "traefik.enable=true"
       # # The Traefik Network
       # - "traefik.docker.network=proxy"

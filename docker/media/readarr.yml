@@ -6,15 +6,16 @@ services:
     networks:
       - external
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
     volumes:
       - ${NAS}/docker/readarr:/config
-      - ${NAS}/media/books:/books
+      - ${NAS}/docker/readarr/books:/books
+      - ${NAS}:${NAS}
       # - /path/to/books:/books #optional
       # - /path/to/downloadclient-downloads:/downloads #optional
     labels:
       ingress:
         - port: 8787
-          host: redr.${SERVER_DOMAIN}
+          host: readr.${SERVER_DOMAIN}

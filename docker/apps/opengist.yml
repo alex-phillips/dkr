@@ -16,6 +16,7 @@ services:
       OG_LOG_LEVEL: info
       OG_DISABLE_SIGNUP: true
     labels:
+      auth: false
       ingress:
         - port: 6157
           host: gist.${SERVER_DOMAIN}

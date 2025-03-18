@@ -11,6 +11,11 @@ services:
       - 27017:27017
     volumes:
       - ${APPDATA}/mongo:/data/db
+    # healthcheck:
+    #   test: echo 'db.runCommand("ping").ok' | mongosh mongo:27017/test --quiet
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
     labels:
       namespace: data
       app: mongo

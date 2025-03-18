@@ -1,37 +1,43 @@
 version: "3.3"
 services:
   traefik:
-    image: traefik:v3.1.4
+    image: traefik:v3.3.3
     container_name: traefik
     networks:
       - web
-      - dockerproxy
       - external
     depends_on:
-      - dockerproxy
       - authelia
+    env_file:
+      - .env
     environment:
-      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-      - CF_DNS_API_TOKEN=${CLOUDFLARE_API_KEY}
-      - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
+      CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
+      CF_DNS_API_KEY: ${CLOUDFLARE_API_KEY} # vpXOa4GBJUcyUf_FwVVbltqNQQ-noMg09XVlCJcm
+      NAMECHEAP_API_USER: alexphillips
+      NAMECHEAP_API_KEY: 6a4d0f39c1f2442abc02549b0918279d
+      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN}
     restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
     ports:
       - 80:80
       - 443:443
     volumes:
       - ${APPDATA}/traefik:/etc/traefik
       - /var/log/traefik:/var/log/traefik
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       namespace: network
-      port: 8080
-      host: tr.${SERVER_DOMAIN}
+      ingress:
+        - port: 8080
+          host: tr.${SERVER_DOMAIN}
       homepage.widget: true
       traefik.http.routers.traefik.tls.certresolver: letsencrypt
       traefik.http.routers.traefik.tls.domains[0].main: "${SERVER_DOMAIN}"
       traefik.http.routers.traefik.tls.domains[0].sans: "*.${SERVER_DOMAIN}"
-      traefik.http.routers.traefik.tls.domains[1].main: "wootables.com"
-      traefik.http.routers.traefik.tls.domains[1].sans: "*.wootables.com"
-      traefik.http.routers.traefik.tls.domains[2].sans: "*.eq.${SERVER_DOMAIN}"
+      # traefik.http.routers.traefik.tls.domains[1].main: "wootables.com"
+      # traefik.http.routers.traefik.tls.domains[1].sans: "*.wootables.com"
+      # traefik.http.routers.traefik.tls.domains[2].sans: "*.eq.${SERVER_DOMAIN}"
       traefik.http.routers.traefik2.tls.certresolver: duckdns
       traefik.http.routers.traefik2.tls.domains[0].main: "wootables.duckdns.org"
       traefik.http.routers.traefik2.tls.domains[0].sans: "*.wootables.duckdns.org"

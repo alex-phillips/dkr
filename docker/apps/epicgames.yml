@@ -1,19 +1,26 @@
-# # start with `docker compose up`
-# services:
-#   free-games-claimer:
-#     container_name: fgc # is printed in front of every output line
-#     image: ghcr.io/vogler/free-games-claimer # otherwise image name will be free-games-claimer-free-games-claimer
-#     build: .
-#     ports:
-#       # - "5900:5900" # VNC server
-#       - "6080:6080" # noVNC (browser-based VNC client)
-#     volumes:
-#       - fgc:/fgc/data
-#     # command: bash -c "node epic-games; node gog"
-#     environment:
-#       # - EMAIL=foo@bar.org
-#       # - NOTIFY='tgram://...'
-#     labels:
-#       ingress:
-#         - port: 6080
-#           host: fgc.${SERVER_DOMAIN}
+version: '3.9'
+services:
+  epic-games-claimer:
+    container_name: epic-games-claimer
+    image: ghcr.io/claabs/epicgames-freegames-node:latest
+    networks:
+      - external
+    environment:
+      TZ: ${TIMEZONE}
+      EMAIL: ahp118@gmail.com
+      RUN_ON_STARTUP: true
+      BASE_URL: https://epic.${SERVER_DOMAIN}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: 587
+      EMAIL_SENDER_ADDRESS: ${SMTP_USER}
+      EMAIL_SENDER_NAME: "Epic Games Captchas"
+      EMAIL_RECIPIENT_ADDRESS: ahp118@gmail.com
+      # SMTP_SECURE: true
+      SMTP_USERNAME: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    volumes:
+      - ${APPDATA}/epic-games-claimer:/usr/app/config
+    labels:
+      ingress:
+        - port: 3000
+          host: epic.${SERVER_DOMAIN}

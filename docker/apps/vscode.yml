@@ -1,8 +1,8 @@
 version: "2"
 services:
   vscode:
-    image: linuxserver/code-server
     container_name: vscode
+    image: linuxserver/code-server
     networks:
       - external
     environment:
@@ -11,8 +11,10 @@ services:
       PGID: ${PGID} # for GroupID
     volumes:
       - ${APPDATA}/vscode:/config # Contains all relevant configuration files.
-      - ${HOME}/code:/code
       - ${NAS}:${NAS}
+      - ${ZFS}:${ZFS}
+      - ${APPDATA}:${APPDATA}
+      - /dkr:/dkr
     labels:
       ingress:
         - port: 8443

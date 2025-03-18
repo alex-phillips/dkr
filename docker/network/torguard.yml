@@ -4,9 +4,13 @@ services:
     container_name: torguard
     image: lscr.io/linuxserver/wireguard:latest
     networks:
+      external:
       data:
-      torguard:
       web:
+      monitoring:
+    ports:
+      - 7095:7095
+      - 9981:9981 # tvheadend
     cap_add:
       - NET_ADMIN
     environment:
@@ -19,20 +23,34 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
 
-  torguard-misc:
-    container_name: torguard-misc
+  wireguard-tg:
+    container_name: wireguard-tg
     image: lscr.io/linuxserver/wireguard:latest
     networks:
-      torguard-misc:
-      web:
+      - web
+      - data
+      - external
+      - monitoring
     cap_add:
       - NET_ADMIN
+      - SYS_MODULE
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TIMEZONE}
+      - USE_COREDNS=true
+      # These values are to run server and peer with the Torguard VPN
+      - SERVERURL=alexphillips.duckdns.org
+      - SERVERPORT=51822
+      - PEERS=torguard,vpnContainer,alexPhone,opnsense
+      - PEERDNS=auto
+      - INTERNAL_SUBNET=10.13.13.0
     volumes:
-      - ${APPDATA}/torguard-misc:/config
+      - ${APPDATA}/wireguard-tg:/config
+      - /lib/modules:/lib/modules
     sysctls:
+      - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
+    ports:
+      - "51822:51820/udp"
     restart: unless-stopped

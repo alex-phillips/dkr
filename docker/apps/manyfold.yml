@@ -8,7 +8,12 @@ services:
       - external
 #    user: "1000:1000"
     environment:
-      DATABASE_URL: postgresql://manyfold:${DB_PASS_MANYFOLD}@postgres/manyfold?pool=5
+      # DATABASE_URL: postgresql://manyfold:${DB_PASS_MANYFOLD}@postgres/manyfold?pool=5
+      DATABASE_ADAPTER: postgresql
+      DATABASE_HOST: postgres
+      DATABASE_USER: manyfold
+      DATABASE_PASSWORD: ${DB_PASS_MANYFOLD}
+      DATABASE_NAME: manyfold
       SECRET_KEY_BASE: ${VAN_DAM_SECRET_KEY_BASE}
       REDIS_URL: redis://redis:6379/1
       # RAILS_RELATIVE_URL_ROOT: /vandam Sets the root of the app to /vandam useful for reverse proxies with nginx

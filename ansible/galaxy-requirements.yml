@@ -8,7 +8,7 @@ roles:
 - src: ironicbadger.snapraid
 - src: fuzzymistborn.autorestic
 - src: ironicbadger.docker_compose_generator
-- src: geerlingguy.nfs
+- src: geerlingguy.samba
 - src: geerlingguy.pip
   version: 2.2.0
 - src: artis3n.tailscale

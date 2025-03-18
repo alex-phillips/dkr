@@ -11,6 +11,7 @@ services:
       # WS_FALLBACK: false #optional
       # RTC_CONFIG:  #optional
     labels:
+      auth: false
       ingress:
         - port: 3000
           host: drop.${SERVER_DOMAIN}

@@ -2,7 +2,7 @@ version: '3'
 services:
   lms:
     container_name: lms
-    image: lmscommunity/logitechmediaserver
+    image: lmscommunity/lyrionmusicserver:stable
     # image: lmscommunity/lyrionmusicserver
     network_mode: host
     environment:
@@ -14,8 +14,8 @@ services:
       - ${NAS}/music/beets/Music/playlists:/playlists:ro
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-#    ports:
-#      - 9000:9000/tcp
+    ports:
+     - 9000:9000/tcp # so it's accessible via tailscale ip for mimi and papas instance
 #      - 9090:9090/tcp
 #      - 3483:3483/tcp
 #      - 3483:3483/udp
@@ -23,13 +23,13 @@ services:
     restart: unless-stopped
     labels:
       app: lms
-      # ingress:
-      #   - port: 9000
-      #     host: lms.${SERVER_DOMAIN}
+      ingress:
+        - port: 9000
+          host: lms.${SERVER_DOMAIN}
 
   snapserver:
     container_name: snapserver
-    image: alexphillips/snapserver:dev
+    image: alexphillips/snapserver
     network_mode: host
     privileged: true # required for sound hw access
     environment:

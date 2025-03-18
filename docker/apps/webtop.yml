@@ -2,7 +2,7 @@ version: "3"
 services:
   webtop:
     container_name: webtop
-    image: ghcr.io/linuxserver/webtop:ubuntu-xfce # -3da962f5-ls165
+    image: ghcr.io/linuxserver/webtop:arch-xfce
     #    network_mode: service:mullvad
     networks:
       # - vlan20

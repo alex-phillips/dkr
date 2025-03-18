@@ -1,13 +1,21 @@
-version: '3'
+version: "3.7"
 services:
-  tailscale:
-    container_name: tailscale
-    image: tailscale/tailscale
-    hostname: tailscale-docker-cloyster
-    network_mode: host
-    privileged: true
+  tailscale-mew:
+    container_name: tailscale-mew
+    image: tailscale/tailscale:latest
+    hostname: tailscale-mew
+    networks:
+      - external
+      - torguard
     environment:
-      TS_AUTH_KEY: ${TAILSCALE_AUTH_KEY}
+      TS_AUTHKEY: tskey-auth-kXdWkBS6a721CNTRL-qYLkDEuzr76ooUSzuYnY26cQewkrDWsR
+      TS_EXTRA_ARGS: --advertise-tags=tag:container
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_USERSPACE: false
     volumes:
+      - ${APPDATA}/tailscale:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
     restart: unless-stopped

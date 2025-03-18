@@ -14,6 +14,10 @@ services:
   #   8: docmost
   #   9: netbox - tasks
   #  10: netbox - cache
+  #  11: searxng
+  #  12: bar-assistant sessions
+  #  13: bar-assistant cache
+  #  14: authentik
   ###
   redis:
     container_name: redis

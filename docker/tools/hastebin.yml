@@ -11,5 +11,6 @@ services:
       - ${APPDATA}/hastebin/config:/config
       - ${APPDATA}/hastebin/data:/data
     labels:
+      auth: False
       port: 7777
       host: haste.${SERVER_DOMAIN}

@@ -4,22 +4,16 @@ services:
     container_name: maloja
     # from dockerhub
     image: krateng/maloja:latest
-    # or built locally
-    #build:
-    #  context: .
-    #  dockerfile: ./Containerfile
-    # ports:
-    # - "42010:42010"
-    # different directories for configuration, state and logs
+    networks:
+      - external
     volumes:
-    - ${APPDATA}/maloja/config:/etc/maloja
-    - ${APPDATA}/maloja/data:/var/lib/maloja
-    - ${APPDATA}/maloja/logs:/var/log/maloja
-    #you can also have everything together instead:
-    #volumes:
-    #- "$PWD/data:/data"
-    #environment:
-    #- "MALOJA_DATA_DIRECTORY=/data"
+      - ${APPDATA}/maloja/config:/etc/maloja
+      - ${APPDATA}/maloja/data:/var/lib/maloja
+      - ${APPDATA}/maloja/logs:/var/log/maloja
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      MALOJA_FORCE_PASSWORD: applepie
     labels:
       ingress:
         - port: 42010

@@ -3,18 +3,21 @@ services:
   deezer:
     container_name: deezer
     image: registry.gitlab.com/bockiii/deemix-docker
-    # network_mode: service:mullvad
-    networks:
-      - vlan20
-    dns:
-      - 1.1.1.1
-      - 1.0.0.1
+    # image: ghcr.io/bambanah/deemix:latest
+    network_mode: service:torguard
+    depends_on:
+      - torguard
+    # networks:
+    #   - vlan20
+    # dns:
+    #   - 1.1.1.1
+    #   - 1.0.0.1
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
-      ARL: ${ARL_TOKEN}
-      #ARL: d5c3295e1e140a8ed47efbc06b1c82a268c3d41047939f88a38ef68a1519d198d86d12bb2e13b3979e1aaecabceebb900faa94e6ffca748338698cbd4b23226c9ebd9d2476b8c2504429840ac0391fd0b26f2c5674327419c8a5a13655e61575
+      # ARL: ${ARL_TOKEN}
+      ARL: 253096d7a0b045b5d2a73b6fba6a09377cb67777d415d2fcb52d3b0f4fe9f9f7305b5fc4273b22b748f9ee88bf48cf2748ad4bf2a6f8e43d26e801ebf9664f2c172d1f348bdd6fca272c2ce945d25826224df376ecf3fbbdb14935fb2012e1d0
       REVERSEPROXY: "true"
     volumes:
       - ${HOME}/docker/deemix:/config
