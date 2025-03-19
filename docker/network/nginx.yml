@@ -26,5 +26,3 @@ services:
         # - rule: Host(`static.${SERVER_DOMAIN}`) && Path(`/nginx`)
         - port: 80
           host: static.${SERVER_DOMAIN}
-        - port: 80
-          rule: Host(`static.wootables.duckdns.org`)
