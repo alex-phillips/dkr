@@ -14,6 +14,8 @@ services:
       - ${APPDATA}/tvheadend/custom-init:/custom-cont-init.d
       # - ${APPDATA}/tvheadend/custom-services:/custom-services.d
     labels:
+      traefik.http.middlewares.tvheadend-cors.headers.customResponseHeaders.Access-Control-Allow-Origin: "*"
+      traefik.http.routers.tvheadend-0.middlewares: tvheadend-cors@docker
       ingress:
         - port: 9981
           host: tvh.${SERVER_DOMAIN}

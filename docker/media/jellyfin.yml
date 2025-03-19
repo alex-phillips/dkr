@@ -14,6 +14,7 @@ services:
       - /mnt/storage/music/beets/Music:/music:ro
       # - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
     labels:
+      context: dragonite
       namespace: media
       ingress:
         - port: 8097
