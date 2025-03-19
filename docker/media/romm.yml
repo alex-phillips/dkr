@@ -20,7 +20,7 @@ services:
       - ROMM_AUTH_PASSWORD=${ROMM_AUTH_PASSWORD}
       - ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY}
     volumes:
-      - ${NAS}/media/games:/romm/library
+      - ${NAS}/media/games:/romm/library/roms:ro
       - ${APPDATA}/romm/resources:/romm/resources
       - ${APPDATA}/romm/config:/romm/config
       - ${APPDATA}/romm/assets:/romm/assets
