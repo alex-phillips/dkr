@@ -14,6 +14,8 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_REDIS__DB: 14
+      TZ: ${TIMEZONE}
+      AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: postgres
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
@@ -40,6 +42,20 @@ services:
       - external
     command: worker
     environment:
+          host: authentik.${SERVER_DOMAIN}
+          protocol: https
+    # ports:
+    #   - "0.0.0.0:${AUTHENTIK_PORT_HTTP:-9000}:9000"
+    #   - "0.0.0.0:${AUTHENTIK_PORT_HTTPS:-9443}:9443"
+
+  authentik-worker:
+    container_name: authentik-worker
+    image: ghcr.io/goauthentik/server:2024.12.1
+    networks:
+      - data
+    command: worker
+    environment:
+      TZ: ${TIMEZONE}
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_REDIS__DB: 14
       AUTHENTIK_POSTGRESQL__HOST: postgres
