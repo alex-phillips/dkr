@@ -29,7 +29,7 @@ services:
 
   immich-ml:
     container_name: immich-ml
-    image: ghcr.io/immich-app/immich-machine-learning:v1.129.0
+    image: ghcr.io/immich-app/immich-machine-learning:v1.130.1
     networks:
       - data
     user: ${PUID}:${PGID}
