@@ -24,7 +24,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.26
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.28
     network_mode: service:diskover
     environment:
       - discovery.type=single-node
