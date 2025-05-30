@@ -61,7 +61,7 @@ services:
 
   oncall-redis:
     container_name: oncall-redis
-    image: redis:7.4.3
+    image: redis:7.4.4
     networks:
       - monitoring
     volumes:
