@@ -2,7 +2,7 @@ version: "3"
 services:
   smokeping:
     container_name: smokeping
-    image: ghcr.io/linuxserver/smokeping:2.8.2
+    image: ghcr.io/linuxserver/smokeping:2.9.0
     networks:
       - external
     environment:
