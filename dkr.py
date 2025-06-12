@@ -200,7 +200,6 @@ def build_docker_compose(args):
         os.remove("docker-compose.yml")
 
     retval = {
-        "version": "2",
         "services": {},
     }
 

@@ -21,7 +21,7 @@ services:
           host: ldr.${SERVER_DOMAIN}
 
   lidarr-misc:
-    image: lscr.io/linuxserver/lidarr
+    image: ghcr.io/linuxserver-labs/prarr:lidarr-plugins
     container_name: lidarr-misc
     networks:
       - external
@@ -34,6 +34,7 @@ services:
       - ${NAS}/docker/lidarr-misc:/config
       - ${NAS}/docker/lidarr-misc/custom-init:/custom-cont-init.d
       - ${NAS}/docker/lidarr-misc/custom-services:/custom-services.d
+      - ${NAS}/docker/slskd/downloads:/app/downloads
       - ${NAS}:${NAS}
     labels:
       app: lidarr

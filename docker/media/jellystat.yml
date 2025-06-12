@@ -12,9 +12,32 @@ services:
       POSTGRES_IP: postgres
       POSTGRES_PORT: 5432
       JWT_SECRET: T2P63lvgHueOqTp6Gzvu3f5K2r1oGFAY
+      TZ: ${TIMEZONE}
     depends_on:
       - postgres
     labels:
       ingress:
         - port: 3000
           host: js.${SERVER_DOMAIN}
+
+  embystat:
+    container_name: embystat
+    image: cyfershepard/jellystat
+    networks:
+      - data
+      - external
+    environment:
+      POSTGRES_DB: embystat
+      POSTGRES_USER: embystat
+      POSTGRES_PASSWORD: ym71zKiFTKj2g4w4Sxm4LizgnUkNshSq
+      POSTGRES_IP: postgres
+      POSTGRES_PORT: 5432
+      JWT_SECRET: T2P63lvgHueOqTp6Gzvu3f5K2r1oGFAY
+      TZ: ${TIMEZONE}
+      IS_EMBY_API: true
+    depends_on:
+      - postgres
+    labels:
+      ingress:
+        - port: 3000
+          host: es.${SERVER_DOMAIN}

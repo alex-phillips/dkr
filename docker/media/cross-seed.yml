@@ -2,7 +2,7 @@ version: "2.1"
 services:
   cross-seed:
     container_name: cross-seed
-    image: crossseed/cross-seed
+    image: ghcr.io/cross-seed/cross-seed:6
     user: ${PUID}:${PGID}
     networks:
       - external
@@ -17,7 +17,7 @@ services:
       - ${NAS}/torrents/cross-seeds:/cross-seeds
       - /mnt/storage/torrents:/mnt/storage/torrents
     command: daemon
-    # command: search
+    #command: search
     # entrypoint: ["sleep", "infinity"]
     labels:
       ingress:

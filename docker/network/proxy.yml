@@ -25,3 +25,11 @@ services:
     restart: unless-stopped
     environment:
       PROXY_PORT: 1080
+
+  squid:
+    container_name: squid
+    image: ubuntu/squid
+    network_mode: service:torguard
+    restart: always
+    volumes:
+      - ${APPDATA}/squid/squid.conf:/etc/squid/squid.conf

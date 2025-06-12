@@ -3,7 +3,7 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich-server
-    image: ghcr.io/immich-app/immich-server:v1.133.1
+    image: ghcr.io/immich-app/immich-server:v1.134.0
     networks:
       - data
       - external
@@ -31,7 +31,7 @@ services:
 
   immich-ml:
     container_name: immich-ml
-    image: ghcr.io/immich-app/immich-machine-learning:v1.133.1
+    image: ghcr.io/immich-app/immich-machine-learning:v1.134.0
     networks:
       - data
       - external
@@ -71,7 +71,7 @@ services:
       HOST: 0.0.0.0
       EXTERNAL_IMMICH_URL: https://photos.w00t.cloud # Immich URL
       IMMICH_URL: http://immich-server:2283
-      IMMICH_API_KEY: fRxcLrJqRj8bRLIQXibEfaYnpGjABykWBIBrX2Ww
+      IMMICH_API_KEY: wMjMMzxQ454qC3MS4TXnGEQt4I4eBTiPDoG1yrSgkxo # spencer
       # DB_USERNAME: ""   # Postgress Database Username
       # DB_PASSWORD: "" # Postgres Database Password
       DB_HOST: immich-db # Postgres Host (IP address or hostname of the database)

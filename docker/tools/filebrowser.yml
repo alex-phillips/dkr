@@ -1,19 +1,37 @@
 version: '3'
 services:
+  # filebrowser:
+  #   container_name: filebrowser
+  #   image: filebrowser/filebrowser:s6
+  #   environment:
+  #     PUID: ${PUID}
+  #     PGID: ${PGID}
+  #     TZ: ${TIMEZONE}
+  #   volumes:
+  #     - ${NAS}:/srv/nas
+  #     - ${HOME}:/srv/home
+  #     - ${ZFS}:/srv/tank
+  #     - ${APPDATA}:/srv/appdata
+  #     - ${APPDATA}/filebrowser/database.db:/database/filebrowser.db
+  #     - ${APPDATA}/filebrowser/settings.json:/config/settings.json
+  #   labels:
+  #     port: 80
+  #     host: fb.${SERVER_DOMAIN}
+
   filebrowser:
     container_name: filebrowser
-    image: filebrowser/filebrowser:s6
-    environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TIMEZONE}
+    image: gtstef/filebrowser
     volumes:
       - ${NAS}:/srv/nas
-      - ${HOME}:/srv/home
-      - ${ZFS}:/srv/tank
-      - ${APPDATA}:/srv/appdata
-      - ${APPDATA}/filebrowser/database.db:/database/filebrowser.db
-      - ${APPDATA}/filebrowser/settings.json:/config/settings.json
+      # optional if you want db to persist - configure a path under "database" dir in config file.
+      - ${APPDATA}/filebrowser-quantum/database:/database
+      - ${APPDATA}/filebrowser-quantum/config.yaml:/home/filebrowser/config.yaml
+      # optional mount a temp directory to use. Generally, there is no need for this unless your user is not root or filebrowser.
+      - '/tmp/:/home/filebrowser/tmp/'
+    # Optionally run as non-root filebrowser user
+    #user: filebrowser
+    restart: always
     labels:
-      port: 80
-      host: fb.${SERVER_DOMAIN}
+      ingress:
+        - port: 80
+          host: fb.${SERVER_DOMAIN}

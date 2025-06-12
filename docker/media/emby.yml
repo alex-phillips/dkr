@@ -15,7 +15,7 @@ services:
       - /appdata/emby:/config
       - /mnt/storage/media:/mnt/storage/media
       - /mnt/storage/music/beets/Music:/media/music:ro
-      # - /appdata/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - /mnt/storage/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
       # - ${NAS}/transcode:/transcode
       # - ${APPDATA}/dtv:/dtv
     labels:

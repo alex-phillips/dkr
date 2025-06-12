@@ -10,9 +10,13 @@ services:
       - authelia
     env_file:
       - .env
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     environment:
-      CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
-      CF_DNS_API_KEY: ${CLOUDFLARE_API_KEY} # vpXOa4GBJUcyUf_FwVVbltqNQQ-noMg09XVlCJcm
+      # CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
+      # CF_DNS_API_KEY: ${CLOUDFLARE_API_KEY} # vpXOa4GBJUcyUf_FwVVbltqNQQ-noMg09XVlCJcm
+      CF_DNS_API_TOKEN: 7eUyoqH2dq5YbrCtws0YAQTKwXhqH-PE6HFIFfdB
       NAMECHEAP_API_USER: alexphillips
       NAMECHEAP_API_KEY: 6a4d0f39c1f2442abc02549b0918279d
       DUCKDNS_TOKEN: ${DUCKDNS_TOKEN}

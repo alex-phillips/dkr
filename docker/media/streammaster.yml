@@ -35,3 +35,23 @@ services:
       ingress:
         - port: 5002
           host: aiptv.${SERVER_DOMAIN}
+
+  m3u-editor:
+    image: sparkison/m3u-editor:latest
+    container_name: m3u-editor
+    environment:
+      - TZ=Etc/UTC
+      - APP_URL=http://localhost # or http://192.168.0.123 or https://your-custom-tld.com
+      # This is used for websockets and in-app notifications
+      # Set to your machine/container IP where m3u editor will be accessed, if not localhost
+      - REVERB_HOST=localhost # or 192.168.0.123 or your-custom-tld.com
+      - REVERB_SCHEME=http # or https if using custom TLD with https
+    volumes:
+      # This will allow you to reuse the data across container recreates
+      # Format is: <host_directory_path>:<container_path>
+      # More information: https://docs.docker.com/reference/compose-file/volumes/
+      - ./data:/var/www/config
+    restart: unless-stopped
+    ports:
+      - 36400:36400 # app
+      - 36800:36800 # websockets/broadcasting

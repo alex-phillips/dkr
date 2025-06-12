@@ -26,6 +26,7 @@ services:
       PUID: ${PUID}
       TZ: ${TIMEZONE}
         #      - WEBUI_PORT=8080
+      DOCKER_MODS: ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
       # - DOCKER_MODS=ghcr.io/gilbn/theme.park:qbittorrent
       # - DOCKER_MODS=ghcr.io/linuxserver/mods:universal-stdout-logs
       # - LOGS_TO_STDOUT=/config/qBittorrent/logs/qbittorrent.log
@@ -74,7 +75,7 @@ services:
 
   qbitmanage:
     container_name: qbitmanage
-    image: cr.hotio.dev/hotio/qbitmanage
+    image: ghcr.io/stuffanthings/qbit_manage:latest
     networks:
       - external
     environment:
@@ -82,8 +83,8 @@ services:
       PGID: ${PGID}
       UMASK: 002
       TZ: ${TIMEZONE}
-      QBT_TRACE: "true"
-      ARGS: -tnhl --trace --log-level DEBUG -r --dry-run
+      #QBT_TRACE: "true"
+      #ARGS: -tnhl --trace --log-level DEBUG -r --dry-run
     volumes:
       - ${APPDATA}/qbitmanage:/config
       - ${NAS}:${NAS}

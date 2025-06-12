@@ -5,6 +5,8 @@ services:
     image: jlesage/makemkv
     networks:
       - external
+    devices:
+      - /dev/sr0:/dev/sr0
     volumes:
       - ${NAS}/docker/makemkv:/output
       - ${NAS}:${NAS}:ro

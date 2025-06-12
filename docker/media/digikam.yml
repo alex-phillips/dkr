@@ -16,6 +16,7 @@ services:
 #      - ${NAS}/pictures:/pictures
       - ${NAS}/pictures/Organized:/pictures/Organized
       - ${NAS}:${NAS}:ro
+      - ${ZFS}:${ZFS}:ro
     labels:
       namespace: media
       host: dk.${SERVER_DOMAIN}

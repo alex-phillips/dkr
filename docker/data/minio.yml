@@ -20,5 +20,5 @@ services:
       ingress:
         - port: 9001
           host: minio.${SERVER_DOMAIN}
-        - port: 9000
-          host: s3.${SERVER_DOMAIN}
+        # - port: 9000
+        #   host: s3.${SERVER_DOMAIN}

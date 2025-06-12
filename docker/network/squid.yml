@@ -1,13 +1,13 @@
-version: '2'
-services:
-  squid:
-    container_name: squid
-    image: sameersbn/squid
-    network_mode: host
-      #    networks:
-      #- external
-    volumes:
-      - ${HOME}/docker/squid:/var/spool/squid
-    ports:
-      - 3128:3128
-        #    restart: always
+# version: '2'
+# services:
+#   squid:
+#     container_name: squid
+#     image: sameersbn/squid
+#     network_mode: host
+#       #    networks:
+#       #- external
+#     volumes:
+#       - ${HOME}/docker/squid:/var/spool/squid
+#     ports:
+#       - 3128:3128
+#         #    restart: always

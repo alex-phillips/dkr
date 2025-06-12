@@ -19,6 +19,9 @@ services:
       - ROMM_AUTH_USERNAME=${ROMM_AUTH_USERNAME}
       - ROMM_AUTH_PASSWORD=${ROMM_AUTH_PASSWORD}
       - ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY}
+      - SCREENSCRAPER_USER=${SCREENSCRAPER_USER}z6ByYELyi24tRY893KmmZaq
+      - SCREENSCRAPER_PASSWORD=${SCREENSCRAPER_PASSWORD}CrCmfrNAntaCGBa8E9rPP93
+      - KIOSK_MODE=true
     volumes:
       - ${NAS}/media/games:/romm/library/roms:ro
       - ${APPDATA}/romm/resources:/romm/resources
@@ -26,6 +29,7 @@ services:
       - ${APPDATA}/romm/assets:/romm/assets
       - ${NAS}:${NAS}:ro
     labels:
+      auth: false
       ingress:
         - port: 8080
           host: romm.${SERVER_DOMAIN}

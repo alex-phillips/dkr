@@ -12,9 +12,9 @@ services:
       - /appdata/jellyfin:/config
       - /mnt/storage/media:/media:ro
       - /mnt/storage/music/beets/Music:/music:ro
-      # - ${APPDATA}/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - /mnt/storage/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
     labels:
-      context: dragonite
+      context: 192.168.1.149
       namespace: media
       ingress:
         - port: 8097

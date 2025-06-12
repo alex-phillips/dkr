@@ -2,7 +2,7 @@ version: "3"
 services:
   webtop:
     container_name: webtop
-    image: ghcr.io/linuxserver/webtop:arch-xfce
+    image: ghcr.io/linuxserver/webtop:latest
     #    network_mode: service:mullvad
     networks:
       # - vlan20
@@ -34,23 +34,41 @@ services:
       auth: true
       post_up: 'docker cp /usr/local/bin/megatools webtop:/usr/local/bin/ --quiet'
 
-  webtop-mitm:
-    container_name: webtop-mitm
-    image: ghcr.io/linuxserver/webtop:ubuntu-xfce
-    network_mode: service:mitmproxy
-    depends_on:
-      - mitmproxy
-    privileged: true
-    shm_size: "2gb"
-    environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      TZ: ${TIMEZONE}
-    volumes:
-      - ${APPDATA}/webtop-test:/config
-      - ${NAS}:${NAS}
-      - ${APPDATA}/mitm/certs:/cert:ro # Mounts certificates from the MITM container
-      - ${APPDATA}/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
-    labels:
-      port: 3000
-      host: wtt.${SERVER_DOMAIN}
+  # webtop-mitm:
+  #   container_name: webtop-mitm
+  #   image: ghcr.io/linuxserver/webtop:ubuntu-xfce
+  #   network_mode: service:mitmproxy
+  #   depends_on:
+  #     - mitmproxy
+  #   privileged: true
+  #   shm_size: "2gb"
+  #   environment:
+  #     PUID: ${PUID}
+  #     PGID: ${PGID}
+  #     TZ: ${TIMEZONE}
+  #   volumes:
+  #     - ${APPDATA}/webtop-test:/config
+  #     - ${NAS}:${NAS}
+  #     - ${APPDATA}/mitm/certs:/cert:ro # Mounts certificates from the MITM container
+  #     - ${APPDATA}/mitm/init:/custom-cont-init.d:ro # Mounts script responsible for certificate injection into various keystores
+  #   labels:
+  #     port: 3000
+  #     host: wtt.${SERVER_DOMAIN}
+
+  # webtop-trash:
+  #   container_name: webtop-trash
+  #   image: lscr.io/linuxserver/webtop:latest
+  #   networks:
+  #     - vlan20
+  #   security_opt:
+  #     - seccomp:unconfined #optional
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Etc/UTC
+  #     - SUBFOLDER=/ #optional
+  #     - TITLE=Webtop #optional
+  #   shm_size: "1gb" #optional
+  #   labels:
+  #     port: 3000
+  #     host: wtt.${SERVER_DOMAIN}

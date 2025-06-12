@@ -18,6 +18,7 @@ services:
   #  12: bar-assistant sessions
   #  13: bar-assistant cache
   #  14: authentik
+  #  15: dispatcharr
   ###
   redis:
     container_name: redis
@@ -33,7 +34,7 @@ services:
     networks:
       - data
     environment:
-      - REDIS_HOSTS=nextcloud:redis:6379:0,van_dam:redis:6379:1,linkace:redis:6379:2,immich:redis:6379:3
+      - REDIS_HOSTS=nextcloud:redis:6379:0,van_dam:redis:6379:1,linkace:redis:6379:2,immich:redis:6379:3,dispatcharr:redis:6379:15
       - TRUST_PROXY=true
       - ADDRESS=0.0.0.0
     labels:
