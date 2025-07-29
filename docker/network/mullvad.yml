@@ -2,7 +2,7 @@ version: '3'
 services:
   mullvad:
     container_name: mullvad
-    image: ghcr.io/linuxserver/wireguard:1.0.20210914
+    image: ghcr.io/linuxserver/wireguard:1.0.20250521
     networks:
       - external
     cap_add:
@@ -33,7 +33,7 @@ services:
 
   mullvad-misc:
     container_name: mullvad-misc
-    image: ghcr.io/linuxserver/wireguard:1.0.20210914
+    image: ghcr.io/linuxserver/wireguard:1.0.20250521
     networks:
       - external
     cap_add:
