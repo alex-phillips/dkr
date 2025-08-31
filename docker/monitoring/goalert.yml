@@ -2,7 +2,7 @@ version: '3'
 services:
   goalert:
     container_name: goalert
-    image: goalert/goalert:v0.33.0
+    image: goalert/goalert:v0.34.0
     networks:
       - default
       - data
