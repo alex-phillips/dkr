@@ -15,7 +15,6 @@ services:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_REDIS__DB: 14
       TZ: ${TIMEZONE}
-      AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_POSTGRESQL__HOST: postgres
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__NAME: authentik
@@ -29,6 +28,7 @@ services:
       - ${APPDATA}/authentik/geoip:/geoip
     labels:
       app: authentik
+      auth: false
       ingress:
         - port: 9443
           host: idp.${SERVER_DOMAIN}

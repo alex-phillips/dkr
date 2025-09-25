@@ -44,17 +44,19 @@ services:
     environment:
       WYZE_EMAIL: ${WYZE_LUCY_EMAIL}
       WYZE_PASSWORD: ${WYZE_LUCY_PASSWORD}
+      API_ID: 0726c9dd-8c0d-4486-88fd-9b3c3c2d5b9f
+      API_KEY: H793a3X1rxiAgI9aVw6uddgtoMq7oUkPH1iv36MDeHqAqfzObFHE4PQ6sTyl
       TZ: ${TIMEZONE}
       # NET_MODE: LAN
       #   : "true"
       SNAPSHOT: RTSP30
+      WB_AUTH: false
       WB_RTSP_URL: rtsp://wyze-lucy-rtsp.${SERVER_DOMAIN}/
       WB_RTMP_URL: rtmp://wyze-lucy-rtmp.${SERVER_DOMAIN}/
       WB_HLS_URL: http://wyze-lucy-hls.${SERVER_DOMAIN}/
       ENABLE_AUDIO: true
       ON_DEMAND: "False"
       RECORD_ALL: "True"
-      RECORD_LENGTH: 300
       QUALITY: HD120
       AUDIO_CODEC: AAC
 

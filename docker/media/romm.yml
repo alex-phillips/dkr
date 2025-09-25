@@ -22,6 +22,7 @@ services:
       - SCREENSCRAPER_USER=${SCREENSCRAPER_USER}z6ByYELyi24tRY893KmmZaq
       - SCREENSCRAPER_PASSWORD=${SCREENSCRAPER_PASSWORD}CrCmfrNAntaCGBa8E9rPP93
       - KIOSK_MODE=true
+      - RETROACHIEVEMENTS_API_KEY=ConSaJxpokVzvagDJ4O7p7qOGOordoU0
     volumes:
       - ${NAS}/media/games:/romm/library/roms:ro
       - ${APPDATA}/romm/resources:/romm/resources

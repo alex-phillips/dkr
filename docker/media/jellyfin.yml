@@ -13,6 +13,7 @@ services:
       - /mnt/storage/media:/media:ro
       - /mnt/storage/music/beets/Music:/music:ro
       - /mnt/storage/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - /appdata/dispatcharr/vod:/vod:ro
     labels:
       context: 192.168.1.149
       namespace: media

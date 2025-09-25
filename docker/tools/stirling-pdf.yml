@@ -2,17 +2,16 @@ version: '3.3'
 services:
   stirling-pdf:
     container_name: stirling-pdf
-    image: frooodle/s-pdf
-    # volumes:
-      # - /location/of/trainingData:/usr/share/tesseract-ocr/4.00/tessdata #Required for extra OCR languages
-#      - /location/of/extraConfigs:/configs
-#    environment:
-#      APP_LOCALE: en_GB
-#      APP_HOME_NAME: Stirling PDF
-#      APP_HOME_DESCRIPTION: Your locally hosted one-stop-shop for all your PDF needs.
-#      APP_NAVBAR_NAME: Stirling PDF
-#      APP_ROOT_PATH: /
-#      ALLOW_GOOGLE_VISIBILITY: true
+    image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+    volumes:
+      - ${APPDATA}/stirling-pdf/trainingData:/usr/share/tessdata
+      - ${APPDATA}/stirling-pdf/extraConfigs:/configs
+      - ${APPDATA}/stirling-pdf/customFiles:/customFiles/
+      - ${APPDATA}/stirling-pdf/logs:/logs/
+      - ${APPDATA}/stirling-pdf/pipeline:/pipeline/
+    environment:
+      - DISABLE_ADDITIONAL_FEATURES=false
+      - DISABLE_PIXEL=true
     labels:
       ingress:
         - port: 8080
