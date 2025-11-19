@@ -2,7 +2,7 @@ version: '3'
 services:
   paperless-redis:
     container_name: paperless-redis
-    image: docker.io/library/redis:7.4
+    image: docker.io/library/redis:8.4
     networks:
       - paperless
     restart: unless-stopped
