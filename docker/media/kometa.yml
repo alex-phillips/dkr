@@ -2,13 +2,17 @@ version: '3'
 services:
   kometa:
     container_name: kometa
-    image: ghcr.io/linuxserver/kometa:2.2.2
+    image: ghcr.io/linuxserver/kometa:latest
     networks:
       - external
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
       TZ: ${TIMEZONE}
-      PMM_CONFIG: /config/config.yml
+      KOMETA_CONFIG: /config/config.yml
+      KOMETA_TIME: 03:00
+      # KOMETA_RUN: True
+      KOMETA_TEST: False
+      KOMETA_NO_MISSING: False
     volumes:
       - ${APPDATA}/kometa:/config

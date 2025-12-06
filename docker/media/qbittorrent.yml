@@ -89,3 +89,13 @@ services:
       - ${APPDATA}/qbitmanage:/config
       - ${NAS}:${NAS}
       - ${APPDATA}:/appdata
+
+  qui:
+    container_name: qui
+    image: ghcr.io/autobrr/qui:latest
+    volumes:
+      - ${APPDATA}/qui:/app/config
+    labels:
+      ingress:
+        - port: 7476
+          host: qui.${SERVER_DOMAIN}

@@ -14,8 +14,8 @@ services:
       - ${NAS}/music/beets/Music/playlists:/playlists:ro
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-    ports:
-     - 9000:9000/tcp # so it's accessible via tailscale ip for mimi and papas instance
+    # ports:
+    #  - 9000:9000/tcp # so it's accessible via tailscale ip for mimi and papas instance
 #      - 9090:9090/tcp
 #      - 3483:3483/tcp
 #      - 3483:3483/udp
@@ -44,5 +44,16 @@ services:
       - /appdata/snapserver/custom-init:/custom-cont-init.d
       - /appdata/snapserver/asound.conf:/etc/asound.conf
     restart: unless-stopped
+    labels:
+      context: dragonite
+
+  squeeze-plex-hub:
+    container_name: squeeze-plex-hub
+    image: onmomo/squeeze-plex-hub:latest
+    network_mode: host
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
     labels:
       context: dragonite

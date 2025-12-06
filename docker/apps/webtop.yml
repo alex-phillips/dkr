@@ -8,6 +8,8 @@ services:
       # - vlan20
       - external
       - torguard-misc
+    ports:
+      - 3838:3000
     depends_on:
       - socks5
 #    security_opt:

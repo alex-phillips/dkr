@@ -17,3 +17,20 @@ services:
       ingress:
         - port: 9696
           host: plr.${SERVER_DOMAIN}
+
+  prowlarr-public:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr-public
+    network_mode: service:torguard
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${APPDATA}/prowlarr-public:/config
+    labels:
+      auth: false
+      namespace: media
+      ingress:
+        - port: 9696
+          host: plrp.${SERVER_DOMAIN}

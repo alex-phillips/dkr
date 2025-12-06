@@ -18,3 +18,21 @@ services:
           host: request.${SERVER_DOMAIN}
       homepage.widget: true
       homepage.widget.key: ${OVERSEERR_API_KEY}
+
+  overseerr-rd:
+    image: lscr.io/linuxserver/overseerr:1.34.0
+    container_name: overseerr-rd
+    networks:
+      - external
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${APPDATA}/overseerr-rd:/config
+    labels:
+      auth: false
+      namespace: media
+      ingress:
+        - port: 5055
+          host: requestrd.${SERVER_DOMAIN}

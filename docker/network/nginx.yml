@@ -26,3 +26,9 @@ services:
         # - rule: Host(`static.${SERVER_DOMAIN}`) && Path(`/nginx`)
         - port: 80
           host: static.${SERVER_DOMAIN}
+
+  test:
+    container_name: test
+    image: ghcr.io/linuxserver/nginx:1.26.3
+    networks:
+      - vlan10

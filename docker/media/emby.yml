@@ -16,8 +16,11 @@ services:
       - /mnt/storage/media:/mnt/storage/media
       - /mnt/storage/music/beets/Music:/media/music:ro
       - /mnt/storage/docker/zap2xml/xmltv.xml:/xmltv.xml:ro
+      - /mnt/rd:/mnt/rd:ro
       # - ${NAS}/transcode:/transcode
       # - ${APPDATA}/dtv:/dtv
+    depends_on:
+      - rclone-zurg
     labels:
       context: dragonite
       auth: false

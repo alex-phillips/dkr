@@ -400,16 +400,16 @@ def build_nginx(nginx_dir, args):
 
             if conf is not None:
                 conf = re.sub(
-                    "server_name\s+.+?;", f"server_name {labels['host']};", conf
+                    r"server_name\s+.+?;", f"server_name {labels['host']};", conf
                 )
 
                 if "port" in labels:
                     conf = re.sub(
-                        "upstream_port \d+;", f"upstream_port {labels['port']};", conf
+                        r"upstream_port \d+;", f"upstream_port {labels['port']};", conf
                     )
                 if "protocol" in labels:
                     conf = re.sub(
-                        "upstream_proto \w+;",
+                        r"upstream_proto \w+;",
                         f"upstream_proto {labels['protocol']};",
                         conf,
                     )
@@ -417,11 +417,11 @@ def build_nginx(nginx_dir, args):
                 # use upstream label, otherwise use service_name to make sure we are using the proper container...
                 if "upstream" in labels:
                     conf = re.sub(
-                        "upstream_app \w+;", f"upstream_app {labels['upstream']};", conf
+                        r"upstream_app \w+;", f"upstream_app {labels['upstream']};", conf
                     )
                 else:
                     conf = re.sub(
-                        "upstream_app \w+;", f"upstream_app {service_name};", conf
+                        r"upstream_app \w+;", f"upstream_app {service_name};", conf
                     )
 
                 if auth_block is not None:

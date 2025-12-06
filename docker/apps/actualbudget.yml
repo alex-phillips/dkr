@@ -15,4 +15,4 @@ services:
     labels:
       ingress:
         - port: 5006
-          host: actual.${SERVER_DOMAIN}
+          host: budget.${SERVER_DOMAIN}

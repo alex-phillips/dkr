@@ -102,6 +102,17 @@ networks:
           # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
           gateway: 192.168.20.1
 
+  vlan10:
+    name: vlan10
+    driver: ipvlan
+    driver_opts:
+      parent: enp5s0f1.10
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24
+          # ip_range: 192.168.0.64/26 # only if you need to exclude a range that is maybe DHCP vs static
+          gateway: 192.168.10.1
+
   vlan30:
     name: vlan30
     driver: ipvlan

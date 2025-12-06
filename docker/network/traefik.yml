@@ -1,11 +1,12 @@
 version: "3.3"
 services:
   traefik:
-    image: traefik:v3.3.6
+    image: traefik:v3.6.1
     container_name: traefik
     networks:
       - web
       - external
+      - vlan20
     depends_on:
       - authelia
     env_file:
@@ -45,6 +46,9 @@ services:
       traefik.http.routers.traefik2.tls.certresolver: duckdns
       traefik.http.routers.traefik2.tls.domains[0].main: "wootables.duckdns.org"
       traefik.http.routers.traefik2.tls.domains[0].sans: "*.wootables.duckdns.org"
+      traefik.http.routers.traefik3.tls.certresolver: letsencrypt
+      traefik.http.routers.traefik3.tls.domains[0].main: "eqemu.dev"
+      traefik.http.routers.traefik3.tls.domains[0].sans: "*.eqemu.dev"
 
   dockerproxy:
     container_name: dockerproxy

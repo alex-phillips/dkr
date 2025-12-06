@@ -25,6 +25,7 @@ services:
     restart: unless-stopped
     environment:
       PROXY_PORT: 1080
+      REQUIRE_AUTH: "false"
 
   squid:
     container_name: squid

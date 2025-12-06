@@ -3,7 +3,7 @@ version: "3.8"
 services:
   immich-server:
     container_name: immich-server
-    image: ghcr.io/immich-app/immich-server:v2.0.0
+    image: ghcr.io/immich-app/immich-server:v2.3.1
     networks:
       - data
       - external
@@ -31,7 +31,7 @@ services:
 
   immich-ml:
     container_name: immich-ml
-    image: ghcr.io/immich-app/immich-machine-learning:v2.0.0
+    image: ghcr.io/immich-app/immich-machine-learning:v2.3.1
     networks:
       - data
       - external
