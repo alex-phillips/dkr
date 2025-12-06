@@ -2,7 +2,7 @@ version: '3'
 services:
   romm:
     container_name: romm
-    image: rommapp/romm:3.10.2
+    image: rommapp/romm:4.3.0
     networks:
       - data
       - external
@@ -13,8 +13,8 @@ services:
       - DB_USER=romm # Only needed if ROMM_DB_DRIVER=mariadb
       - DB_NAME=romm # Only needed if ROMM_DB_DRIVER=mariadb. Can be optionally changed, and should match the MYSQL_DATABASE value in the mariadb container.
       - DB_PASSWD=${DB_PASS_ROMM} # Only needed if ROMM_DB_DRIVER=mariadb
-      - CLIENT_ID=${TWITCH_CLIENT_ID}
-      - CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - IGDB_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - IGDB_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
       - STEAMGRIDDB_API_KEY=<SteamGridDB api key>
       - ROMM_AUTH_USERNAME=${ROMM_AUTH_USERNAME}
       - ROMM_AUTH_PASSWORD=${ROMM_AUTH_PASSWORD}
@@ -23,6 +23,7 @@ services:
       - SCREENSCRAPER_PASSWORD=${SCREENSCRAPER_PASSWORD}CrCmfrNAntaCGBa8E9rPP93
       - KIOSK_MODE=true
       - RETROACHIEVEMENTS_API_KEY=ConSaJxpokVzvagDJ4O7p7qOGOordoU0
+      - STEAMGRIDDB_API_KEY=79488fe091cff6fefc6e391f29089d3f
     volumes:
       - ${NAS}/media/games:/romm/library/roms:ro
       - ${APPDATA}/romm/resources:/romm/resources
