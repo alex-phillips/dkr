@@ -2,7 +2,7 @@ version: '2'
 services:
   ha-chevalier:
     container_name: ha-chevalier
-    image: ghcr.io/home-assistant/home-assistant:2025.12.1
+    image: ghcr.io/home-assistant/home-assistant:2025.12.3
     network_mode: host
     volumes:
       - ${APPDATA}/ha-chevalier:/config
