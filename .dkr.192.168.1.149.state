@@ -1,1 +1,1 @@
-{"plex": {"enabled": true}, "tautulli": {"enabled": true}, "emby": {"enabled": false}, "plex-other": {"enabled": true}, "snapserver": {"enabled": true}}
+{"plex": {"enabled": true}, "tautulli": {"enabled": true}, "emby": {"enabled": false}, "plex-other": {"enabled": true}, "snapserver": {"enabled": true}, "frigate": {"enabled": true}}

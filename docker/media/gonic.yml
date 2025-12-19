@@ -3,13 +3,17 @@ services:
   gonic:
     container_name: gonic
     image: sentriz/gonic:latest
+    networks:
+      - external
     environment:
       TZ: ${TIMEZONE}
     volumes:
       - ${APPDATA}/gonic/data:/data
       - ${APPDATA}/gonic/cache:/cache
       - ${NAS}/music/beets/Music:/music:ro
+      - ${NAS}/music/beets/playlists:/playlists:ro
       # - ${NAS}/podcasts:/podcasts
     labels:
-      port: 80
-      host: gonic.${SERVER_DOMAIN}
+      ingress:
+        - port: 80
+          host: gonic.${SERVER_DOMAIN}

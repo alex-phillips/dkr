@@ -11,7 +11,7 @@ services:
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
-      - TZ=${TIMEZONE}
+      - TZ=UTC
       - SITE_ROOT=https://hc.${SERVER_DOMAIN}
       - SITE_NAME=${SERVER_DOMAIN}
       - REGENERATE_SETTINGS="False"
