@@ -25,7 +25,7 @@ services:
 
   mealie-old:
     container_name: mealie-old
-    image: hkotel/mealie:v3.8.0
+    image: hkotel/mealie:v3.9.2
     networks:
       - external
     environment:
@@ -38,7 +38,7 @@ services:
 
   mealie-hellofresh:
     container_name: mealie-hellofresh
-    image: hkotel/mealie:v3.8.0
+    image: hkotel/mealie:v3.9.2
     environment:
       TZ: America/New_York
     volumes:
