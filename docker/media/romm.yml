@@ -2,7 +2,7 @@ version: '3'
 services:
   romm:
     container_name: romm
-    image: rommapp/romm:4.5.0
+    image: rommapp/romm:4.6.1
     networks:
       - data
       - external
@@ -24,9 +24,15 @@ services:
       - KIOSK_MODE=true
       - RETROACHIEVEMENTS_API_KEY=ConSaJxpokVzvagDJ4O7p7qOGOordoU0
       - STEAMGRIDDB_API_KEY=79488fe091cff6fefc6e391f29089d3f
+      - HASHEOUS_API_ENABLED=true
+      - HLTB_API_ENABLED=true
+      - TGDB_API_ENABLED=true
+      - PLAYMATCH_API_ENABLED=true
     volumes:
-      - ${NAS}/media/games:/romm/library/roms:ro
+      - ${NAS}/media/games/platforms:/romm/library/roms
+      - ${NAS}/media/games/bios:/romm/library/bios
       - ${APPDATA}/romm/resources:/romm/resources
+      - ${APPDATA}/romm/redis:/redis-data
       - ${APPDATA}/romm/config:/romm/config
       - ${APPDATA}/romm/assets:/romm/assets
       - ${NAS}:${NAS}:ro
