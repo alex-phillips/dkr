@@ -3,15 +3,14 @@ services:
   node-red:
     container_name: node-red
     image: nodered/node-red:4.1.5
-    networks:
-      - external
     environment:
       TZ: ${TIMEZONE}
     volumes:
-      - ${APPDATA}/node-red:/data
+      - /appdata/node-red:/data
       - ${HOME}/.ssh:/usr/src/node-red/.ssh
     labels:
       namespace: home
+      context: weepinbell
       port: 1880
       host: node.${SERVER_DOMAIN}
       logs: true
