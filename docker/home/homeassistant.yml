@@ -5,15 +5,14 @@ services:
     image: ghcr.io/home-assistant/home-assistant:2026.2.2
     network_mode: host
     volumes:
-      - ${APPDATA}/ha-chevalier:/config
+      - /appdata/ha-chevalier:/config
       - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      - mariadb
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
     restart: unless-stopped
     labels:
+      context: weepinbell
       namespace: home
       port: 8123
       host: ha.${SERVER_DOMAIN}
