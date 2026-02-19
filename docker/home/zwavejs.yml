@@ -2,7 +2,7 @@ version: '3'
 services:
   zwavejs:
     container_name: zwavejs
-    image: zwavejs/zwavejs2mqtt:11.11.0@sha256:b70e665fbf7e0ef94787ca38155e4e428d52ee8d29783e70f84e09db240f5ffc
+    image: zwavejs/zwavejs2mqtt:11.12.0@sha256:8eb6640b41784d8b5812a67c341f5ca063db847b6db693013d270472442684f2
     stop_signal: SIGINT
     devices:
       - /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00:/dev/ttyUSB0
