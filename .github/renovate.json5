@@ -1,18 +1,21 @@
 {
-  "extends": [
-    "config:base",
-    ":disableRateLimiting",
-    "github>whitesource/merge-confidence:beta"
+  extends: [
+    'config:recommended',
+    ':disableRateLimiting',
+    'mergeConfidence:all-badges',
   ],
-  "timezone": "America/New_York",
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate Dashboard",
-  "rebaseWhen": "conflicted",
-  "commitBodyTable": true,
-  // "ignorePaths": [".archived/**"],
-  "fetchReleaseNotes": true,
-  "labels": ["renovate"],
-  "docker-compose": {
-    "fileMatch": "(^|/)docker\/.*\.ya?ml$"
-  }
+  timezone: 'America/New_York',
+  dependencyDashboard: true,
+  dependencyDashboardTitle: 'Renovate Dashboard',
+  rebaseWhen: 'conflicted',
+  commitBodyTable: true,
+  fetchChangeLogs: 'pr',
+  labels: [
+    'renovate',
+  ],
+  'docker-compose': {
+    managerFilePatterns: [
+      '/(^|/)docker/.*.ya?ml$/',
+    ],
+  },
 }
