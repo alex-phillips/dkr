@@ -3,7 +3,7 @@ services:
   funkwhale-redis:
     container_name: funkwhale-redis
     env_file: .env
-    image: redis:7
+    image: redis:8
     networks:
       - external
       - data
