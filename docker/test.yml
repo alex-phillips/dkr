@@ -17,7 +17,7 @@ services:
 
   photoprism-test:
     container_name: photoprism-test
-    image: photoprism/photoprism:230923
+    image: photoprism/photoprism:231128
       #  network_mode: service:mitmproxy
     security_opt:
       - seccomp:unconfined
